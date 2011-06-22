@@ -60,6 +60,10 @@ bool treeLeaf<octreeDataTriSurface>::findNearest
 
 } // End namespace Foam
 
+#ifdef NoRepository
+#   include "octreeDataTriSurfaceTreeLeaf.C"
+#endif
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif

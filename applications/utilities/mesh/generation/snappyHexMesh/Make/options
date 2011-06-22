@@ -15,3 +15,12 @@ EXE_LIBS = \
     -lmeshTools \
     -ldynamicMesh \
     -lautoMesh
+
+#if (defined( WIN32 ) || defined( WIN64 ))
+
+EXE_LIBS += \
+    -lscotchDecomp \
+    -lmetisDecomp \
+    -lparMetisDecomp
+
+#endif

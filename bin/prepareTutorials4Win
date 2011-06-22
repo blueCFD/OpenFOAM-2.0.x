@@ -1,0 +1,117 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     prepareTutorials4Win
+#
+# Description
+#     Help script for preparing tutorials for the Windows environment.
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} tutorial_folder
+
+  Help script for preparing tutorials for the Windows environment.
+  It will prepare and pack the tutorials into $WM_PROJECT_DIR/tutorials_win.tar.bz2
+
+USAGE
+    exit 1
+}
+
+if [ $# -lt 1 -o "$1" = "--help" ]
+then
+    usage
+fi
+
+tutorialFolder=$1
+
+#prepare the folder for processing and copy the original tutorials
+#remove the build files, since their useless in Windows.
+mkdir -p "$tutorialFolder"
+cd "$tutorialFolder"
+cp -r $FOAM_TUTORIALS/. .
+find . -name "*.dep" | xargs rm
+find . -type d -name "linux*" | grep "/Make/" | xargs rm -rf
+
+if [ -d "$WM_PROJECT_USER_DIR/contribsExtend/viscoelasticSource" ]; then
+  #also copy the tutorials from viscoelasticSource
+  cp -r $WM_PROJECT_USER_DIR/contribsExtend/viscoelasticSource/tutorials/. .
+fi
+
+echo "Fixing chtMultiRegion* tutorials"
+for chtMultis in `find heatTransfer -name "chtMultiRegion*"`; do
+  for chtTuto in `find $chtMultis -maxdepth 1 -mindepth 1`; do
+    chtMultiRegionFixK $chtTuto
+  done
+done
+
+echo "Fixing motorBike STL"
+cd incompressible/simpleFoam/motorBike
+chmod +x fixForWindows
+./fixForWindows
+sed -i -e 's=sed \-i=sedIt=' Allrun
+cd -
+
+echo "Fixing multiphase/interFoam/les/nozzleFlow2D/Allrun (exponencial issue)"
+cd multiphase/interFoam/les/nozzleFlow2D
+echo '--- Allrun.orig 2010-12-13 20:30:39.164415186 +0000
++++ Allrun  2010-12-13 20:31:19.192043509 +0000
+@@ -13,6 +13,7 @@
+ 
+ runApplication blockMesh
+ 
++firstiter=1e-008
+ i=1
+ if [ -f log.cellSet ] ; then
+    i=3
+@@ -24,8 +30,8 @@
+     cp system/cellSetDict.${i} system/cellSetDict
+     runApplication cellSet
+     runRefineMesh
+-    cp -r 1e-08/polyMesh/* constant/polyMesh
+-    rm -rf 1e-08
++    cp -r ${firstiter}/polyMesh/* constant/polyMesh
++    rm -rf ${firstiter}
+     i=`expr $i + 1`
+ done
+ cp constant/polyMesh/boundary.org constant/polyMesh/boundary
+' | patch -p0
+cd -
+
+echo "Fixing combustion/XiFoam/ras/Allrun (rounding issue in SP mode)"
+cd combustion/XiFoam/ras
+sed -i -e 's=\.\./moriyoshiHomogeneous/0.005=\`find ../moriyoshiHomogeneous -name "0.*" | sort -u | tail -n 1\`=' Allrun
+cd -
+
+echo "Packing Tutorials to here: '$WM_PROJECT_DIR/tutorials_win.tar.bz2'"
+if [ -e "$WM_PROJECT_DIR/tutorials_win.tar.bz2" ]; then rm "$WM_PROJECT_DIR/tutorials_win.tar.bz2"; fi
+tar -cjhf $WM_PROJECT_DIR/tutorials_win.tar.bz2 .
+
+echo "Removing temporary folder."
+cd ..
+rm -rf "$tutorialFolder"

@@ -1,0 +1,11 @@
+--- applications/solvers/multiphase/compressibleInterFoam/compressibleInterDyMFoam/Make/options
++++ applications/solvers/multiphase/compressibleInterFoam/compressibleInterDyMFoam/Make/options
+@@ -18,5 +18,7 @@
+     -lfiniteVolume \
+     -ldynamicMesh \
+     -lmeshTools \
+-    -ldynamicFvMesh
++    -ldynamicFvMesh \
++    -lincompressibleTurbulenceModel \
++    -linterfaceProperties
+ 

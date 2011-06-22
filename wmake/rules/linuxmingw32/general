@@ -1,10 +1,13 @@
-LD         = mingw32-ld
+CPP        = cpp -traditional-cpp $(GFLAGS)
+LD         = i686-pc-mingw32-ld
 
-PROJECT_LIBS = -l$(WM_PROJECT)
+PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
+PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
+    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
 
 include $(GENERAL_RULES)/standard
+include $(GENERAL_RULES)/rc
 
-include $(RULES)/X
 include $(RULES)/c
 include $(RULES)/c++
 

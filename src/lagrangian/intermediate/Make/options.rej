@@ -1,0 +1,9 @@
+--- src/lagrangian/intermediate/Make/options
++++ src/lagrangian/intermediate/Make/options
+@@ -30,4 +30,5 @@
+     -lbasicThermophysicalModels \
+     -lreactionThermophysicalModels \
+     -lcompressibleRASModels \
+-    -lcompressibleLESModels
++    -lcompressibleLESModels \
++    -lradiation

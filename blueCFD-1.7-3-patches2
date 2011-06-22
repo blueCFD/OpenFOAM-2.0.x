@@ -1,0 +1,1464 @@
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/general b/wmake/rules/linuxamd64-mingw32msvc/general
+new file mode 100644
+index 0000000..2f34372
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/general
+@@ -0,0 +1,20 @@
++CPP        = cpp -traditional-cpp $(GFLAGS)
++LD         = $(WM_COMPILER)-ld
++
++PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
++PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
++    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
++
++include $(GENERAL_RULES)/standard
++include $(GENERAL_RULES)/rc
++
++include $(RULES)/c
++include $(RULES)/c++
++
++SO      = dll
++EXE_EXT = .exe
++
++# Ensure we know what OS we are compiling for
++# during MakefileFiles and MakefileOptions
++GFLAGS  += -DWIN64 -DLITTLE_ENDIAN
++
++
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/mplib b/wmake/rules/linuxamd64-mingw32msvc/mplib
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/mplib
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/mplibGAMMA b/wmake/rules/linuxamd64-mingw32msvc/mplibGAMMA
+new file mode 100644
+index 0000000..d62c625
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/mplibGAMMA
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lgamma
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/mplibMPICH b/wmake/rules/linuxamd64-mingw32msvc/mplibMPICH
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/mplibMPICH
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/mplibMPICH-GM b/wmake/rules/linuxamd64-mingw32msvc/mplibMPICH-GM
+new file mode 100644
+index 0000000..88493eb
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/mplibMPICH-GM
+@@ -0,0 +1,3 @@
++PFLAGS     =
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -L$(GM_LIB_PATH) -lgm
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/mplibMSMPI b/wmake/rules/linuxamd64-mingw32msvc/mplibMSMPI
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/mplibMSMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/mplibNONE b/wmake/rules/linuxamd64-mingw32msvc/mplibNONE
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/mplibNONE
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxamd64-mingw32msvc/mplibOPENMPI b/wmake/rules/linuxamd64-mingw32msvc/mplibOPENMPI
+new file mode 100644
+index 0000000..834d2d3
+--- /dev/null
++++ b/wmake/rules/linuxamd64-mingw32msvc/mplibOPENMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = -DOMPI_SKIP_MPICXX
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxi586-mingw32msvc/c b/wmake/rules/linuxi586-mingw32msvc/c
+new file mode 100644
+index 0000000..1161064
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/c
+@@ -0,0 +1,16 @@
++.SUFFIXES: .c .h
++
++cWARN        = -Wall
++
++cc          = $(WM_CC) -m$(WM_ARCH_OPTION)
++
++include $(RULES)/c$(WM_COMPILE_OPTION)
++
++cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS)
++
++ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
++
++LINK_LIBS   = $(cDBUG)
++
++LINKLIBSO   = $(cc) $(cFLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(cc) $(cFLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxi586-mingw32msvc/c++ b/wmake/rules/linuxi586-mingw32msvc/c++
+new file mode 100644
+index 0000000..a69061d
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/c++
+@@ -0,0 +1,23 @@
++.SUFFIXES: .C .cxx .cc .cpp
++
++c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast
++
++CC          = $(WM_CXX)
++
++include $(RULES)/c++$(WM_COMPILE_OPTION)
++
++ptFLAGS     = -DNoRepository -ftemplate-depth-40
++
++c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS)
++
++Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
++cxxtoo      = $(Ctoo)
++cctoo       = $(Ctoo)
++cpptoo      = $(Ctoo)
++
++LINK_LIBS   = $(c++DBUG)
++
++# Tried using -Wl,-no-undefined,--enable-runtime-pseudo-reloc
++# but didnt forgive undefined symbols during linking
++LINKLIBSO   = $(CC) $(c++FLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(CC) $(c++FLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxi586-mingw32msvc/c++Debug b/wmake/rules/linuxi586-mingw32msvc/c++Debug
+new file mode 100644
+index 0000000..19bdb9c
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/c++Debug
+@@ -0,0 +1,2 @@
++c++DBUG    = -ggdb3 -DFULLDEBUG
++c++OPT      = -O0 -fdefault-inline
+diff --git a/wmake/rules/linuxi586-mingw32msvc/c++Opt b/wmake/rules/linuxi586-mingw32msvc/c++Opt
+new file mode 100644
+index 0000000..8d5bc55
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/c++Opt
+@@ -0,0 +1,2 @@
++c++DBUG     = 
++c++OPT      = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxi586-mingw32msvc/c++Prof b/wmake/rules/linuxi586-mingw32msvc/c++Prof
+new file mode 100644
+index 0000000..36a70bd
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/c++Prof
+@@ -0,0 +1,2 @@
++c++DBUG    = -pg
++c++OPT     = -O2 -pg
+diff --git a/wmake/rules/linuxi586-mingw32msvc/cDebug b/wmake/rules/linuxi586-mingw32msvc/cDebug
+new file mode 100644
+index 0000000..6c71ed9
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/cDebug
+@@ -0,0 +1,2 @@
++cDBUG       = -ggdb -DFULLDEBUG
++cOPT        = -O1 -finline-functions
+diff --git a/wmake/rules/linuxi586-mingw32msvc/cOpt b/wmake/rules/linuxi586-mingw32msvc/cOpt
+new file mode 100644
+index 0000000..f2abb55
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/cOpt
+@@ -0,0 +1,2 @@
++cDBUG       = 
++cOPT        = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxi586-mingw32msvc/cProf b/wmake/rules/linuxi586-mingw32msvc/cProf
+new file mode 100644
+index 0000000..19d4f54
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/cProf
+@@ -0,0 +1,2 @@
++cDBUG       = -pg
++cOPT        = -O2 -pg
+diff --git a/wmake/rules/linuxi586-mingw32msvc/general b/wmake/rules/linuxi586-mingw32msvc/general
+new file mode 100644
+index 0000000..48fbad4
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/general
+@@ -0,0 +1,20 @@
++CPP        = cpp -traditional-cpp $(GFLAGS)
++LD         = $(WM_COMPILER)-ld
++
++PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
++PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
++    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
++
++include $(GENERAL_RULES)/standard
++include $(GENERAL_RULES)/rc
++
++include $(RULES)/c
++include $(RULES)/c++
++
++SO      = dll
++EXE_EXT = .exe
++
++# Ensure we know what OS we are compiling for
++# during MakefileFiles and MakefileOptions
++GFLAGS  += -DWIN32 -DLITTLE_ENDIAN
++
+diff --git a/wmake/rules/linuxi586-mingw32msvc/mplib b/wmake/rules/linuxi586-mingw32msvc/mplib
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/mplib
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxi586-mingw32msvc/mplibGAMMA b/wmake/rules/linuxi586-mingw32msvc/mplibGAMMA
+new file mode 100644
+index 0000000..d62c625
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/mplibGAMMA
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lgamma
+diff --git a/wmake/rules/linuxi586-mingw32msvc/mplibMPICH b/wmake/rules/linuxi586-mingw32msvc/mplibMPICH
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/mplibMPICH
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxi586-mingw32msvc/mplibMPICH-GM b/wmake/rules/linuxi586-mingw32msvc/mplibMPICH-GM
+new file mode 100644
+index 0000000..88493eb
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/mplibMPICH-GM
+@@ -0,0 +1,3 @@
++PFLAGS     =
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -L$(GM_LIB_PATH) -lgm
+diff --git a/wmake/rules/linuxi586-mingw32msvc/mplibMSMPI b/wmake/rules/linuxi586-mingw32msvc/mplibMSMPI
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/mplibMSMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxi586-mingw32msvc/mplibNONE b/wmake/rules/linuxi586-mingw32msvc/mplibNONE
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/mplibNONE
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxi586-mingw32msvc/mplibOPENMPI b/wmake/rules/linuxi586-mingw32msvc/mplibOPENMPI
+new file mode 100644
+index 0000000..834d2d3
+--- /dev/null
++++ b/wmake/rules/linuxi586-mingw32msvc/mplibOPENMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = -DOMPI_SKIP_MPICXX
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxi686-w64-mingw32/c b/wmake/rules/linuxi686-w64-mingw32/c
+new file mode 100644
+index 0000000..1161064
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/c
+@@ -0,0 +1,16 @@
++.SUFFIXES: .c .h
++
++cWARN        = -Wall
++
++cc          = $(WM_CC) -m$(WM_ARCH_OPTION)
++
++include $(RULES)/c$(WM_COMPILE_OPTION)
++
++cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS)
++
++ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
++
++LINK_LIBS   = $(cDBUG)
++
++LINKLIBSO   = $(cc) $(cFLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(cc) $(cFLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxi686-w64-mingw32/c++ b/wmake/rules/linuxi686-w64-mingw32/c++
+new file mode 100644
+index 0000000..a69061d
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/c++
+@@ -0,0 +1,23 @@
++.SUFFIXES: .C .cxx .cc .cpp
++
++c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast
++
++CC          = $(WM_CXX)
++
++include $(RULES)/c++$(WM_COMPILE_OPTION)
++
++ptFLAGS     = -DNoRepository -ftemplate-depth-40
++
++c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS)
++
++Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
++cxxtoo      = $(Ctoo)
++cctoo       = $(Ctoo)
++cpptoo      = $(Ctoo)
++
++LINK_LIBS   = $(c++DBUG)
++
++# Tried using -Wl,-no-undefined,--enable-runtime-pseudo-reloc
++# but didnt forgive undefined symbols during linking
++LINKLIBSO   = $(CC) $(c++FLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(CC) $(c++FLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxi686-w64-mingw32/c++Debug b/wmake/rules/linuxi686-w64-mingw32/c++Debug
+new file mode 100644
+index 0000000..19bdb9c
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/c++Debug
+@@ -0,0 +1,2 @@
++c++DBUG    = -ggdb3 -DFULLDEBUG
++c++OPT      = -O0 -fdefault-inline
+diff --git a/wmake/rules/linuxi686-w64-mingw32/c++Opt b/wmake/rules/linuxi686-w64-mingw32/c++Opt
+new file mode 100644
+index 0000000..8d5bc55
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/c++Opt
+@@ -0,0 +1,2 @@
++c++DBUG     = 
++c++OPT      = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxi686-w64-mingw32/c++Prof b/wmake/rules/linuxi686-w64-mingw32/c++Prof
+new file mode 100644
+index 0000000..36a70bd
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/c++Prof
+@@ -0,0 +1,2 @@
++c++DBUG    = -pg
++c++OPT     = -O2 -pg
+diff --git a/wmake/rules/linuxi686-w64-mingw32/cDebug b/wmake/rules/linuxi686-w64-mingw32/cDebug
+new file mode 100644
+index 0000000..6c71ed9
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/cDebug
+@@ -0,0 +1,2 @@
++cDBUG       = -ggdb -DFULLDEBUG
++cOPT        = -O1 -finline-functions
+diff --git a/wmake/rules/linuxi686-w64-mingw32/cOpt b/wmake/rules/linuxi686-w64-mingw32/cOpt
+new file mode 100644
+index 0000000..f2abb55
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/cOpt
+@@ -0,0 +1,2 @@
++cDBUG       = 
++cOPT        = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxi686-w64-mingw32/cProf b/wmake/rules/linuxi686-w64-mingw32/cProf
+new file mode 100644
+index 0000000..19d4f54
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/cProf
+@@ -0,0 +1,2 @@
++cDBUG       = -pg
++cOPT        = -O2 -pg
+diff --git a/wmake/rules/linuxi686-w64-mingw32/general b/wmake/rules/linuxi686-w64-mingw32/general
+new file mode 100644
+index 0000000..48fbad4
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/general
+@@ -0,0 +1,20 @@
++CPP        = cpp -traditional-cpp $(GFLAGS)
++LD         = $(WM_COMPILER)-ld
++
++PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
++PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
++    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
++
++include $(GENERAL_RULES)/standard
++include $(GENERAL_RULES)/rc
++
++include $(RULES)/c
++include $(RULES)/c++
++
++SO      = dll
++EXE_EXT = .exe
++
++# Ensure we know what OS we are compiling for
++# during MakefileFiles and MakefileOptions
++GFLAGS  += -DWIN32 -DLITTLE_ENDIAN
++
+diff --git a/wmake/rules/linuxi686-w64-mingw32/mplib b/wmake/rules/linuxi686-w64-mingw32/mplib
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/mplib
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxi686-w64-mingw32/mplibGAMMA b/wmake/rules/linuxi686-w64-mingw32/mplibGAMMA
+new file mode 100644
+index 0000000..d62c625
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/mplibGAMMA
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lgamma
+diff --git a/wmake/rules/linuxi686-w64-mingw32/mplibMPICH b/wmake/rules/linuxi686-w64-mingw32/mplibMPICH
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/mplibMPICH
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxi686-w64-mingw32/mplibMPICH-GM b/wmake/rules/linuxi686-w64-mingw32/mplibMPICH-GM
+new file mode 100644
+index 0000000..88493eb
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/mplibMPICH-GM
+@@ -0,0 +1,3 @@
++PFLAGS     =
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -L$(GM_LIB_PATH) -lgm
+diff --git a/wmake/rules/linuxi686-w64-mingw32/mplibMSMPI b/wmake/rules/linuxi686-w64-mingw32/mplibMSMPI
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/mplibMSMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxi686-w64-mingw32/mplibNONE b/wmake/rules/linuxi686-w64-mingw32/mplibNONE
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/mplibNONE
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxi686-w64-mingw32/mplibOPENMPI b/wmake/rules/linuxi686-w64-mingw32/mplibOPENMPI
+new file mode 100644
+index 0000000..834d2d3
+--- /dev/null
++++ b/wmake/rules/linuxi686-w64-mingw32/mplibOPENMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = -DOMPI_SKIP_MPICXX
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw-w32/c b/wmake/rules/linuxmingw-w32/c
+new file mode 100644
+index 0000000..1161064
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/c
+@@ -0,0 +1,16 @@
++.SUFFIXES: .c .h
++
++cWARN        = -Wall
++
++cc          = $(WM_CC) -m$(WM_ARCH_OPTION)
++
++include $(RULES)/c$(WM_COMPILE_OPTION)
++
++cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS)
++
++ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
++
++LINK_LIBS   = $(cDBUG)
++
++LINKLIBSO   = $(cc) $(cFLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(cc) $(cFLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxmingw-w32/c++ b/wmake/rules/linuxmingw-w32/c++
+new file mode 100644
+index 0000000..a69061d
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/c++
+@@ -0,0 +1,23 @@
++.SUFFIXES: .C .cxx .cc .cpp
++
++c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast
++
++CC          = $(WM_CXX)
++
++include $(RULES)/c++$(WM_COMPILE_OPTION)
++
++ptFLAGS     = -DNoRepository -ftemplate-depth-40
++
++c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS)
++
++Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
++cxxtoo      = $(Ctoo)
++cctoo       = $(Ctoo)
++cpptoo      = $(Ctoo)
++
++LINK_LIBS   = $(c++DBUG)
++
++# Tried using -Wl,-no-undefined,--enable-runtime-pseudo-reloc
++# but didnt forgive undefined symbols during linking
++LINKLIBSO   = $(CC) $(c++FLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(CC) $(c++FLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxmingw-w32/c++Debug b/wmake/rules/linuxmingw-w32/c++Debug
+new file mode 100644
+index 0000000..19bdb9c
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/c++Debug
+@@ -0,0 +1,2 @@
++c++DBUG    = -ggdb3 -DFULLDEBUG
++c++OPT      = -O0 -fdefault-inline
+diff --git a/wmake/rules/linuxmingw-w32/c++Opt b/wmake/rules/linuxmingw-w32/c++Opt
+new file mode 100644
+index 0000000..8d5bc55
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/c++Opt
+@@ -0,0 +1,2 @@
++c++DBUG     = 
++c++OPT      = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxmingw-w32/c++Prof b/wmake/rules/linuxmingw-w32/c++Prof
+new file mode 100644
+index 0000000..36a70bd
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/c++Prof
+@@ -0,0 +1,2 @@
++c++DBUG    = -pg
++c++OPT     = -O2 -pg
+diff --git a/wmake/rules/linuxmingw-w32/cDebug b/wmake/rules/linuxmingw-w32/cDebug
+new file mode 100644
+index 0000000..6c71ed9
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/cDebug
+@@ -0,0 +1,2 @@
++cDBUG       = -ggdb -DFULLDEBUG
++cOPT        = -O1 -finline-functions
+diff --git a/wmake/rules/linuxmingw-w32/cOpt b/wmake/rules/linuxmingw-w32/cOpt
+new file mode 100644
+index 0000000..f2abb55
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/cOpt
+@@ -0,0 +1,2 @@
++cDBUG       = 
++cOPT        = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxmingw-w32/cProf b/wmake/rules/linuxmingw-w32/cProf
+new file mode 100644
+index 0000000..19d4f54
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/cProf
+@@ -0,0 +1,2 @@
++cDBUG       = -pg
++cOPT        = -O2 -pg
+diff --git a/wmake/rules/linuxmingw-w32/general b/wmake/rules/linuxmingw-w32/general
+new file mode 100644
+index 0000000..404a36b
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/general
+@@ -0,0 +1,20 @@
++CPP        = cpp -traditional-cpp $(GFLAGS)
++LD         = i686-pc-mingw32-ld
++
++PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
++PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
++    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
++
++include $(GENERAL_RULES)/standard
++include $(GENERAL_RULES)/rc
++
++include $(RULES)/c
++include $(RULES)/c++
++
++SO      = dll
++EXE_EXT = .exe
++
++# Ensure we know what OS we are compiling for
++# during MakefileFiles and MakefileOptions
++GFLAGS  += -DWIN32 -DLITTLE_ENDIAN
++
+diff --git a/wmake/rules/linuxmingw-w32/mplib b/wmake/rules/linuxmingw-w32/mplib
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/mplib
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxmingw-w32/mplibGAMMA b/wmake/rules/linuxmingw-w32/mplibGAMMA
+new file mode 100644
+index 0000000..d62c625
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/mplibGAMMA
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lgamma
+diff --git a/wmake/rules/linuxmingw-w32/mplibMPICH b/wmake/rules/linuxmingw-w32/mplibMPICH
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/mplibMPICH
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw-w32/mplibMPICH-GM b/wmake/rules/linuxmingw-w32/mplibMPICH-GM
+new file mode 100644
+index 0000000..88493eb
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/mplibMPICH-GM
+@@ -0,0 +1,3 @@
++PFLAGS     =
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -L$(GM_LIB_PATH) -lgm
+diff --git a/wmake/rules/linuxmingw-w32/mplibMSMPI b/wmake/rules/linuxmingw-w32/mplibMSMPI
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/mplibMSMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw-w32/mplibNONE b/wmake/rules/linuxmingw-w32/mplibNONE
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/mplibNONE
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxmingw-w32/mplibOPENMPI b/wmake/rules/linuxmingw-w32/mplibOPENMPI
+new file mode 100644
+index 0000000..834d2d3
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w32/mplibOPENMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = -DOMPI_SKIP_MPICXX
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw-w64/c b/wmake/rules/linuxmingw-w64/c
+new file mode 100644
+index 0000000..1161064
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/c
+@@ -0,0 +1,16 @@
++.SUFFIXES: .c .h
++
++cWARN        = -Wall
++
++cc          = $(WM_CC) -m$(WM_ARCH_OPTION)
++
++include $(RULES)/c$(WM_COMPILE_OPTION)
++
++cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS)
++
++ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
++
++LINK_LIBS   = $(cDBUG)
++
++LINKLIBSO   = $(cc) $(cFLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(cc) $(cFLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxmingw-w64/c++ b/wmake/rules/linuxmingw-w64/c++
+new file mode 100644
+index 0000000..a69061d
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/c++
+@@ -0,0 +1,23 @@
++.SUFFIXES: .C .cxx .cc .cpp
++
++c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast
++
++CC          = $(WM_CXX)
++
++include $(RULES)/c++$(WM_COMPILE_OPTION)
++
++ptFLAGS     = -DNoRepository -ftemplate-depth-40
++
++c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS)
++
++Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
++cxxtoo      = $(Ctoo)
++cctoo       = $(Ctoo)
++cpptoo      = $(Ctoo)
++
++LINK_LIBS   = $(c++DBUG)
++
++# Tried using -Wl,-no-undefined,--enable-runtime-pseudo-reloc
++# but didnt forgive undefined symbols during linking
++LINKLIBSO   = $(CC) $(c++FLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(CC) $(c++FLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxmingw-w64/c++Debug b/wmake/rules/linuxmingw-w64/c++Debug
+new file mode 100644
+index 0000000..19bdb9c
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/c++Debug
+@@ -0,0 +1,2 @@
++c++DBUG    = -ggdb3 -DFULLDEBUG
++c++OPT      = -O0 -fdefault-inline
+diff --git a/wmake/rules/linuxmingw-w64/c++Opt b/wmake/rules/linuxmingw-w64/c++Opt
+new file mode 100644
+index 0000000..cc26575
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/c++Opt
+@@ -0,0 +1,2 @@
++c++DBUG     = 
++c++OPT      = -O2 -DNDEBUG
+diff --git a/wmake/rules/linuxmingw-w64/c++Prof b/wmake/rules/linuxmingw-w64/c++Prof
+new file mode 100644
+index 0000000..d1ce86f
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/c++Prof
+@@ -0,0 +1,3 @@
++c++DBUG    = -pg
++c++OPT     = 
++#-O2
+diff --git a/wmake/rules/linuxmingw-w64/cDebug b/wmake/rules/linuxmingw-w64/cDebug
+new file mode 100644
+index 0000000..6c71ed9
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/cDebug
+@@ -0,0 +1,2 @@
++cDBUG       = -ggdb -DFULLDEBUG
++cOPT        = -O1 -finline-functions
+diff --git a/wmake/rules/linuxmingw-w64/cOpt b/wmake/rules/linuxmingw-w64/cOpt
+new file mode 100644
+index 0000000..44113ef
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/cOpt
+@@ -0,0 +1,2 @@
++cDBUG       = 
++cOPT        = -O2 -DNDEBUG
+diff --git a/wmake/rules/linuxmingw-w64/cProf b/wmake/rules/linuxmingw-w64/cProf
+new file mode 100644
+index 0000000..8fe44b4
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/cProf
+@@ -0,0 +1,3 @@
++cDBUG       = -p
++cOPT        = 
++#-O2
+diff --git a/wmake/rules/linuxmingw-w64/general b/wmake/rules/linuxmingw-w64/general
+new file mode 100644
+index 0000000..46339a2
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/general
+@@ -0,0 +1,20 @@
++CPP        = cpp -traditional-cpp $(GFLAGS)
++LD         = x86_64-w64-mingw32-ld
++
++PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
++PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
++    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
++
++include $(GENERAL_RULES)/standard
++include $(GENERAL_RULES)/rc
++
++include $(RULES)/c
++include $(RULES)/c++
++
++SO      = dll
++EXE_EXT = .exe
++
++# Ensure we know what OS we are compiling for
++# during MakefileFiles and MakefileOptions
++GFLAGS  += -DWIN64 -DLITTLE_ENDIAN
++
+diff --git a/wmake/rules/linuxmingw-w64/mplib b/wmake/rules/linuxmingw-w64/mplib
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/mplib
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxmingw-w64/mplibGAMMA b/wmake/rules/linuxmingw-w64/mplibGAMMA
+new file mode 100644
+index 0000000..d62c625
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/mplibGAMMA
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lgamma
+diff --git a/wmake/rules/linuxmingw-w64/mplibMPICH b/wmake/rules/linuxmingw-w64/mplibMPICH
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/mplibMPICH
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw-w64/mplibMPICH-GM b/wmake/rules/linuxmingw-w64/mplibMPICH-GM
+new file mode 100644
+index 0000000..88493eb
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/mplibMPICH-GM
+@@ -0,0 +1,3 @@
++PFLAGS     =
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -L$(GM_LIB_PATH) -lgm
+diff --git a/wmake/rules/linuxmingw-w64/mplibMSMPI b/wmake/rules/linuxmingw-w64/mplibMSMPI
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/mplibMSMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw-w64/mplibNONE b/wmake/rules/linuxmingw-w64/mplibNONE
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/mplibNONE
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxmingw-w64/mplibOPENMPI b/wmake/rules/linuxmingw-w64/mplibOPENMPI
+new file mode 100644
+index 0000000..834d2d3
+--- /dev/null
++++ b/wmake/rules/linuxmingw-w64/mplibOPENMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = -DOMPI_SKIP_MPICXX
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw32/c b/wmake/rules/linuxmingw32/c
+new file mode 100644
+index 0000000..1161064
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/c
+@@ -0,0 +1,16 @@
++.SUFFIXES: .c .h
++
++cWARN        = -Wall
++
++cc          = $(WM_CC) -m$(WM_ARCH_OPTION)
++
++include $(RULES)/c$(WM_COMPILE_OPTION)
++
++cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS)
++
++ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
++
++LINK_LIBS   = $(cDBUG)
++
++LINKLIBSO   = $(cc) $(cFLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(cc) $(cFLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxmingw32/c++ b/wmake/rules/linuxmingw32/c++
+new file mode 100644
+index 0000000..a69061d
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/c++
+@@ -0,0 +1,23 @@
++.SUFFIXES: .C .cxx .cc .cpp
++
++c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast
++
++CC          = $(WM_CXX)
++
++include $(RULES)/c++$(WM_COMPILE_OPTION)
++
++ptFLAGS     = -DNoRepository -ftemplate-depth-40
++
++c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS)
++
++Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
++cxxtoo      = $(Ctoo)
++cctoo       = $(Ctoo)
++cpptoo      = $(Ctoo)
++
++LINK_LIBS   = $(c++DBUG)
++
++# Tried using -Wl,-no-undefined,--enable-runtime-pseudo-reloc
++# but didnt forgive undefined symbols during linking
++LINKLIBSO   = $(CC) $(c++FLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(CC) $(c++FLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxmingw32/c++Debug b/wmake/rules/linuxmingw32/c++Debug
+new file mode 100644
+index 0000000..19bdb9c
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/c++Debug
+@@ -0,0 +1,2 @@
++c++DBUG    = -ggdb3 -DFULLDEBUG
++c++OPT      = -O0 -fdefault-inline
+diff --git a/wmake/rules/linuxmingw32/c++Opt b/wmake/rules/linuxmingw32/c++Opt
+new file mode 100644
+index 0000000..8d5bc55
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/c++Opt
+@@ -0,0 +1,2 @@
++c++DBUG     = 
++c++OPT      = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxmingw32/c++Prof b/wmake/rules/linuxmingw32/c++Prof
+new file mode 100644
+index 0000000..3bda4da
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/c++Prof
+@@ -0,0 +1,2 @@
++c++DBUG    = -pg
++c++OPT     = -O2
+diff --git a/wmake/rules/linuxmingw32/cDebug b/wmake/rules/linuxmingw32/cDebug
+new file mode 100644
+index 0000000..6c71ed9
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/cDebug
+@@ -0,0 +1,2 @@
++cDBUG       = -ggdb -DFULLDEBUG
++cOPT        = -O1 -finline-functions
+diff --git a/wmake/rules/linuxmingw32/cOpt b/wmake/rules/linuxmingw32/cOpt
+new file mode 100644
+index 0000000..f2abb55
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/cOpt
+@@ -0,0 +1,2 @@
++cDBUG       = 
++cOPT        = -O3 -DNDEBUG
+diff --git a/wmake/rules/linuxmingw32/cProf b/wmake/rules/linuxmingw32/cProf
+new file mode 100644
+index 0000000..ca3ac9b
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/cProf
+@@ -0,0 +1,2 @@
++cDBUG       = -pg
++cOPT        = -O2
+diff --git a/wmake/rules/linuxmingw32/general b/wmake/rules/linuxmingw32/general
+new file mode 100644
+index 0000000..404a36b
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/general
+@@ -0,0 +1,20 @@
++CPP        = cpp -traditional-cpp $(GFLAGS)
++LD         = i686-pc-mingw32-ld
++
++PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
++PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
++    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
++
++include $(GENERAL_RULES)/standard
++include $(GENERAL_RULES)/rc
++
++include $(RULES)/c
++include $(RULES)/c++
++
++SO      = dll
++EXE_EXT = .exe
++
++# Ensure we know what OS we are compiling for
++# during MakefileFiles and MakefileOptions
++GFLAGS  += -DWIN32 -DLITTLE_ENDIAN
++
+diff --git a/wmake/rules/linuxmingw32/mplib b/wmake/rules/linuxmingw32/mplib
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/mplib
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxmingw32/mplibGAMMA b/wmake/rules/linuxmingw32/mplibGAMMA
+new file mode 100644
+index 0000000..d62c625
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/mplibGAMMA
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lgamma
+diff --git a/wmake/rules/linuxmingw32/mplibMPICH b/wmake/rules/linuxmingw32/mplibMPICH
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/mplibMPICH
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw32/mplibMPICH-GM b/wmake/rules/linuxmingw32/mplibMPICH-GM
+new file mode 100644
+index 0000000..88493eb
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/mplibMPICH-GM
+@@ -0,0 +1,3 @@
++PFLAGS     =
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -L$(GM_LIB_PATH) -lgm
+diff --git a/wmake/rules/linuxmingw32/mplibMSMPI b/wmake/rules/linuxmingw32/mplibMSMPI
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/mplibMSMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxmingw32/mplibNONE b/wmake/rules/linuxmingw32/mplibNONE
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/mplibNONE
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxmingw32/mplibOPENMPI b/wmake/rules/linuxmingw32/mplibOPENMPI
+new file mode 100644
+index 0000000..834d2d3
+--- /dev/null
++++ b/wmake/rules/linuxmingw32/mplibOPENMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = -DOMPI_SKIP_MPICXX
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/c b/wmake/rules/linuxx86_64-w64-mingw32/c
+new file mode 100644
+index 0000000..1161064
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/c
+@@ -0,0 +1,16 @@
++.SUFFIXES: .c .h
++
++cWARN        = -Wall
++
++cc          = $(WM_CC) -m$(WM_ARCH_OPTION)
++
++include $(RULES)/c$(WM_COMPILE_OPTION)
++
++cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS)
++
++ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
++
++LINK_LIBS   = $(cDBUG)
++
++LINKLIBSO   = $(cc) $(cFLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(cc) $(cFLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/c++ b/wmake/rules/linuxx86_64-w64-mingw32/c++
+new file mode 100644
+index 0000000..a69061d
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/c++
+@@ -0,0 +1,23 @@
++.SUFFIXES: .C .cxx .cc .cpp
++
++c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast
++
++CC          = $(WM_CXX)
++
++include $(RULES)/c++$(WM_COMPILE_OPTION)
++
++ptFLAGS     = -DNoRepository -ftemplate-depth-40
++
++c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS)
++
++Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
++cxxtoo      = $(Ctoo)
++cctoo       = $(Ctoo)
++cpptoo      = $(Ctoo)
++
++LINK_LIBS   = $(c++DBUG)
++
++# Tried using -Wl,-no-undefined,--enable-runtime-pseudo-reloc
++# but didnt forgive undefined symbols during linking
++LINKLIBSO   = $(CC) $(c++FLAGS) -Wl,--output-def,$(LIB).def,--out-implib,$(LIB).a,--enable-auto-import,--strip-all -shared
++LINKEXE     = $(CC) $(c++FLAGS) -Wl,--enable-auto-import,--force-exe-suffix,--strip-all
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/c++Debug b/wmake/rules/linuxx86_64-w64-mingw32/c++Debug
+new file mode 100644
+index 0000000..19bdb9c
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/c++Debug
+@@ -0,0 +1,2 @@
++c++DBUG    = -ggdb3 -DFULLDEBUG
++c++OPT      = -O0 -fdefault-inline
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/c++Opt b/wmake/rules/linuxx86_64-w64-mingw32/c++Opt
+new file mode 100644
+index 0000000..cc26575
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/c++Opt
+@@ -0,0 +1,2 @@
++c++DBUG     = 
++c++OPT      = -O2 -DNDEBUG
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/c++Prof b/wmake/rules/linuxx86_64-w64-mingw32/c++Prof
+new file mode 100644
+index 0000000..d1ce86f
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/c++Prof
+@@ -0,0 +1,3 @@
++c++DBUG    = -pg
++c++OPT     = 
++#-O2
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/cDebug b/wmake/rules/linuxx86_64-w64-mingw32/cDebug
+new file mode 100644
+index 0000000..6c71ed9
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/cDebug
+@@ -0,0 +1,2 @@
++cDBUG       = -ggdb -DFULLDEBUG
++cOPT        = -O1 -finline-functions
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/cOpt b/wmake/rules/linuxx86_64-w64-mingw32/cOpt
+new file mode 100644
+index 0000000..44113ef
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/cOpt
+@@ -0,0 +1,2 @@
++cDBUG       = 
++cOPT        = -O2 -DNDEBUG
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/cProf b/wmake/rules/linuxx86_64-w64-mingw32/cProf
+new file mode 100644
+index 0000000..8fe44b4
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/cProf
+@@ -0,0 +1,3 @@
++cDBUG       = -p
++cOPT        = 
++#-O2
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/general b/wmake/rules/linuxx86_64-w64-mingw32/general
+new file mode 100644
+index 0000000..2f34372
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/general
+@@ -0,0 +1,20 @@
++CPP        = cpp -traditional-cpp $(GFLAGS)
++LD         = $(WM_COMPILER)-ld
++
++PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_MPI_LIBBIN) -lPstream
++PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
++    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
++
++include $(GENERAL_RULES)/standard
++include $(GENERAL_RULES)/rc
++
++include $(RULES)/c
++include $(RULES)/c++
++
++SO      = dll
++EXE_EXT = .exe
++
++# Ensure we know what OS we are compiling for
++# during MakefileFiles and MakefileOptions
++GFLAGS  += -DWIN64 -DLITTLE_ENDIAN
++
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/mplib b/wmake/rules/linuxx86_64-w64-mingw32/mplib
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/mplib
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/mplibGAMMA b/wmake/rules/linuxx86_64-w64-mingw32/mplibGAMMA
+new file mode 100644
+index 0000000..d62c625
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/mplibGAMMA
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lgamma
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/mplibMPICH b/wmake/rules/linuxx86_64-w64-mingw32/mplibMPICH
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/mplibMPICH
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/mplibMPICH-GM b/wmake/rules/linuxx86_64-w64-mingw32/mplibMPICH-GM
+new file mode 100644
+index 0000000..88493eb
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/mplibMPICH-GM
+@@ -0,0 +1,3 @@
++PFLAGS     =
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpich -L$(GM_LIB_PATH) -lgm
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/mplibMSMPI b/wmake/rules/linuxx86_64-w64-mingw32/mplibMSMPI
+new file mode 100644
+index 0000000..c80a051
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/mplibMSMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/mplibNONE b/wmake/rules/linuxx86_64-w64-mingw32/mplibNONE
+new file mode 100644
+index 0000000..8a84b40
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/mplibNONE
+@@ -0,0 +1,3 @@
++PFLAGS     = 
++PINC       = 
++PLIBS      = 
+diff --git a/wmake/rules/linuxx86_64-w64-mingw32/mplibOPENMPI b/wmake/rules/linuxx86_64-w64-mingw32/mplibOPENMPI
+new file mode 100644
+index 0000000..834d2d3
+--- /dev/null
++++ b/wmake/rules/linuxx86_64-w64-mingw32/mplibOPENMPI
+@@ -0,0 +1,3 @@
++PFLAGS     = -DOMPI_SKIP_MPICXX
++PINC       = -I$(MPI_ARCH_PATH)/include
++PLIBS      = -L$(MPI_ARCH_PATH)/lib -lmpi
+diff --git a/wmake/wmake b/wmake/wmake
+index 8ac2fc4..4abd187 100755
+--- a/wmake/wmake
++++ b/wmake/wmake
+@@ -149,6 +149,11 @@ then
+     fi
+ fi
+ 
++if isMinGW; then
++  if [ "$WM_COMPILE_OPTION" = "Prof" -a "$makeOption" = "libso" ]; then
++    makeOption="libo"
++  fi
++fi
+ 
+ #------------------------------------------------------------------------------
+ # Recurse the application directories tree
+diff --git a/wmake/wmakeDerivedFiles b/wmake/wmakeDerivedFiles
+index 8d522e9..e14bb4f 100755
+--- a/wmake/wmakeDerivedFiles
++++ b/wmake/wmakeDerivedFiles
+@@ -43,6 +43,43 @@ cd $WM_OPTIONS 2>/dev/null || {
+     exit 1
+ }
+ 
++# special preparations for MinGW builds
++TIS_MinGW=0
++if isMinGW && [ "$makeOption" != "libo" -a "$makeOption" != "lib" ]; then
++    if [ -e "$FOAM_SRC/OSspecific/$WM_OSTYPE/res/OFversion_template.rc" ]; then
++        TIS_MinGW=1
++        cp "$FOAM_SRC/OSspecific/$WM_OSTYPE/res/OFversion_template.rc" tmpver.rc
++    fi
++fi
++
++if [ $TIS_MinGW -eq 1 ]; then
++    #Extract the binary name
++    MGW_EXENAME=`grep -e "^EXE =" files`
++    MGW_LIBNAME=`grep -e "^LIB =" files`
++    MGW_FINALNAME="NONAME"
++
++    if [ -n "$MGW_EXENAME" ]; then
++        MGW_FINALNAME=`echo $MGW_EXENAME | sed -e 's=.*/=='`.exe
++    fi
++
++    if [ -n "$MGW_LIBNAME" ]; then
++        MGW_FINALNAME=`echo $MGW_LIBNAME | sed -e 's=.*/=='`.dll
++    fi
++
++    #get current OpenFOAM version
++    MGW_OFversion=`wmakePrintBuild -update`
++
++    #apply values to template
++    sed -e 's=1\.7\.\0\.0='$MGW_OFversion'=g' \
++        -e 's=tmpintname='$MGW_FINALNAME'=' \
++        -e 's=tmporigname='$MGW_FINALNAME'=' \
++        tmpver.rc > version_of_build.rc
++
++    #clean up
++    unset MGW_OFversion MGW_EXENAME MGW_LIBNAME MGW_FINALNAME
++    rm tmpver.rc
++fi
++
+ # Find and keep macro definitions in files list
+ grep "=" files > filesMacros
+ 
+@@ -52,6 +89,11 @@ grep -v "=" files > filesPlusBlank
+ # Add a newline to files to make sure the last line is followed by a newline
+ echo "" >> filesPlusBlank
+ 
++# Plug in the version resource file for being compiled along
++if [ $TIS_MinGW -eq 1 ]; then
++    echo "Make/$WM_OPTIONS/version_of_build.rc" >> filesPlusBlank
++    echo "" >> filesPlusBlank
++fi
+ 
+ # Remove commented lines blank lines, and trailing blanks from files
+ # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/wmake/wmakeVerifyExeDependencies b/wmake/wmakeVerifyExeDependencies
+new file mode 100755
+index 0000000..8aba9a5
+--- /dev/null
++++ b/wmake/wmakeVerifyExeDependencies
+@@ -0,0 +1,160 @@
++#!/bin/bash
++#------------------------------------------------------------------------------
++# =========                 |
++# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
++#  \\    /   O peration     |
++#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
++#    \\/     M anipulation  |
++#------------------------------------------------------------------------------
++# License
++#     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
++#
++#     OpenFOAM is free software: you can redistribute it and/or modify it
++#     under the terms of the GNU General Public License as published by
++#     the Free Software Foundation, either version 3 of the License, or
++#     (at your option) any later version.
++#
++#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
++#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++#     for more details.
++#
++#     You should have received a copy of the GNU General Public License
++#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
++#
++# Script
++#     wmakeVerifyExeDependencies
++#
++# Description
++#     Script for verifying and closing dependencies of application binaries 
++#   built for OpenFOAM. This will then rely on the user running wmake again 
++#   on the desired folder.
++#   NOTE: this script was partially based on the wmake script.
++#
++#------------------------------------------------------------------------------
++Script=${0##*/}
++
++#function that tells the user how to use this script
++usage() {
++    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
++    cat<<USAGE
++usage: $Script dir
++
++This a helper script to close dependencies that are left open in the MinGW builds.
++
++The 'dir' argument is the folder of the solver or utility that you want to close dependencies on.
++    e.g., $Script solvers
++
++Then you will have to run wmake again.
++    e.g., wmake all solvers
++
++USAGE
++    exit 1
++}
++
++#this will check and try to close dependencies
++# usage:
++# processFolder folder_that_already_has_processed_data
++processFolder()
++{
++  localDir=$1
++  opFile=$localDir/options
++  fiFile=$localDir/files
++
++  #end if the needed files don't exist
++  if [ ! -e $opFile -o ! -e $fiFile ]; then return; fi
++
++  #retrieve the name of the binary application
++  exeName=`grep -e "EXE.*=" $fiFile | sed 's=.*/=='`".exe"
++
++  #if it didn't find anything, then cancel search for this one
++  if [ "x$exeName" = "x" ]; then return; fi
++
++  #locate where the binary is
++  if [ -e $FOAM_APPBIN/$exeName ]; then
++    exeName=$FOAM_APPBIN/$exeName
++  elif [ -e $FOAM_USER_APPBIN/$exeName ]; then
++    exeName=$FOAM_USER_APPBIN/$exeName
++  else
++    #no executable, then no dependencies to close!
++    return;
++  fi
++
++  #check if dependencies have already been verified and closed
++  if [ `grep "LIBS_TO_LOAD" $opFile | wc -l` -gt 0 ]; then 
++    echo "This application already has dependencies closed: $exeName"
++    return;
++  fi
++
++  #now retrieve the list of libraries the executable is linked to
++  WM_OBJDUMP=`echo $WM_CC | sed s/gcc/objdump/`
++  librariesLinkedTo=`$WM_OBJDUMP -x $exeName | grep dll | grep lib | sort -u | sed -e 's=.*DLL Name: lib==' -e 's=\.dll$=='`
++
++  #now retrieve the libraries that it should link to (and change spaces to lines)
++  EXE_LIBS=`grep -e "EXE_LIBS.*=" $opFile | sed 's=EXE\_LIBS.*\=[ ]*=='`
++  LIBSTOLOAD=`echo $EXE_LIBS | sed -e "s/\-l\([a-zA-Z0-9]*\ *\)/\1/g" | sed -e 's=[ ]=\n=g' | sed -e "s/\-L.*//g" -e 's/\$.*\.o//g' -e 's/^\$.*)$//g'`
++
++  #now remove the libraries that are already loaded and not declared in the other list
++  librariesLinkedToUnique=""
++  for toParse in $librariesLinkedTo; do
++    if [ `echo $LIBSTOLOAD | grep "$toParse" | wc -l` -gt 0 ]; then
++      librariesLinkedToUnique="$librariesLinkedToUnique $toParse"
++    fi
++  done
++  librariesLinkedTo=`echo $librariesLinkedToUnique | sed 's=[ ]=\n=g'`
++  unset librariesLinkedToUnique
++
++  #now compare the lists of libraries
++  LIBSMUSTLOAD=`echo -e "$LIBSTOLOAD\n$librariesLinkedTo" | sort | uniq -u`
++
++  #remove leading spaces
++  LIBSMUSTLOAD=`echo $LIBSMUSTLOAD | sed -e 's=^[ ]*==g'`
++
++  #now if there is anything to still link to  
++  if [ `echo $LIBSMUSTLOAD | sed 's=\ =\n=g' | wc -l` -gt 0 -a "x" != "x$LIBSMUSTLOAD" ]; then
++    echo 'EXE_INC += -DLIBS_TO_LOAD="\"'$LIBSMUSTLOAD'\""' >> $opFile
++    dependenciesClosed=`expr $dependenciesClosed + 1`
++    
++    echo "Dependencies added to: $exeName"
++  fi
++
++}
++
++# provide immediate help, even if none of the environment is set
++if [ "$1" = "-h" -o "$1" = "-help" -o "$#" -eq 0 ]
++then
++    usage
++fi
++
++#
++# check environment variables
++#
++for check in WM_OPTIONS WM_LINK_LANGUAGE WM_DIR WM_PROJECT WM_PROJECT_DIR
++do
++    eval test "\$$check" || {
++        echo "$Script error: environment variable \$$check not set" 1>&2
++        exit 1
++    }
++done
++
++#get the base folder directory
++dir=$1
++
++#retrieve a list of paths to the folders named Make
++folders=$(find $dir -name Make)
++
++#reset variable that indicates that at least one dependency has been closed
++dependenciesClosed=0
++
++#now parse each folder and check each application
++for folder in $folders; do
++  if [ -d $folder/$WM_OPTIONS ]; then
++    processFolder $folder/$WM_OPTIONS
++  fi
++done
++
++if [ $dependenciesClosed -gt 0 ]; then
++  echo "There are $dependenciesClosed applications that are going to be rebuilt."
++fi
++
++exit $dependenciesClosed

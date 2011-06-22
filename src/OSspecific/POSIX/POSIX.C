@@ -56,6 +56,7 @@ Description
 #include <link.h>
 
 #include <netinet/in.h>
+#include <dlfcn.h>
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -1220,5 +1221,9 @@ Foam::fileNameList Foam::dlLoaded()
     return libs;
 }
 
+Foam::string Foam::toUnixPath(const string & path)
+{
+  return path;
+}
 
 // ************************************************************************* //

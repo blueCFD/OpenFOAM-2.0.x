@@ -169,7 +169,6 @@ protected:
         //- Set the object state to bad
         void setBad(const string&);
 
-
 public:
 
     //- Runtime type information
@@ -401,6 +400,7 @@ public:
     // Member operators
 
         void operator=(const IOobject&);
+
 };
 
 

@@ -41,6 +41,11 @@ SourceFiles
 
 #include <sys/types.h>
 
+#ifdef WIN64
+//redefine by force, to override casting issues :(
+#define pid_t long int
+#endif
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -199,6 +204,15 @@ bool dlSymFound(void* handle, const std::string& symbol);
 //- Return all loaded libraries
 fileNameList dlLoaded();
 
+
+//- Open shared library
+void* openLibrary(const fileName& libName);
+
+//- Close shared library
+void closeLibrary(void* const libHandle);
+
+//- Convert to unix path separators
+string toUnixPath(const string& path);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

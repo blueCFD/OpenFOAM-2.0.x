@@ -1,0 +1,9 @@
+--- src/sampling/Make/options
++++ src/sampling/Make/options
+@@ -9,4 +9,5 @@
+     -lfiniteVolume \
+     -lmeshTools \
+     -lsurfMesh \
+-    -ltriSurface
++    -ltriSurface \
++    -llagrangian

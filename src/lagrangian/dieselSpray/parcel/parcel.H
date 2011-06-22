@@ -32,6 +32,7 @@ Description
 #ifndef parcel_H
 #define parcel_H
 
+#include "cloud.H"
 #include "particle.H"
 #include "contiguous.H"
 

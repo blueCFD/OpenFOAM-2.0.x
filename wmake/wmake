@@ -166,6 +166,11 @@ then
     fi
 fi
 
+if isMinGW; then
+  if [ "$WM_COMPILE_OPTION" = "Prof" -a "$makeOption" = "libso" ]; then
+    makeOption="libo"
+  fi
+fi
 
 #------------------------------------------------------------------------------
 # Recurse the application directories tree

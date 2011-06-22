@@ -1,0 +1,19 @@
+--- src/lagrangian/dieselSpray/Make/options
++++ src/lagrangian/dieselSpray/Make/options
+@@ -15,13 +15,15 @@
+     -I$(LIB_SRC)/thermophysicalModels/pdfs/lnInclude
+ 
+ LIB_LIBS = \
+-    -llagrangian \
+     -lfiniteVolume \
++    -llagrangian \
+     -lcompressibleRASModels \
+     -lcompressibleLESModels \
+     -lLESdeltas \
++    -lbasicThermophysicalModels \
+     -lliquids \
+     -lliquidMixture \
+     -lthermophysicalFunctions \
+     -lspecie \
++    -lreactionThermophysicalModels \
+     -lpdf

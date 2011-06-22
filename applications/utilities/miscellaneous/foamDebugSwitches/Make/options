@@ -68,3 +68,12 @@ EXE_LIBS = \
     -ltriSurface \
     -ltwoPhaseInterfaceProperties \
     -lutilityFunctionObjects
+
+#if (defined( WIN32 ) || defined( WIN64 ))
+
+EXE_LIBS += \
+    -lscotchDecomp \
+    -lmetisDecomp \
+    -lparMetisDecomp
+
+#endif

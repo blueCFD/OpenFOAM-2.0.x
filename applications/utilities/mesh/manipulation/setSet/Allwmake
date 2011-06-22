@@ -10,7 +10,7 @@ unset COMP_FLAGS LINK_FLAGS
 # eg,  ./Allwmake NO_READLINE
 #
 
-if [ -f /usr/include/readline/readline.h -a "${1%NO_READLINE}" = "$1" ]
+if ! isMinGW && [ -f /usr/include/readline/readline.h -a "${1%NO_READLINE}" = "$1" ]
 then
     echo "Found <readline/readline.h>  --  enabling readline support."
     export COMP_FLAGS="-DHAS_READLINE"

@@ -1,0 +1,31 @@
+#define IDR_VERSION1 1
+
+IDR_VERSION1 VERSIONINFO
+FILEVERSION 1,7,0,0
+PRODUCTVERSION 1,7,0,0
+FILEOS 0x00000000
+FILETYPE 0x00000000
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "FFFF0000"
+    BEGIN
+      VALUE "FileVersion", "2.0.0.0\0"
+      VALUE "ProductVersion", "2.0.0.0\0"
+      VALUE "FileDescription", "Unofficial build of OpenFOAM: The Open Source CFD Toolbox\n\
+OpenFOAM TM 1991-2011 OpenCFD Ltd.\n\
+Unofficial Windows 32 and 64 bit porting by blueCAPE: http://www.bluecape.com.pt\n\
+Based on Windows porting (1.6.x v11) by Symscape: http://www.symscape.com\0"
+      VALUE "LegalCopyright", "OpenFOAM is Copyright (C) 1991-2011 OpenCFD Ltd.\0"
+      VALUE "LegalTrademarks", "OpenFOAM is Copyright (C) 1991-2011 OpenCFD Ltd.\0"
+      VALUE "ProductName", "OpenFOAM (unofficial build)\0"
+      VALUE "InternalName", "tmpintname\0"
+      VALUE "OriginalFilename", "tmporigname\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0xFFFF, 0x0000
+  END
+END
+

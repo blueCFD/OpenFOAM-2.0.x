@@ -53,7 +53,11 @@
             (
                 IOobject
                 (
+#if defined( WIN32 ) || defined( WIN64 )
+                    "KK",
+#else
                     "K",
+#endif
                     runTime.timeName(),
                     fluidRegions[i],
                     IOobject::NO_READ,
