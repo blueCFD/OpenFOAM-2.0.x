@@ -1,7 +1,7 @@
 #!/bin/sh
 set -x
 
-if [ "NONE" = "$WM_MPLIB" ]; then
+if [ -z "$WM_MPLIB" ]; then
     exit 0
 fi
 

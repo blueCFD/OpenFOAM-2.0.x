@@ -10,7 +10,7 @@ cd ${0%/*} || exit 1    # run from this directory
 
 set -x
 
-rm -rf latex man
+rm -rf latex man qt_qch
 
 # remove html directory in background
 mv html html-stagedRemove$$ 2> /dev/null
@@ -26,5 +26,10 @@ chmod -R a+rX html latex man 2>/dev/null
 echo
 echo "Done doxygen"
 echo
+
+cp openfoam-code.qhcp qt_qch/
+cd qt_qch
+qcollectiongenerator openfoam-code.qhcp -o openfoam-code.qhc
+cd ..
 
 # ----------------------------------------------------------------- end-of-file

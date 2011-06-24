@@ -19,4 +19,18 @@ set -x
 wmake all utilities
 wmake all solvers
 
+if isMinGW; then
+  #since we advise to build these in the wiki, lets just put them here to get built too
+  wmake all utilities/mesh/conversion/Optional #ccmio26ToFoam
+  wmake all test/parallel #parallelTest
+
+  if [ ! -x "$WM_DIR/wmakeVerifyExeDependencies" ]; then chmod +x $WM_DIR/wmakeVerifyExeDependencies; fi
+
+  wmakeVerifyExeDependencies utilities || wmake all utilities
+  wmakeVerifyExeDependencies solvers || wmake all solvers
+  
+  wmake all utilities/mesh/conversion/Optional
+  wmakeVerifyExeDependencies test/parallel || wmake all test/parallel #parallelTest
+fi
+
 # ----------------------------------------------------------------- end-of-file

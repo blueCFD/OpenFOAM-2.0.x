@@ -47,6 +47,13 @@ alias wmUNSET='. $WM_PROJECT_DIR/etc/config/unset.sh'
 alias wmSchedON='export WM_SCHEDULER=$WM_PROJECT_DIR/wmake/wmakeScheduler'
 alias wmSchedOFF='unset WM_SCHEDULER'
 
+# Toggle Multi-Core On/Off
+# Proposed the following bug report: http://www.openfoam.com/mantisbt/view.php?id=211
+#wmSC - single core machine
+#wmMC - multi-core machine
+alias wmSC='unset WM_NCOMPPROCS && echo "Building enabled for a single core"'
+alias wmMC='export WM_NCOMPPROCS=1; test -r /proc/cpuinfo && export WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l) && echo "Building enabled for $WM_NCOMPPROCS cores"'
+
 # Change ParaView version
 # ~~~~~~~~~~~~~~~~~~~~~~~
 unset foamPV

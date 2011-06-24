@@ -67,7 +67,8 @@ runParallel()
         #    echo "$PWD: $WM_SCHEDULER -np $nProcs" 1>&2
         #    $WM_SCHEDULER -np $nProcs "( mpirun -np $nProcs $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1 )"
         #else
-            ( mpirun -np $nProcs $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1 )
+
+            ( mpirun -np $nProcs -x FOAM_SETTINGS $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1 )
         #fi
     fi
 }
@@ -92,6 +93,12 @@ cloneCase()
             cp -r $1/$f $2
         done
     fi
+}
+
+sedIt()
+{
+  sed -e "$1" $2 > $2.tmp
+  mv $2.tmp $2
 }
 
 #------------------------------------------------------------------------------
