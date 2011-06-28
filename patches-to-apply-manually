@@ -3,20 +3,20 @@ index e974f5c..5c595eb 100644
 --- a/src/OpenFOAM/primitives/random/Random.C
 +++ b/src/OpenFOAM/primitives/random/Random.C
 @@ -27,6 +27,10 @@ License
- 
+
  // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
- 
+
 +#if defined( WIN32 ) || defined( WIN64 )
 +#include "random.c"
 +#endif
 +
  namespace Foam
  {
- 
+
 @@ -37,6 +41,16 @@ namespace Foam
  #    error "The random number generator may not work!"
  #endif
- 
+
 +#if defined( WIN32 ) || defined( WIN64 )
 +#    define USE_RANDOM 1
 +//#    define srandom srand
@@ -35,18 +35,18 @@ index 5421390..8771886 100644
 --- a/src/OpenFOAM/primitives/random/random.c
 +++ b/src/OpenFOAM/primitives/random/random.c
 @@ -43,6 +43,7 @@ static char *rcsid = "$NetBSD: random.c,v 1.4 1995/12/28 08:52:43 thorpej Exp $"
- 
+
  #include <stdio.h>
  #include <stdlib.h>
 +#include <stdint.h>
- 
+
  /*
   * random.c:
 @@ -67,7 +68,7 @@ static char *rcsid = "$NetBSD: random.c,v 1.4 1995/12/28 08:52:43 thorpej Exp $"
   * state information, which will allow a degree seven polynomial.  (Note:
   * the zeroeth word of state information also has some other information
   * stored in it -- see setstate() for details).
-- * 
+- *
 + *
   * The random number generation technique is a linear feedback shift register
   * approach, employing trinomials (since there are fewer terms to sum up that
@@ -54,7 +54,7 @@ index 5421390..8771886 100644
 @@ -125,6 +126,8 @@ static char *rcsid = "$NetBSD: random.c,v 1.4 1995/12/28 08:52:43 thorpej Exp $"
  static int degrees[MAX_TYPES] =  { DEG_0, DEG_1, DEG_2, DEG_3, DEG_4 };
  static int seps [MAX_TYPES] =  { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
- 
+
 +long random();
 +
  /*
@@ -70,18 +70,18 @@ index 5421390..8771886 100644
 +void srandom(long x)
  {
   register int i, j;
- 
+
 @@ -222,22 +223,23 @@ srandom(x)
   * the break values for the different R.N.G.'s, we choose the best (largest)
   * one we can and set things up for it.  srandom() is then called to
   * initialize the state information.
-- * 
+- *
 + *
   * Note that on return from srandom(), we set state[-1] to be the type
   * multiplexed with the current value of the rear pointer; this is so
   * successive calls to initstate() won't lose this information and will be
   * able to restart with setstate().
-- * 
+- *
 + *
   * Note: the first thing we do is save the current state, if any, just like
   * setstate() so that it doesn't matter when initstate is called.
@@ -100,7 +100,7 @@ index 5421390..8771886 100644
 + )
  {
   register char *ostate = (char *)(&state[-1]);
- 
+
 @@ -296,9 +298,7 @@ initstate(seed, arg_state, n)
   *
   * Returns a pointer to the old state information.
@@ -119,7 +119,7 @@ index a01538c..6db87d8 100755
 @@ -2,15 +2,31 @@
  cd ${0%/*} || exit 1    # run from this directory
  set -x
- 
+
 -wmake libso dummy
 +buildMode="libso"
 +
@@ -132,7 +132,7 @@ index a01538c..6db87d8 100755
 +fi
 +
 +wmake $buildMode dummy
- 
+
  case "$WM_MPLIB" in
  *MPI*)
      set +x
@@ -149,14 +149,14 @@ index a01538c..6db87d8 100755
 +      (WM_OPTIONS_LOCAL=${WM_OPTIONS}$WM_MPLIB; wmake $buildMode mpi)
 +    fi
      ;;
- 
+
  #GAMMA)
 @@ -18,5 +34,6 @@ case "$WM_MPLIB" in
  #    ;;
  esac
- 
+
 +unset buildMode
- 
+
  # ----------------------------------------------------------------- end-of-file
 diff --git a/src/Pstream/dummy/Make/options b/src/Pstream/dummy/Make/options
 index e69de29..4261914 100644
@@ -166,30 +166,30 @@ index e69de29..4261914 100644
 +#if defined( WIN32 ) || defined( WIN64 )
 +PROJECT_LIBS = -l$(WM_PROJECT)
 +#else
-+PROJECT_LIBS = 
++PROJECT_LIBS =
 +#endif
 diff --git a/src/Pstream/mpi/Make/options b/src/Pstream/mpi/Make/options
 index 90632e8..38d718b 100644
 --- a/src/Pstream/mpi/Make/options
 +++ b/src/Pstream/mpi/Make/options
 @@ -2,3 +2,9 @@ include $(RULES)/mplib$(WM_MPLIB)
- 
+
  EXE_INC = $(PFLAGS) $(PINC)
  LIB_LIBS = $(PLIBS)
 +
 +#if defined( WIN32 ) || defined( WIN64 )
 +  PROJECT_LIBS = -l$(WM_PROJECT)
 +#else
-+  PROJECT_LIBS = 
++  PROJECT_LIBS =
 +#endif
 diff --git a/src/decompositionMethods/Allwmake b/src/decompositionMethods/Allwmake
 index e2612ef..69e7df3 100755
 --- a/src/decompositionMethods/Allwmake
 +++ b/src/decompositionMethods/Allwmake
 @@ -4,13 +4,23 @@ set -x
- 
+
  wmakeLnInclude decompositionMethods
- 
+
 +if [ "NONE" != "$WM_MPLIB" ]; then
 +
 +#this is to guarantee that scotchDecomp is built with the correct headers
@@ -199,7 +199,7 @@ index e2612ef..69e7df3 100755
 +
  wmake libso scotchDecomp
  wmake libso metisDecomp
- 
+
  if [ -d "$FOAM_MPI_LIBBIN" ]
  then
 -    WM_OPTIONS=${WM_OPTIONS}$WM_MPLIB
@@ -209,7 +209,7 @@ index e2612ef..69e7df3 100755
 +fi
 +
  fi
- 
+
  wmake libso decompositionMethods
 diff --git a/src/decompositionMethods/decompositionMethods/Make/options b/src/decompositionMethods/decompositionMethods/Make/options
 index 6dcbd79..a4381b1 100644
@@ -217,7 +217,7 @@ index 6dcbd79..a4381b1 100644
 +++ b/src/decompositionMethods/decompositionMethods/Make/options
 @@ -1,8 +1,14 @@
  EXE_INC =
- 
+
 +#if !(defined( WIN32 ) || defined( WIN64 ))
 +
  LIB_LIBS = \
@@ -238,12 +238,12 @@ index d7ad5e1..d2d07f2 100644
      -L$(FOAM_LIBBIN)/dummy \
      -lmetis \
      -lGKlib
-+    
++
 +#if defined( WIN32 ) || defined( WIN64 )
 +LIB_LIBS += -ldecompositionMethods \
 +    -lscotchDecomp
 +#endif
- 
+
 diff --git a/src/decompositionMethods/parMetisDecomp/Make/options b/src/decompositionMethods/parMetisDecomp/Make/options
 index 76a64be..3e0891b 100644
 --- a/src/decompositionMethods/parMetisDecomp/Make/options
@@ -251,7 +251,7 @@ index 76a64be..3e0891b 100644
 @@ -8,7 +8,16 @@ EXE_INC = \
      -I../metisDecomp/lnInclude \
      -I../scotchDecomp/lnInclude
- 
+
 +#if defined( WIN32 ) || defined( WIN64 )
 +LIB_LIBS = \
 +    -ldecompositionMethods \
@@ -270,14 +270,14 @@ index e889f9e..286a3ba 100644
 --- a/src/decompositionMethods/scotchDecomp/Make/options
 +++ b/src/decompositionMethods/scotchDecomp/Make/options
 @@ -2,9 +2,13 @@ include $(RULES)/mplib$(WM_MPLIB)
- 
+
  EXE_INC = \
      $(PFLAGS) $(PINC) \
 -    -I$(WM_THIRD_PARTY_DIR)/scotch_5.1/include \
 -    -I/usr/include/scotch \
 +    -I$(WM_SCOTCH_PLATFORMS_DIR)/include \
      -I../decompositionMethods/lnInclude
- 
+
  LIB_LIBS = \
 +    -L$(FOAM_MPI_LIBBIN) \
      -lscotch -lscotcherrexit
@@ -292,7 +292,7 @@ index 9a697ef..652efd3 100644
 @@ -111,6 +111,7 @@ License
  #include "cyclicPolyPatch.H"
  #include "OFstream.H"
- 
+
 +#include "mpi.h"
  extern "C"
  {
@@ -300,21 +300,21 @@ index 9a697ef..652efd3 100644
 @@ -123,7 +124,7 @@ extern "C"
  #    define LINUX
  #endif
- 
+
 -#if defined(LINUX) && defined(__GNUC__)
 +#if defined(LINUX) && defined(__GNUC__) && (!defined(WIN32) && !defined(WIN64))
  #    define LINUX_GNUC
  #endif
- 
+
 diff --git a/src/dummyThirdParty/MGridGen/MGridGen/Make/options b/src/dummyThirdParty/MGridGen/MGridGen/Make/options
 index 4c3dd78..de4bd05 100644
 --- a/src/dummyThirdParty/MGridGen/MGridGen/Make/options
 +++ b/src/dummyThirdParty/MGridGen/MGridGen/Make/options
 @@ -1,3 +1,7 @@
  EXE_INC =
- 
+
 -EXE_LIBS =
-+LIB_LIBS = 
++LIB_LIBS =
 +
 +#if defined( WIN32 ) || defined( WIN64 )
 +LIB_LIBS += -ldecompositionMethods
@@ -326,9 +326,9 @@ index c61e828..41eab9e 100644
 @@ -2,4 +2,8 @@ EXE_INC = \
      -I$(FOAM_SRC)/decompositionMethods/decompositionMethods/lnInclude \
      -I$(FOAM_SRC)/decompositionMethods/metisDecomp/lnInclude
- 
+
 -LIB_LIBS =
-+LIB_LIBS = 
++LIB_LIBS =
 +
 +#if defined( WIN32 ) || defined( WIN64 )
 +LIB_LIBS += -ldecompositionMethods
@@ -340,9 +340,9 @@ index 3500e6b..2334474 100644
 @@ -2,4 +2,8 @@ EXE_INC = \
      -I$(FOAM_SRC)/decompositionMethods/decompositionMethods/lnInclude \
      -I$(FOAM_SRC)/decompositionMethods/parMetisDecomp/lnInclude
- 
+
 -LIB_LIBS =
-+LIB_LIBS = 
++LIB_LIBS =
 +
 +#if defined( WIN32 ) || defined( WIN64 )
 +LIB_LIBS += -ldecompositionMethods
@@ -353,60 +353,12 @@ index a9952cf..96cc000 100644
 +++ b/src/dummyThirdParty/scotchDecomp/Make/options
 @@ -3,3 +3,7 @@ EXE_INC = \
      -I$(FOAM_SRC)/decompositionMethods/scotchDecomp/lnInclude
- 
- LIB_LIBS = 
+
+ LIB_LIBS =
 +
 +#if defined( WIN32 ) || defined( WIN64 )
 +LIB_LIBS += -ldecompositionMethods
 +#endif
-diff --git a/src/thermophysicalModels/Allwmake b/src/thermophysicalModels/Allwmake
-index 7fbee69..bfca538 100755
---- a/src/thermophysicalModels/Allwmake
-+++ b/src/thermophysicalModels/Allwmake
-@@ -5,14 +5,16 @@ set -x
- wmake libso specie
- wmake libso thermophysicalFunctions
- wmake libso liquids
--wmake libso liquidMixture
- wmake libso solids
- wmake libso solidMixture
- 
- wmake libso basic
- wmake libso reactionThermo
- wmake libso laminarFlameSpeed
--wmake libso chemistryModel
-+
-+wmake libso liquidMixture #depends on basic and reactionThermo
-+#wmake libso chemistryModel #depends on basic and reactionThermo and ../turbulenceModels/RAS/compressible
-+
- wmake libso pdfs
- wmake libso radiation
- wmake libso barotropicCompressibilityModel
-diff --git a/src/thermophysicalModels/reactionThermo/chemistryReaders/chemkinReader/chemkinReader.C b/src/thermophysicalModels/reactionThermo/chemistryReaders/chemkinReader/chemkinReader.C
-index 8d2467c..8b14196 100644
---- a/src/thermophysicalModels/reactionThermo/chemistryReaders/chemkinReader/chemkinReader.C
-+++ b/src/thermophysicalModels/reactionThermo/chemistryReaders/chemkinReader/chemkinReader.C
-@@ -884,12 +884,20 @@ Foam::chemkinReader::chemkinReader(const dictionary& thermoDict)
-     fileName relPath = thermoDict.name().path();
-     if (relPath.size())
-     {
-+#if defined(WIN32) || defined(WIN64)
-+        if ((chemkinFile.size()>1 && chemkinFile[1] != ':') && (chemkinFile.size() && chemkinFile[0] != '/'))
-+#else
-         if (chemkinFile.size() && chemkinFile[0] != '/')
-+#endif
-         {
-             chemkinFile = relPath/chemkinFile;
-         }
- 
-+#if defined(WIN32) || defined(WIN64)
-+        if ((thermoFile.size()>1 && thermoFile[1] != ':') && (thermoFile.size() && thermoFile[0] != '/'))
-+#else
-         if (thermoFile.size() && thermoFile[0] != '/')
-+#endif
-         {
-             thermoFile = relPath/thermoFile;
-         }
 diff --git a/wmake/Makefile b/wmake/Makefile
 index 2f2be98..af08266 100644
 --- a/wmake/Makefile
@@ -419,22 +371,22 @@ index 2f2be98..af08266 100644
 +WM_OPTIONS_LOCAL  ?= $(WM_OPTIONS)
 +OBJECTS_DIR        = $(MAKE_DIR)/$(WM_OPTIONS_LOCAL)
  CLASSES_DIR        = $(MAKE_DIR)/classes
- 
+
  SYS_INC            =
 @@ -94,6 +95,9 @@ LIB             = libNULL
  # Shared library extension
  SO              = so
- 
+
 +# Executable extension
 +EXE_EXT         =
 +
  # Project executable
  EXE             = $(WM_PROJECT).out
- 
+
 @@ -146,18 +150,21 @@ LIB_HEADER_DIRS = \
  # define link statements for executables
  #------------------------------------------------------------------------------
- 
+
 -$(EXE):  $(OBJECTS)
 -      @$(WM_SCRIPTS)/mkObjectDir $(EXE)
 +EXECUTABLE  = $(EXE)$(EXE_EXT)
@@ -445,12 +397,12 @@ index 2f2be98..af08266 100644
        $(LINKEXE) $(OBJECTS) -L$(LIB_WM_OPTIONS_DIR) \
 -      $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(EXE)
 +      $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(EXECUTABLE)
- 
+
 -exe:     $(SEXE)
 -      @echo \'$(SEXE)\' is up to date.
 +exe:     $(SEXECUTABLE)
 +      @echo \`$(SEXECUTABLE)\' is up to date.
- 
+
 -$(SEXE): $(OBJECTS)
 -      @$(WM_SCRIPTS)/mkObjectDir $(SEXE)
 +$(SEXECUTABLE): $(OBJECTS)
@@ -458,8 +410,8 @@ index 2f2be98..af08266 100644
        $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
 -         $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXE)
 +         $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXECUTABLE)
- 
- 
+
+
  #------------------------------------------------------------------------------
 @@ -170,8 +177,9 @@ libso:   $(LIB).$(SO)
  $(LIB).$(SO): $(OBJECTS)
@@ -469,6 +421,6 @@ index 2f2be98..af08266 100644
        @cd $(OBJECTS_DIR) ; \
 -      $(LINKLIBSO) $(LOCAL_OBJECTS) -L$(LIB_WM_OPTIONS_DIR) $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
 +      $(LINKLIBSO) $(LOCAL_OBJECTS) -L$(LIB_WM_OPTIONS_DIR) $(PROJECT_LIBS) $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
- 
+
  lib:     $(LIB).a
        @echo \'$(LIB).a\' is up to date.
