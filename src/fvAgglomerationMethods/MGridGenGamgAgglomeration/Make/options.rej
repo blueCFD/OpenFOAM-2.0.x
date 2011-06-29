@@ -1,9 +1,0 @@
---- src/fvAgglomerationMethods/MGridGenGamgAgglomeration/Make/options
-+++ src/fvAgglomerationMethods/MGridGenGamgAgglomeration/Make/options
-@@ -13,4 +13,5 @@
-     $(TYPE_REAL)
- 
- LIB_LIBS = \
--    -lMGridGen
-+    -lMGridGen \
-+    -lfiniteVolume

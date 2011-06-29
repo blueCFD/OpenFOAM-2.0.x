@@ -1,7 +1,0 @@
---- applications/utilities/postProcessing/turbulence/createTurbulenceFields/Make/options
-+++ applications/utilities/postProcessing/turbulence/createTurbulenceFields/Make/options
-@@ -8,4 +8,4 @@
-     -lincompressibleRASModels \
-     -lincompressibleTransportModels \
-     -lfiniteVolume \
--    -lgenericPatchFields+    -lgenericPatchFields
