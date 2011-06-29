@@ -204,6 +204,10 @@ bool dlSymFound(void* handle, const std::string& symbol);
 //- Return all loaded libraries
 fileNameList dlLoaded();
 
+//- Random functions
+void osRandomSeed(const label seed);
+label osRandomInteger();
+scalar osRandomDouble();
 
 //- Open shared library
 void* openLibrary(const fileName& libName);
