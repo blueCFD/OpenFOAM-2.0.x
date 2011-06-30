@@ -360,7 +360,7 @@ Foam::string Foam::getEnv(const word& envName)
 bool Foam::setEnv
 (
     const word& envName,
-    const string& value,
+    const std::string& value,
     const bool /*overwrite*/
 )
 {
@@ -1083,14 +1083,14 @@ bool Foam::ping(const word& hostname, const label timeOut)
 }
 
 
-int Foam::system(const string& command)
+int Foam::system(const std::string& command)
 {
     return std::system(command.c_str());
 }
 
 
 //- Open shared library
-void* Foam::openLibrary(const fileName& libName)
+void* Foam::dlOpen(const fileName& libName)
 {
     //Lets check if this is a list of libraries to be loaded
     //NOTE: should only be used for "force loading libraries"
@@ -1158,7 +1158,7 @@ void* Foam::openLibrary(const fileName& libName)
 
 
 //- Close shared library
-void Foam::closeLibrary(void* const libHandle)
+void Foam::dlClose(void* libHandle)
 {
     const bool success = 
       ::FreeLibrary(static_cast<HMODULE>(libHandle));
@@ -1173,6 +1173,80 @@ void Foam::closeLibrary(void* const libHandle)
 }
 
 
+//- Lookup a symbol in a dlopened library using handle to library
+void* Foam::dlSym(void* handle, const std::string& symbol)
+{
+    if (MSwindows::debug)
+    {
+        std::cout
+            << "dlSym(void*, const std::string&)"
+            << " : dlsym of " << symbol << std::endl;
+    }
+
+    // get address of symbol
+    void* fun = ::GetProcAddress(handle, symbol.c_str());
+
+    if(fun == NULL)
+    {
+        WarningIn("dlSym(void*, const std::string&)")
+            << "Cannot lookup symbol " << symbol << " : " << MSwindows::getLastError()
+            << endl;
+    }
+
+    return fun;
+}
+
+
+//- Report if symbol in a dlopened library could be found
+bool Foam::dlSymFound(void* handle, const std::string& symbol)
+{
+    if (handle && !symbol.empty())
+    {
+        if (MSwindows::debug)
+        {
+            std::cout
+                << "dlSymFound(void*, const std::string&)"
+                << " : dlsym of " << symbol << std::endl;
+        }
+
+        // symbol can be found if there was no error
+        return dlSym(handle, symbol.c_str()) != NULL;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+static int collectLibsCallback
+(
+    struct dl_phdr_info *info,
+    size_t size,
+    void *data
+)
+{
+    Foam::DynamicList<Foam::fileName>* ptr =
+        reinterpret_cast<Foam::DynamicList<Foam::fileName>*>(data);
+    ptr->append(info->dlpi_name);
+    return 0;
+}
+
+
+//- Return all loaded libraries
+Foam::fileNameList Foam::dlLoaded()
+{
+    DynamicList<fileName> libs;
+    dl_iterate_phdr(collectLibsCallback, &libs);
+    if (POSIX::debug)
+    {
+        std::cout
+            << "dlLoaded()"
+            << " : determined loaded libraries :" << libs.size() << std::endl;
+    }
+    return libs;
+}
+
 Foam::string Foam::toUnixPath(const string & path)
 {
     string unixPath(path);
@@ -1180,6 +1254,25 @@ Foam::string Foam::toUnixPath(const string & path)
     MSwindows::removeQuotes(unixPath);
 
     return unixPath;
+}
+
+//It's easier to include it here...
+#include "random.c"
+
+//- Random functions
+void Foam::osRandomSeed(const label seed)
+{
+    srandom((unsigned int)seed);
+}
+
+Foam::label Foam::osRandomInteger()
+{
+    return random();
+}
+
+Foam::scalar Foam::osRandomDouble()
+{
+    return (scalar)random();
 }
 
 
