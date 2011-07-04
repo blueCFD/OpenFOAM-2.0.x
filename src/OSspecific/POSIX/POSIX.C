@@ -62,6 +62,10 @@ Description
 #   include <climits>
 #endif
 
+#ifdef USE_RANDOM
+#   include <climits>
+#endif
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(Foam::POSIX, 0);
@@ -73,15 +77,18 @@ pid_t Foam::pid()
     return ::getpid();
 }
 
+
 pid_t Foam::ppid()
 {
     return ::getppid();
 }
 
+
 pid_t Foam::pgid()
 {
     return ::getpgrp();
 }
+
 
 bool Foam::env(const word& envName)
 {
@@ -895,7 +902,6 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
 }
 
 
-
 // Remove a file, returning true if successful otherwise false
 bool Foam::rm(const fileName& file)
 {
@@ -1255,5 +1261,35 @@ Foam::string Foam::toUnixPath(const string & path)
 {
   return path;
 }
+
+void Foam::osRandomSeed(const label seed)
+{
+#ifdef USE_RANDOM
+    srandom((unsigned int)seed);
+#else
+    srand48(seed);
+#endif
+}
+
+
+Foam::label Foam::osRandomInteger()
+{
+#ifdef USE_RANDOM
+    return random();
+#else
+    return lrand48();
+#endif
+}
+
+
+Foam::scalar Foam::osRandomDouble()
+{
+#ifdef USE_RANDOM
+    return (scalar)random();
+#else
+    return drand48();
+#endif
+}
+
 
 // ************************************************************************* //
