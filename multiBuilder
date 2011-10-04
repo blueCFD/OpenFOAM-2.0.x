@@ -39,9 +39,9 @@ usage() {
 
 usage: ${0##*/}
 
-This will run as a scripted multi-builder of WM_OPTIONS based on each 
-bashrc-* version given. NOTE: you cannot have the OpenFOAM environment
-activated prior to executing this script!!
+This will run as a scripted multi-builder of WM_OPTIONS based on each
+prefs-*.sh version given or additional variables. NOTE: you cannot have the
+OpenFOAM environment activated prior to executing this script!!
 
 USAGE
     exit 1
@@ -56,7 +56,7 @@ buildIt()
   fi
 
   (
-    . etc/$1
+    . etc/bashrc $*
 
     timeStamp=$(date +%Y-%m-%d_%H-%M)
     logFile="../buildLogs/Allwmake_${WM_OPTIONS}_${timeStamp}.log"
@@ -72,7 +72,7 @@ buildIt()
     if [ -e "$WM_PROJECT_USER_DIR/contribsExtend" ]; then
       time wmake all $WM_PROJECT_USER_DIR/contribsExtend >> $logFile 2>&1
     fi
-    
+
   )
 }
 
@@ -91,35 +91,34 @@ then
 
   #build with MPICH2 ----------------
 
-  # buildIt bashrc-mingw32
+  # buildIt prefs-mingw32.sh
 
-  buildIt bashrc-mingw-w32
-  buildIt bashrc-mingw-w32S
-  buildIt bashrc-mingw-w64
+  buildIt prefs-mingw-w32.sh
+  buildIt prefs-mingw-w32.sh WM_PRECISION_OPTION=SP
+  buildIt prefs-mingw-w64.sh
 
-  # buildIt bashrc-i586-mingw32msvc
-  # buildIt bashrc-i586-mingw32msvcS
-  # buildIt bashrc-amd64-mingw32msvc
+  # buildIt prefs-i586-mingw32msvc.sh
+  # buildIt prefs-i586-mingw32msvc.sh WM_PRECISION_OPTION=SP
+  # buildIt prefs-amd64-mingw32msvc.sh
 
-  # buildIt bashrc-i686-w64-mingw32
-  # buildIt bashrc-i686-w64-mingw32S
-  # buildIt bashrc-x86_64-w64-mingw32
+  # buildIt prefs-i686-w64-mingw32.sh
+  # buildIt prefs-i686-w64-mingw32.sh  WM_PRECISION_OPTION=SP
+  # buildIt prefs-x86_64-w64-mingw32.sh
 
 
   #build with MSMPI ----------------
-  export WM_MPLIB=MSMPI
-  # buildIt bashrc-mingw32
+  # buildIt prefs-mingw32.sh WM_MPLIB=MSMPI
 
-  buildIt bashrc-mingw-w32
-  buildIt bashrc-mingw-w32S
-  buildIt bashrc-mingw-w64
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MSMPI
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MSMPI  WM_PRECISION_OPTION=SP
+  buildIt prefs-mingw-w64.sh WM_MPLIB=MSMPI
 
-  # buildIt bashrc-i586-mingw32msvc
-  # buildIt bashrc-i586-mingw32msvcS
-  # buildIt bashrc-amd64-mingw32msvc
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MSMPI
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MSMPI WM_PRECISION_OPTION=SP
+  # buildIt prefs-amd64-mingw32msvc.sh WM_MPLIB=MSMPI
 
-  # buildIt bashrc-i686-w64-mingw32
-  # buildIt bashrc-i686-w64-mingw32S
-  # buildIt bashrc-x86_64-w64-mingw32
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MSMPI
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MSMPI WM_PRECISION_OPTION=SP
+  # buildIt prefs-x86_64-w64-mingw32.sh WM_MPLIB=MSMPI
 
 fi
