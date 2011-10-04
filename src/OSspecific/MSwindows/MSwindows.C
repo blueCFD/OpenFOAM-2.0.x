@@ -16,10 +16,10 @@ License
 
     OpenFOAM's official site: http://www.openfoam.com
 
-    OpenFOAM is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -27,8 +27,7 @@ License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
     MS Windows specific functions
@@ -44,6 +43,7 @@ Description
 #include <cassert>
 #include <cstdlib>
 #include <fstream>
+#include <map>
 
 // Windows system header files
 #include <io.h> // _close
@@ -55,6 +55,8 @@ Description
 
 defineTypeNameAndDebug(Foam::MSwindows, 0);
 
+namespace Foam 
+{
 
 // Don't abort under windows, causes abort dialog to
 // popup. Instead just exit with exitCode.
@@ -82,7 +84,7 @@ static bool const abortHandlerInstalled = installAbortHandler();
 
 
 //- Get last windows api error from GetLastError
-Foam::string Foam::MSwindows::getLastError()
+string MSwindows::getLastError()
 {
     // Based on an example at:
     // http://msdn2.microsoft.com/en-us/library/ms680582(VS.85).aspx
@@ -106,7 +108,7 @@ Foam::string Foam::MSwindows::getLastError()
     sprintf(static_cast<LPTSTR>(lpDisplayBuf),
             "Error %d: %s", int(dw), static_cast<LPCTSTR>(lpMsgBuf));
 
-    const Foam::string errorMessage = static_cast<LPTSTR>(lpDisplayBuf);
+    const string errorMessage = static_cast<LPTSTR>(lpDisplayBuf);
 
     LocalFree(lpMsgBuf);
     LocalFree(lpDisplayBuf);
@@ -116,8 +118,6 @@ Foam::string Foam::MSwindows::getLastError()
 
 
 //-Declared here to avoid polluting MSwindows.H with windows.h
-namespace Foam
-{
 namespace MSwindows
 {
     //- Get windows user name
@@ -170,15 +170,14 @@ namespace MSwindows
       const fileName & next();
     }; // class DirectoryIterator
 } // namespace MSwindows
-} // namespace Foam
 
 
 inline
-void Foam::MSwindows::removeQuotes(Foam::string & arg)
+void MSwindows::removeQuotes(Foam::string & arg)
 {
     std::size_t pos;
 
-    while (std::string::npos != (pos = arg.find('"')))
+    while (Foam::string::npos != (pos = arg.find('"')))
     {
         arg.erase(pos, 1);
     }
@@ -186,7 +185,7 @@ void Foam::MSwindows::removeQuotes(Foam::string & arg)
 
 
 inline
-void Foam::MSwindows::toUnixSlash(Foam::string & arg)
+void MSwindows::toUnixSlash(Foam::string & arg)
 {
     arg.replaceAll("\\", "/");
 
@@ -200,12 +199,12 @@ void Foam::MSwindows::toUnixSlash(Foam::string & arg)
 }
 
 
-Foam::string Foam::MSwindows::getUserName()
+string MSwindows::getUserName()
 {
     const DWORD bufferSize = 256;
     TCHAR buffer[bufferSize];
     DWORD actualBufferSize = bufferSize;
-    Foam::string nameAsString;
+    string nameAsString;
 
     bool success = ::GetUserName(buffer, &actualBufferSize);
 
@@ -230,14 +229,14 @@ Foam::string Foam::MSwindows::getUserName()
 
 template<class T>
 inline
-Foam::MSwindows::AutoArray<T>::AutoArray(const unsigned long arrayLength)
+MSwindows::AutoArray<T>::AutoArray(const unsigned long arrayLength)
     : array_(new T[arrayLength])
 {}
 
 
 template<class T>
 inline
-Foam::MSwindows::AutoArray<T>::~AutoArray()
+MSwindows::AutoArray<T>::~AutoArray()
 {
     delete [] array_;
 }
@@ -245,21 +244,21 @@ Foam::MSwindows::AutoArray<T>::~AutoArray()
 
 template<class T>
 inline
-T* Foam::MSwindows::AutoArray<T>::get()
+T* MSwindows::AutoArray<T>::get()
 {
     return array_;
 }
 
 
 inline
-bool Foam::MSwindows::DirectoryIterator::isValid() const
+bool MSwindows::DirectoryIterator::isValid() const
 {
     const bool valid = (INVALID_HANDLE_VALUE != findHandle_);
     return valid;
 }
 
     
-Foam::MSwindows::DirectoryIterator::DirectoryIterator(const fileName & directory)
+MSwindows::DirectoryIterator::DirectoryIterator(const fileName & directory)
 {
     const fileName directoryContents = directory/"*";
     findHandle_ = ::FindFirstFile(directoryContents.c_str(), &findData_);
@@ -267,7 +266,7 @@ Foam::MSwindows::DirectoryIterator::DirectoryIterator(const fileName & directory
 }
         
 
-Foam::MSwindows::DirectoryIterator::~DirectoryIterator()
+MSwindows::DirectoryIterator::~DirectoryIterator()
 {
     if (isValid()) 
     {
@@ -277,7 +276,7 @@ Foam::MSwindows::DirectoryIterator::~DirectoryIterator()
 
 
 inline
-bool Foam::MSwindows::DirectoryIterator::hasNext() const
+bool MSwindows::DirectoryIterator::hasNext() const
 {
     assert(isValid());
 
@@ -286,7 +285,7 @@ bool Foam::MSwindows::DirectoryIterator::hasNext() const
 
 
 inline
-const Foam::fileName & Foam::MSwindows::DirectoryIterator::next()
+const fileName & MSwindows::DirectoryIterator::next()
 {
     assert(hasNext());
 
@@ -297,7 +296,7 @@ const Foam::fileName & Foam::MSwindows::DirectoryIterator::next()
 }
 
 
-pid_t Foam::pid()
+pid_t pid()
 {
 #ifdef WIN32
     const DWORD processId = ::GetCurrentProcessId();
@@ -308,7 +307,7 @@ pid_t Foam::pid()
 }
 
 
-pid_t Foam::ppid()
+pid_t ppid()
 {
     // No equivalent under windows.
 
@@ -321,7 +320,7 @@ pid_t Foam::ppid()
 }
 
 
-pid_t Foam::pgid()
+pid_t pgid()
 {
     // No equivalent under windows.
 
@@ -334,7 +333,7 @@ pid_t Foam::pgid()
 }
 
 
-bool Foam::env(const word& envName)
+bool env(const word& envName)
 {
     const DWORD actualBufferSize = 
       ::GetEnvironmentVariable(envName.c_str(), NULL, 0);
@@ -344,9 +343,9 @@ bool Foam::env(const word& envName)
 }
 
 
-Foam::string Foam::getEnv(const word& envName)
+string getEnv(const word& envName)
 {
-    Foam::string envAsString;
+    string envAsString;
 
     const DWORD actualBufferSize = 
       ::GetEnvironmentVariable(envName.c_str(), NULL, 0);
@@ -365,7 +364,7 @@ Foam::string Foam::getEnv(const word& envName)
 }
 
 
-bool Foam::setEnv
+bool setEnv
 (
     const word& envName,
     const std::string& value,
@@ -378,7 +377,7 @@ bool Foam::setEnv
 }
 
 
-Foam::word Foam::hostName()
+word hostName(bool full)
 {
     const DWORD bufferSize = MAX_COMPUTERNAME_LENGTH + 1;
     TCHAR buffer[bufferSize];
@@ -391,7 +390,17 @@ Foam::word Foam::hostName()
 }
 
 
-Foam::word Foam::userName()
+word domainName()
+{
+    // FIXME: this should be implemented for completion.
+    // Could use ::gethostname and ::gethostbyname like POSIX.C, but would
+    // then need to link against ws_32. Prefer to minimize dependencies.
+
+    return word::null;
+}
+
+
+word userName()
 {
     word nameAsWord = getEnv("USERNAME");
 
@@ -404,9 +413,16 @@ Foam::word Foam::userName()
 }
 
 
-Foam::fileName Foam::home()
+bool isAdministrator()
 {
-    Foam::string homeDir = getEnv("HOME");
+    //FIXME: This is going to be needed as well... for building dynamic code.
+    return true;
+}
+
+
+fileName home()
+{
+    string homeDir = getEnv("HOME");
 
     if (homeDir.empty()) 
     {
@@ -417,15 +433,15 @@ Foam::fileName Foam::home()
 }
 
 
-Foam::fileName Foam::home(const word& userName)
+fileName home(const word& userName)
 {
     return home();
 }
 
 
-Foam::fileName Foam::cwd()
+fileName cwd()
 {
-    Foam::string currentDirectory;
+    string currentDirectory;
 
     const DWORD actualBufferSize = 
       ::GetCurrentDirectory(0, NULL);
@@ -449,18 +465,133 @@ Foam::fileName Foam::cwd()
 }
 
 
-bool Foam::chDir(const fileName& dir)
+bool chDir(const fileName& dir)
 {
     const bool success = ::SetCurrentDirectory(dir.c_str());
     return success; 
 }
 
 
-Foam::fileName Foam::findEtcFile(const fileName& name, bool mandatory)
+fileNameList findEtcFiles(const fileName& name, bool mandatory)
 {
+    fileNameList results;
+
+    // Search for user files in
+    // * ~/.OpenFOAM/VERSION
+    // * ~/.OpenFOAM
+    //
+    fileName searchDir = home()/".OpenFOAM";
+    if (isDir(searchDir))
+    {
+        fileName fullName = searchDir/FOAMversion/name;
+        if (isFile(fullName))
+        {
+            results.append(fullName);
+        }
+
+        fullName = searchDir/name;
+        if (isFile(fullName))
+        {
+            results.append(fullName);
+        }
+    }
+
+    // Search for group (site) files in
+    // * $WM_PROJECT_SITE/VERSION
+    // * $WM_PROJECT_SITE
+    //
+    searchDir = getEnv("WM_PROJECT_SITE");
+    if (searchDir.size())
+    {
+        if (isDir(searchDir))
+        {
+            fileName fullName = searchDir/FOAMversion/name;
+            if (isFile(fullName))
+            {
+                results.append(fullName);
+            }
+
+            fullName = searchDir/name;
+            if (isFile(fullName))
+            {
+                results.append(fullName);
+            }
+        }
+    }
+    else
+    {
+        // OR search for group (site) files in
+        // * $WM_PROJECT_INST_DIR/site/VERSION
+        // * $WM_PROJECT_INST_DIR/site
+        //
+        searchDir = getEnv("WM_PROJECT_INST_DIR");
+        if (isDir(searchDir))
+        {
+            fileName fullName = searchDir/"site"/FOAMversion/name;
+            if (isFile(fullName))
+            {
+                results.append(fullName);
+            }
+
+            fullName = searchDir/"site"/name;
+            if (isFile(fullName))
+            {
+                results.append(fullName);
+            }
+        }
+    }
+
+    // Search for other (shipped) files in
+    // * $WM_PROJECT_DIR/etc
+    //
+    searchDir = getEnv("WM_PROJECT_DIR");
+    if (isDir(searchDir))
+    {
+        fileName fullName = searchDir/"etc"/name;
+        if (isFile(fullName))
+        {
+            results.append(fullName);
+        }
+    }
+
+    // Not found
+    if (results.empty())
+    {
+        // Abort if the file is mandatory, otherwise return null
+        if (mandatory)
+        {
+            std::cerr
+                << "--> FOAM FATAL ERROR in Foam::findEtcFiles() :"
+                   " could not find mandatory file\n    '"
+                << name.c_str() << "'\n\n" << std::endl;
+            ::exit(1);
+        }
+    }
+
+    // Return list of matching paths or empty list if none found
+    return results;
+}
+
+
+fileName findEtcFile(const fileName& name, bool mandatory)
+{
+    // Search most likely location first
+    // Search installation files:
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    fileName searchDir = getEnv("WM_PROJECT_DIR");
+    if (isDir(searchDir))
+    {
+        // Check for shipped OpenFOAM file in $WM_PROJECT_DIR/etc
+        fileName fullName = searchDir/"etc"/name;
+        if (isFile(fullName))
+        {
+            return fullName;
+        }
+    }
+
     // Search user files:
     // ~~~~~~~~~~~~~~~~~~
-    fileName searchDir = home()/".OpenFOAM";
+    searchDir = home()/".OpenFOAM";
     if (isDir(searchDir))
     {
         // Check for user file in ~/.OpenFOAM/VERSION
@@ -499,19 +630,6 @@ Foam::fileName Foam::findEtcFile(const fileName& name, bool mandatory)
         }
     }
 
-    // Search installation files:
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~
-    searchDir = getEnv("WM_PROJECT_DIR");
-    if (isDir(searchDir))
-    {
-        // Check for shipped OpenFOAM file in $WM_PROJECT_DIR/etc
-        fileName fullName = searchDir/"etc"/name;
-        if (isFile(fullName))
-        {
-            return fullName;
-        }
-    }
-
     // Not found
     // abort if the file is mandatory, otherwise return null
     if (mandatory)
@@ -528,7 +646,7 @@ Foam::fileName Foam::findEtcFile(const fileName& name, bool mandatory)
 }
 
 
-bool Foam::mkDir(const fileName& pathName, const mode_t mode)
+bool mkDir(const fileName& pathName, const mode_t mode)
 {
     if (pathName.empty())
     {
@@ -540,7 +658,7 @@ bool Foam::mkDir(const fileName& pathName, const mode_t mode)
 
     if (success)
     {
-        Foam::chMod(pathName, mode);
+        chMod(pathName, mode);
     }
     else 
     {
@@ -581,7 +699,7 @@ bool Foam::mkDir(const fileName& pathName, const mode_t mode)
 
 
 // Set the file mode
-bool Foam::chMod(const fileName& name, const mode_t m)
+bool chMod(const fileName& name, const mode_t m)
 {
     const int success = _chmod(name.c_str(), m);
     return success;
@@ -589,7 +707,7 @@ bool Foam::chMod(const fileName& name, const mode_t m)
 
 
 // Return the file mode
-mode_t Foam::mode(const fileName& name)
+mode_t mode(const fileName& name)
 {
     fileStat fileStatus(name);
 
@@ -600,7 +718,7 @@ mode_t Foam::mode(const fileName& name)
 
 
 // Return the file type: FILE or DIRECTORY
-Foam::fileName::Type Foam::type(const fileName& name)
+fileName::Type type(const fileName& name)
 {
     fileName::Type fileType = fileName::UNDEFINED;
     const DWORD attrs = ::GetFileAttributes(name.c_str());
@@ -618,9 +736,9 @@ Foam::fileName::Type Foam::type(const fileName& name)
 
 static
 bool 
-isGzFile(const Foam::fileName& name)
+isGzFile(const fileName& name)
 {
-    Foam::string gzName(name);
+    string gzName(name);
     gzName += ".gz";
     const DWORD attrs = ::GetFileAttributes(gzName.c_str());
     const bool success = (attrs != INVALID_FILE_ATTRIBUTES);
@@ -630,7 +748,7 @@ isGzFile(const Foam::fileName& name)
 
 
 // Does the name exist in the filing system?
-bool Foam::exists(const fileName& name, const bool checkGzip)
+bool exists(const fileName& name, const bool checkGzip)
 {
     const DWORD attrs = ::GetFileAttributes(name.c_str());
     const bool success = (attrs != INVALID_FILE_ATTRIBUTES) || 
@@ -641,7 +759,7 @@ bool Foam::exists(const fileName& name, const bool checkGzip)
 
 
 // Does the directory exist
-bool Foam::isDir(const fileName& name)
+bool isDir(const fileName& name)
 {
     const DWORD attrs = ::GetFileAttributes(name.c_str());
     bool success = (attrs != INVALID_FILE_ATTRIBUTES) &&
@@ -652,7 +770,7 @@ bool Foam::isDir(const fileName& name)
 
 
 // Does the file exist
-bool Foam::isFile(const fileName& name, const bool checkGzip)
+bool isFile(const fileName& name, const bool checkGzip)
 {
     const DWORD attrs = ::GetFileAttributes(name.c_str());
     const bool success = ((attrs != INVALID_FILE_ATTRIBUTES) && 
@@ -664,7 +782,7 @@ bool Foam::isFile(const fileName& name, const bool checkGzip)
 
 
 // Return size of file
-off_t Foam::fileSize(const fileName& name)
+off_t fileSize(const fileName& name)
 {
     fileStat fileStatus(name);
 
@@ -675,7 +793,7 @@ off_t Foam::fileSize(const fileName& name)
 
 
 // Return time of last file modification
-time_t Foam::lastModified(const fileName& name)
+time_t lastModified(const fileName& name)
 {
     fileStat fileStatus(name);
 
@@ -686,7 +804,7 @@ time_t Foam::lastModified(const fileName& name)
 
 
 // Read a directory and return the entries as a string list
-Foam::fileNameList Foam::readDir
+fileNameList readDir
 (
     const fileName& directory,
     const fileName::Type type,
@@ -771,7 +889,7 @@ Foam::fileNameList Foam::readDir
 
 
 // Copy, recursively if necessary, the source top the destination
-bool Foam::cp(const fileName& src, const fileName& dest)
+bool cp(const fileName& src, const fileName& dest)
 {
     // Make sure source exists.
     if (!exists(src))
@@ -876,7 +994,7 @@ bool Foam::cp(const fileName& src, const fileName& dest)
 
 
 // Create a softlink. destFile should not exist. Returns true if successful.
-bool Foam::ln(const fileName& src, const fileName& dest)
+bool ln(const fileName& src, const fileName& dest)
 {
     // Seems that prior to Vista softlinking was poorly supported.
     // Vista does a better job, but requires adminstrator privileges.
@@ -892,7 +1010,7 @@ bool Foam::ln(const fileName& src, const fileName& dest)
 
 
 // Rename srcFile destFile
-bool Foam::mv(const fileName& srcFile, const fileName& destFile)
+bool mv(const fileName& srcFile, const fileName& destFile)
 {
     if (MSwindows::debug)
     {
@@ -914,7 +1032,7 @@ bool Foam::mv(const fileName& srcFile, const fileName& destFile)
 
 //- Rename to a corresponding backup file
 //  If the backup file already exists, attempt with "01" .. "99" index
-bool Foam::mvBak(const fileName& src, const std::string& ext)
+bool mvBak(const fileName& src, const std::string& ext)
 {
     if (MSwindows::debug)
     {
@@ -951,7 +1069,7 @@ bool Foam::mvBak(const fileName& src, const std::string& ext)
 
 
 // Remove a file returning true if successful otherwise false
-bool Foam::rm(const fileName& file)
+bool rm(const fileName& file)
 {
     if (MSwindows::debug)
     {
@@ -963,7 +1081,7 @@ bool Foam::rm(const fileName& file)
     // If deleting plain file name failed try with .gz
     if (!success) 
     {
-        const Foam::string fileGz = file + ".gz";
+        const string fileGz = file + ".gz";
         success = (0 == std::remove(fileGz.c_str()));
     }
 
@@ -972,7 +1090,7 @@ bool Foam::rm(const fileName& file)
 
 
 // Remove a dirctory and it's contents
-bool Foam::rmDir(const fileName& directory)
+bool rmDir(const fileName& directory)
 {
     if (MSwindows::debug)
     {
@@ -1039,7 +1157,7 @@ bool Foam::rmDir(const fileName& directory)
 
 
 //- Sleep for the specified number of seconds
-unsigned int Foam::sleep(const unsigned int s)
+unsigned int sleep(const unsigned int s)
 {
     const DWORD milliseconds = s * 1000;
 
@@ -1049,7 +1167,7 @@ unsigned int Foam::sleep(const unsigned int s)
 }
 
 
-void Foam::fdClose(const int fd)
+void fdClose(const int fd)
 {
     const int result = ::_close(fd);
 
@@ -1065,7 +1183,7 @@ void Foam::fdClose(const int fd)
 
 
 //- Check if machine is up by pinging given port
-bool Foam::ping
+bool ping
 (
     const word& destName,
     const label destPort,
@@ -1085,27 +1203,42 @@ bool Foam::ping
 
 
 //- Check if machine is up by ping port 22 = ssh and 222 = rsh
-bool Foam::ping(const word& hostname, const label timeOut)
+bool ping(const word& hostname, const label timeOut)
 {
     return ping(hostname, 222, timeOut) || ping(hostname, 22, timeOut);
 }
 
 
-int Foam::system(const std::string& command)
+int system(const std::string& command)
 {
     return std::system(command.c_str());
 }
 
 
+// Explicitly track loaded libraries, rather than use
+// EnumerateLoadedModules64 and have to link against 
+// Dbghelp.dll
+// Details at http://msdn.microsoft.com/en-us/library/ms679316(v=vs.85).aspx
+typedef std::map<void*, std::string> OfLoadedLibs;
+
+static
+OfLoadedLibs &
+getLoadedLibs()
+{
+  static OfLoadedLibs loadedLibs;
+  return loadedLibs;
+}
+
+
 //- Open shared library
-void* Foam::dlOpen(const fileName& libName)
+void* dlOpen(const fileName& libName)
 {
     //Lets check if this is a list of libraries to be loaded
     //NOTE: should only be used for "force loading libraries"
     if (libName.find_first_of(' ')!=Foam::string::npos)
     {
       void *moduleh=NULL;
-      Foam::string libsToLoad=libName;
+      string libsToLoad=libName;
       libsToLoad.removeRepeated(' ');
       libsToLoad.removeTrailing(' '); //removes spaces from both ends
       libsToLoad += ' ';
@@ -1117,10 +1250,10 @@ void* Foam::dlOpen(const fileName& libName)
 
       //generate the word list
       size_t stposstr=0, found=libsToLoad.find_first_of(' ');
-      while (found!=Foam::string::npos)
+      while (found!=string::npos)
       {
-          Foam::string libToLoad = libsToLoad.substr(stposstr,found-stposstr);
-          moduleh = openLibrary(libToLoad); //FIX: module handle is ignored and maybe it shouldn't
+          string libToLoad = libsToLoad.substr(stposstr,found-stposstr);
+          moduleh = dlOpen(libToLoad); //FIX: module handle is ignored and maybe it shouldn't
           stposstr=found+1; found=libsToLoad.find_first_of(' ',stposstr);
       }
 
@@ -1128,6 +1261,12 @@ void* Foam::dlOpen(const fileName& libName)
     }
     else
     {
+      if (MSwindows::debug)
+      {
+          Info<< "dlOpen(const fileName&)"
+              << " : LoadLibrary of " << libName << endl;
+      }
+
       const char* dllExt = ".dll";
 
       // Assume libName is of the form, lib<name>.so
@@ -1147,10 +1286,14 @@ void* Foam::dlOpen(const fileName& libName)
       
       if (NULL == libHandle) 
       {
-          WarningIn("openLibrary(const fileName& libName)")
+          WarningIn("dlOpen(const fileName&)")
             << "LoadLibrary failed. "
             << MSwindows::getLastError()
             << endl;
+      }
+      else
+      {
+          getLoadedLibs()[handle] = libName;
       }
       
       if (MSwindows::debug)
@@ -1166,8 +1309,14 @@ void* Foam::dlOpen(const fileName& libName)
 
 
 //- Close shared library
-void Foam::dlClose(void* libHandle)
+bool dlClose(void* libHandle)
 {
+    if (MSwindows::debug)
+    {
+        Info<< "dlClose(void*)"
+            << " : FreeLibrary of handle " << handle << endl;
+    }
+
     const bool success = 
       ::FreeLibrary(static_cast<HMODULE>(libHandle));
   
@@ -1178,21 +1327,26 @@ void Foam::dlClose(void* libHandle)
             << MSwindows::getLastError()
             << endl;
     }
+    else
+    {
+        getLoadedLibs().erase(handle);
+    }
+    
+    return success;
 }
 
 
 //- Lookup a symbol in a dlopened library using handle to library
-void* Foam::dlSym(void* handle, const std::string& symbol)
+void* dlSym(void* handle, const std::string& symbol)
 {
     if (MSwindows::debug)
     {
-        std::cout
-            << "dlSym(void*, const std::string&)"
+        Info<< "dlSym(void*, const std::string&)"
             << " : dlsym of " << symbol << std::endl;
     }
 
     // get address of symbol
-    void* fun = ::GetProcAddress(handle, symbol.c_str());
+    void* fun = static_cast<void *>(::GetProcAddress(static_cast<HMODULE>(handle), symbol.c_str()));
 
     if(fun == NULL)
     {
@@ -1206,15 +1360,14 @@ void* Foam::dlSym(void* handle, const std::string& symbol)
 
 
 //- Report if symbol in a dlopened library could be found
-bool Foam::dlSymFound(void* handle, const std::string& symbol)
+bool dlSymFound(void* handle, const std::string& symbol)
 {
     if (handle && !symbol.empty())
     {
         if (MSwindows::debug)
         {
-            std::cout
-                << "dlSymFound(void*, const std::string&)"
-                << " : dlsym of " << symbol << std::endl;
+            Info<< "dlSymFound(void*, const std::string&)"
+                << " : dlSym of " << symbol << std::endl;
         }
 
         // symbol can be found if there was no error
@@ -1227,35 +1380,47 @@ bool Foam::dlSymFound(void* handle, const std::string& symbol)
 }
 
 
-static int collectLibsCallback
-(
-    struct dl_phdr_info *info,
-    size_t size,
-    void *data
-)
-{
-    Foam::DynamicList<Foam::fileName>* ptr =
-        reinterpret_cast<Foam::DynamicList<Foam::fileName>*>(data);
-    ptr->append(info->dlpi_name);
-    return 0;
-}
-
-
 //- Return all loaded libraries
-Foam::fileNameList Foam::dlLoaded()
+fileNameList dlLoaded()
 {
-    DynamicList<fileName> libs;
-    dl_iterate_phdr(collectLibsCallback, &libs);
-    if (POSIX::debug)
+    fileNameList libs;
+    OfLoadedLibs & loadedLibs = getLoadedLibs();
+
+    for (OfLoadedLibs::const_iterator it = loadedLibs.begin();
+         it != loadedLibs.end();
+         ++it)
     {
-        std::cout
-            << "dlLoaded()"
-            << " : determined loaded libraries :" << libs.size() << std::endl;
+        libs.append(it->second);
+    }
+
+    if (MSwindows::debug)
+    {
+        Info<< "dlLoaded()"
+            << " : determined loaded libraries :" << libs.size() << endl;
     }
     return libs;
 }
 
-Foam::string Foam::toUnixPath(const string & path)
+//It's easier to include it here...
+#include "random.c"
+
+//- Random functions
+void osRandomSeed(const label seed)
+{
+    srandom((unsigned int)seed);
+}
+
+label osRandomInteger()
+{
+    return random();
+}
+
+scalar osRandomDouble()
+{
+    return (scalar)random();
+}
+
+string toUnixPath(const string & path)
 {
     string unixPath(path);
     MSwindows::toUnixSlash(unixPath);
@@ -1264,24 +1429,5 @@ Foam::string Foam::toUnixPath(const string & path)
     return unixPath;
 }
 
-//It's easier to include it here...
-#include "random.c"
-
-//- Random functions
-void Foam::osRandomSeed(const label seed)
-{
-    srandom((unsigned int)seed);
-}
-
-Foam::label Foam::osRandomInteger()
-{
-    return random();
-}
-
-Foam::scalar Foam::osRandomDouble()
-{
-    return (scalar)random();
-}
-
-
+} // namespace Foam
 // ************************************************************************* //

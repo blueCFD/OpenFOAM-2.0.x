@@ -1,12 +1,13 @@
 /*---------------------------------------------------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 1991-2008 OpenCFD Ltd.
-     \\/     M anipulation  |
+    Copyright            : (C) 2011 Symscape
+    Website              : www.symscape.com
 -------------------------------------------------------------------------------
 License
-    This file is part of OpenFOAM.
+    This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+    For more information about these patches, visit:
+         http://www.bluecape.com.pt/blueCFD
+
+    OpenFOAM's official site: http://www.openfoam.com
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -34,8 +35,9 @@ SourceFiles
 #ifndef MSwindows_H
 #define MSwindows_H
 
+#include <string>
+
 #include "className.H"
-#include "string.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
