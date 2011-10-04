@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,11 @@ void Foam::filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()
     typedef regionModels::surfaceFilmModels::surfaceFilmModel filmModelType;
     typedef regionModels::pyrolysisModels::pyrolysisModel pyrModelType;
 
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag+1;
+
     bool filmOk =
         db().objectRegistry::foundObject<filmModelType>
         (
@@ -215,6 +220,9 @@ void Foam::filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()
             Up[i] = UAvePyr[i]*nf[i];
         }
     }
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
 
     fixedValueFvPatchVectorField::updateCoeffs();
 }

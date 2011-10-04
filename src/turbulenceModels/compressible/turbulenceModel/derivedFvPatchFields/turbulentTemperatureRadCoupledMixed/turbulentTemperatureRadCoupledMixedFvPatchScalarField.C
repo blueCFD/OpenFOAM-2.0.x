@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,6 +150,11 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
         return;
     }
 
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag+1;
+
     // Get the coupling information from the directMappedPatchBase
     const directMappedPatchBase& mpp =
         refCast<const directMappedPatchBase>(patch().patch());
@@ -201,6 +206,9 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
     valueFraction() = alpha/(alpha + KDelta);
 
     refValue() = (KDeltaNbr*TcNbr)/alpha;
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
 
     mixedFvPatchScalarField::updateCoeffs();
 }

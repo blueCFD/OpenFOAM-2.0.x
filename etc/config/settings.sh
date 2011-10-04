@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -186,7 +186,7 @@ SunOS)
     cat <<USAGE
 
     Your "$WM_ARCH" operating system is not supported by this release
-    of OpenFOAM. For further assistance, please contact www.OpenFOAM.com
+    of OpenFOAM. For further assistance, please contact www.OpenFOAM.org
 
 USAGE
     ;;
@@ -271,7 +271,7 @@ OpenFOAM | ThirdParty)
         mpfr_version=mpfr-2.4.2
         ;;
     Gcc46 | Gcc46++0x)
-        gcc_version=gcc-4.6.0
+        gcc_version=gcc-4.6.1
         gmp_version=gmp-5.0.1
         mpfr_version=mpfr-2.4.2
         mpc_version=mpc-0.8.2
@@ -296,8 +296,8 @@ OpenFOAM | ThirdParty)
         # using clang - not gcc
         export WM_CC='clang'
         export WM_CXX='clang++'
-        clang_version=llvm-2.9
-        #clang_version=llvm-svn
+        #clang_version=llvm-2.9
+        clang_version=llvm-svn
         ;;
     mingw32 | mingw-w32 | mingw-w64 | i686-w64-mingw32 | x86_64-w64-mingw32)
         export WM_COMPILER_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER_ARCH/mingw
@@ -557,6 +557,14 @@ MSMPI)
     export FOAM_MPI=msmpi-2008R2
     export MPI_HOME=$WM_THIRD_PARTY_DIR/$FOAM_MPI
     export MPI_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
+
+    _foamAddPath    $MPI_ARCH_PATH/bin
+    _foamAddLib     $MPI_ARCH_PATH/lib
+    ;;
+
+SGIMPI)
+    export FOAM_MPI=${MPI_ROOT##*/}
+    export MPI_ARCH_PATH=$MPI_ROOT
 
     _foamAddPath    $MPI_ARCH_PATH/bin
     _foamAddLib     $MPI_ARCH_PATH/lib

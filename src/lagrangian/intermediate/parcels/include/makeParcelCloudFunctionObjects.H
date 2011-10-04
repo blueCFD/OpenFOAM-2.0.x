@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ License
 #include "FacePostProcessing.H"
 #include "ParticleTracks.H"
 #include "PatchPostProcessing.H"
+#include "VoidFraction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +41,8 @@ License
                                                                               \
     makeCloudFunctionObjectType(FacePostProcessing, CloudType);               \
     makeCloudFunctionObjectType(ParticleTracks, CloudType);                   \
-    makeCloudFunctionObjectType(PatchPostProcessing, CloudType);
+    makeCloudFunctionObjectType(PatchPostProcessing, CloudType);              \
+    makeCloudFunctionObjectType(VoidFraction, CloudType);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

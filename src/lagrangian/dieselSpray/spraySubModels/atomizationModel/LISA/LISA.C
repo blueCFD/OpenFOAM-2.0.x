@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,10 +108,6 @@ void Foam::LISA::atomizeParcel
     scalar muFuel = fuels.mu(pressure, p.T(), p.X());
     scalar rhoFuel = fuels.rho(1.0e+5, p.T(), p.X());
     scalar nuFuel = muFuel/rhoFuel;
-
-    vector uDir = p.U()/mag(p.U());
-
-    scalar uGas = mag(vel & uDir);
 
     // Might be the relative velocity between Liquid and Gas, but using the
     // absolute velocity of the parcel as suggested by the authors

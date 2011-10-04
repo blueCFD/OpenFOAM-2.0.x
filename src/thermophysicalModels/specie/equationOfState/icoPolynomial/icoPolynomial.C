@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2008-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ void icoPolynomial<PolySize>::write(Ostream& os) const
         rhoCoeffs_/this->W()
     );
 
-    os  << dict;
+    os  << indent << dict.dictName() << dict;
 }
 
 

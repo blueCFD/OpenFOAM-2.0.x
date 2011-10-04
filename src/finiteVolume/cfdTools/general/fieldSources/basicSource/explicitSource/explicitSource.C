@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,12 +106,13 @@ void Foam::explicitSource::setFieldData(const dictionary& dict)
 Foam::explicitSource::explicitSource
 (
     const word& name,
+    const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    basicSource(name, dict, mesh),
-    dict_(dict.subDict(typeName + "Coeffs")),
+    basicSource(name, modelType, dict, mesh),
+    dict_(dict.subDict(modelType + "Coeffs")),
     volumeMode_(volumeModeTypeNames_.read(dict_.lookup("volumeMode")))
 {
     setFieldData(dict_.subDict("fieldData"));

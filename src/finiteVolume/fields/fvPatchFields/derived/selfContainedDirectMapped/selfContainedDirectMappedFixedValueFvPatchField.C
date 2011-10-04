@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,6 +222,11 @@ void selfContainedDirectMappedFixedValueFvPatchField<Type>::updateCoeffs()
 
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag+1;
+
     const fvMesh& thisMesh = this->patch().boundaryMesh().mesh();
     const fvMesh& nbrMesh = refCast<const fvMesh>(sampleMesh());
     const mapDistribute& distMap = directMappedPatchBase::map();
@@ -359,6 +364,9 @@ void selfContainedDirectMappedFixedValueFvPatchField<Type>::updateCoeffs()
             << "  max:" << gMax(*this)
             << endl;
     }
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
 
     fixedValueFvPatchField<Type>::updateCoeffs();
 }

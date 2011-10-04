@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,7 +308,7 @@ void qZeta::correct()
       - fvm::laplacian(DzetaEff(), zeta_)
      ==
         (2.0*C1_ - 1)*G*zeta_/q_
-      - fvm::Sp((2.0*C2_ - dimensionedScalar(1.0))*f2()*zeta_/q_, zeta_)
+      - fvm::SuSp((2.0*C2_*f2() - dimensionedScalar(1.0))*zeta_/q_, zeta_)
       + E
     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,8 +129,8 @@ void Foam::SRFVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    // If relative, include the effect of the SRF
-    if (relative_)
+    // If not relative to the SRF include the effect of the SRF
+    if (!relative_)
     {
         // Get reference to the SRF model
         const SRF::SRFModel& srf =
@@ -141,7 +141,8 @@ void Foam::SRFVelocityFvPatchVectorField::updateCoeffs()
 
         operator==(-SRFVelocity + inletValue_);
     }
-    // If absolute, simply supply the inlet value as a fixed value
+    // If already relative to the SRF simply supply the inlet value as a fixed
+    // value
     else
     {
         operator==(inletValue_);

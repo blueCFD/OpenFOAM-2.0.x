@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
 #include "turbulenceModel.H"
 #include "basicReactingCloud.H"
 #include "surfaceFilmModel.H"
-#include "pyrolysisModel.H"
+#include "pyrolysisModelCollection.H"
 #include "radiationModel.H"
 #include "SLGThermo.H"
 #include "hsCombustionThermo.H"
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 
         surfaceFilm.evolve();
 
-        pyrolysis->evolve();
+        pyrolysis.evolve();
 
         if (solvePrimaryRegion)
         {

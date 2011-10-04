@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2008-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -324,6 +324,8 @@ bool Foam::KinematicParcel<ParcelType>::move
         }
 
         p.age() += dt;
+
+        td.cloud().functions().postMove(p, cellI, dt);
     }
 
     return td.keepParticle;

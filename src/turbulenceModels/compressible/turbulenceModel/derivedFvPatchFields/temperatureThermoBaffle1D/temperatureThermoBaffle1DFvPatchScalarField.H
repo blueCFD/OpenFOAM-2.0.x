@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::temperatureThermoBaffle1DFvPatchScalarField
 
 Description
-    Bounday which solves the 1D steady state heat transfer equation
+    Boundary which solves the 1D steady state heat transfer equation
     through a baffle.
 
 SourceFiles

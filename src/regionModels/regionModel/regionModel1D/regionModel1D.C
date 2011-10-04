@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,6 +159,21 @@ bool Foam::regionModels::regionModel1D::read()
 }
 
 
+bool Foam::regionModels::regionModel1D::read(const dictionary& dict)
+{
+    if (regionModel::read(dict))
+    {
+        moveMesh_.readIfPresent("moveMesh", coeffs_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 Foam::tmp<Foam::labelField> Foam::regionModels::regionModel1D::moveMesh
 (
     const scalarList& deltaV,
@@ -296,6 +311,36 @@ Foam::regionModels::regionModel1D::regionModel1D
         if (readFields)
         {
             read();
+        }
+    }
+}
+
+
+Foam::regionModels::regionModel1D::regionModel1D
+(
+    const fvMesh& mesh,
+    const word& regionType,
+    const word& modelName,
+    const dictionary& dict,
+    bool readFields
+)
+:
+    regionModel(mesh, regionType, modelName, dict, readFields),
+    boundaryFaceFaces_(regionMesh().nCells()),
+    boundaryFaceCells_(regionMesh().nCells()),
+    boundaryFaceOppositeFace_(regionMesh().nCells()),
+    nLayers_(0),
+    nMagSfPtr_(NULL),
+    moveMesh_(false)
+{
+    if (active_)
+    {
+        constructMeshObjects();
+        initialise();
+
+        if (readFields)
+        {
+            read(dict);
         }
     }
 }

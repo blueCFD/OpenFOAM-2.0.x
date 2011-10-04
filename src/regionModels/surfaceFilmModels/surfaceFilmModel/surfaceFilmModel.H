@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,9 +129,6 @@ public:
          );
 
     // Constructors
-
-        //- Construct null
-        surfaceFilmModel(const fvMesh& mesh);
 
         //- Construct from type name, mesh and gravity vector
         surfaceFilmModel

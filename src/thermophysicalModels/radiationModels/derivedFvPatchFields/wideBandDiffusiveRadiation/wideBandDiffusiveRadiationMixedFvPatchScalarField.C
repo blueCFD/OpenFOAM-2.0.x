@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2008-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,6 +155,11 @@ updateCoeffs()
         return;
     }
 
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag+1;
+
     const radiationModel& radiation =
         db().lookupObject<radiationModel>("radiationProperties");
 
@@ -189,7 +194,7 @@ updateCoeffs()
         dom.blackBody().bLambda(lambdaId).boundaryField()[patchI]
     );
 
-    scalarList temissivity = emissivity();
+    scalarField temissivity = emissivity();
 
     forAll(Iw, faceI)
     {
@@ -229,6 +234,9 @@ updateCoeffs()
             refValue()[faceI] = 0.0; //not used
         }
     }
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
 
     mixedFvPatchScalarField::updateCoeffs();
 }

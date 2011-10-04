@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ const Foam::dimensionedScalar Foam::constant::electromagnetic::mu0
         dimensionedScalar
         (
             "mu0",
-            dimensionSet(1, 2, -1, 0, 0, -2, 0),
+            dimensionSet(1, 1, -2, 0, 0, -2, 0),
             4.0*constant::mathematical::pi*1e-07
         )
     )

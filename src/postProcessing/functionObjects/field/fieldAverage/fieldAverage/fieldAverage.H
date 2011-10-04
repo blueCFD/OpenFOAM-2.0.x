@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
         type fieldAverage;
 
         // Where to load it from (if not already in solver)
-        functionObjectLibs ("libfieldAverage.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
 
         // Whether to perform a clean restart, or start from previous
         // averaging info if available

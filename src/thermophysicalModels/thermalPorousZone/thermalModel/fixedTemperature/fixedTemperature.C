@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,6 +82,8 @@ void Foam::porousMedia::fixedTemperature::addEnthalpySource
     scalarField& hDiag = hEqn.diag();
     scalarField& hSource = hEqn.source();
 
+    tmp<volScalarField> Cp = thermo.Cp();
+
     // TODO: generalize for non-fixedTemperature methods
     const scalar rate = 1e6;
 
@@ -92,7 +94,7 @@ void Foam::porousMedia::fixedTemperature::addEnthalpySource
         forAll(cells, i)
         {
             hDiag[cells[i]] += rate*V[cells[i]]*rho[cells[i]];
-            hSource[cells[i]] += rate*V[cells[i]]*rho[cells[i]]*T_;
+            hSource[cells[i]] += rate*V[cells[i]]*rho[cells[i]]*Cp()[cells[i]]*T_;
         }
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -581,9 +581,9 @@ Foam::labelList Foam::scotchDecomp::decompose
     {
         FatalErrorIn
         (
-            "scotchDecomp::decompose(const pointField&, const scalarField&)"
-        )
-            << "Can use this decomposition method only for the whole mesh"
+            "scotchDecomp::decompose(const polyMesh&, const pointField&"
+            ", const scalarField&)"
+        )   << "Can use this decomposition method only for the whole mesh"
             << endl
             << "and supply one coordinate (cellCentre) for every cell." << endl
             << "The number of coordinates " << points.size() << endl
@@ -628,7 +628,9 @@ Foam::labelList Foam::scotchDecomp::decompose
     {
         FatalErrorIn
         (
-            "scotchDecomp::decompose(const labelList&, const pointField&)"
+            "scotchDecomp::decompose"
+            "(const polyMesh&, const labelList&, const pointField&"
+            ", const scalarField&)"
         )   << "Size of cell-to-coarse map " << agglom.size()
             << " differs from number of cells in mesh " << mesh.nCells()
             << exit(FatalError);

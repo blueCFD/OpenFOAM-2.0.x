@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -220,11 +220,14 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
 :
     InjectionModel<CloudType>(im),
     injectionMethod_(im.injectionMethod_),
+    flowType_(im.flowType_),
     outerDiameter_(im.outerDiameter_),
     innerDiameter_(im.innerDiameter_),
     duration_(im.duration_),
     position_(im.position_),
     injectorCell_(im.injectorCell_),
+    tetFaceI_(im.tetFaceI_),
+    tetPtI_(im.tetPtI_),
     direction_(im.direction_),
     parcelsPerSecond_(im.parcelsPerSecond_),
     volumeFlowRate_(im.volumeFlowRate_().clone().ptr()),
@@ -235,9 +238,18 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
     tanVec2_(im.tanVec1_),
     normal_(im.normal_),
     UMag_(im.UMag_),
-    Cd_(im.Cd_().clone().ptr()),
-    Pinj_(im.Pinj_().clone().ptr())
-{}
+    Cd_(NULL),
+    Pinj_(NULL)
+{
+    if (im.Cd_.valid())
+    {
+        Cd_.reset(im.Cd_().clone().ptr());
+    }
+    if (im.Pinj_.valid())
+    {
+        Pinj_.reset(im.Pinj_().clone().ptr());
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

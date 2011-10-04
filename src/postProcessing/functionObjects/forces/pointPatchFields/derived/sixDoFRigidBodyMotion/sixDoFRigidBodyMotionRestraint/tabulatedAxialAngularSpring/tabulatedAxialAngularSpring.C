@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,7 @@ Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::restrain
     vector refDir = rotationTensor(vector(1, 0 ,0), axis_) & vector(0, 1, 0);
 
     vector oldDir = refQ_ & refDir;
+
     vector newDir = motion.orientation() & refDir;
 
     if (mag(oldDir & axis_) > 0.95 || mag(newDir & axis_) > 0.95)
@@ -94,7 +95,6 @@ Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::restrain
         // Directions getting close to the axis, change reference
 
         refDir = rotationTensor(vector(1, 0 ,0), axis_) & vector(0, 0, 1);
-
         oldDir = refQ_ & refDir;
         newDir = motion.orientation() & refDir;
     }

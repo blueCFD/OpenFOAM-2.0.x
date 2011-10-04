@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,6 +75,34 @@ autoPtr<thermoBaffleModel> thermoBaffleModel::New(const fvMesh& mesh)
     return autoPtr<thermoBaffleModel>(cstrIter()(modelType, mesh));
 }
 
+
+autoPtr<thermoBaffleModel> thermoBaffleModel::New
+(
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+{
+
+    word modelType = dict.lookup("thermoBaffleModel");
+
+    Info<< "Selecting baffle model " << modelType << endl;
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(modelType);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+
+        FatalErrorIn("thermoBaffleModel::New(const fvMesh&,const dictionary&)")
+            << "Unknown thermoBaffleModel type " << modelType
+            << nl << nl
+            <<  "Valid thermoBaffleModel types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<thermoBaffleModel>(cstrIter()(modelType, mesh, dict));
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

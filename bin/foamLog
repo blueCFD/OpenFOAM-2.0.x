@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -21,6 +21,11 @@
 #
 #     You should have received a copy of the GNU General Public License
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Modifications
+#     This file has been modified by blueCAPE's unofficial mingw patches for OpenFOAM.
+#     For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
 #
 # Script
 #     foamLog
@@ -46,6 +51,7 @@ Usage: $Script [OPTIONS] <log>
   -n                create single column files with the extracted data only
   -merge            merge outputs for when solvers don't use Time iterations.
   -quiet            quiet operation
+  -localDB          only use the local database file
   -help             print the usage
 
 $Script - extracts xy files from OpenFOAM logs.
@@ -106,7 +112,7 @@ usage
 
 
 timeName=Time
-unset listOpt quietOpt mergeOpt
+unset listOpt quietOpt mergeOpt localDB
 
 # parse options
 while [ "$#" -gt 0 ]
@@ -130,6 +136,10 @@ do
         ;;
     -q | -quiet | -s | -silent)
         quietOpt=true
+        shift
+        ;;
+    -localDB)
+        localDB=true
         shift
         ;;
     -*)
@@ -226,7 +236,7 @@ getSolveQueryList()
 getAllQueries()
 {
     #-- All solved for queries from log file
-    queries=`getSolveQueryList $2`
+    [ "$localDB" = true ] || queries=`getSolveQueryList $2`
 
     #-- Add ones from database, present in log file
     # Note: just like awk, line selected with regular expression,
@@ -400,10 +410,11 @@ AWK_CONTENTS
 #
 # Code for extracting solved for quantities
 #
-cat << AWK_CONTENTS >> $AWKFILE
-# Extraction of any solved for variable
-/Solving for/ {
-    extract(\$0, "Solving for ", varNameVal)
+[ "$localDB" = true ] ||
+    cat << AWK_CONTENTS >> $AWKFILE
+    # Extraction of any solved for variable
+    /Solving for/ {
+        extract(\$0, "Solving for ", varNameVal)
 
     varName=varNameVal[1]
     extract(\$0, "Initial residual = ", val)
@@ -412,18 +423,18 @@ cat << AWK_CONTENTS >> $AWKFILE
     file="$outputDir/" file
     print $timeName "\t" val[1] > file
 
-    varName=varNameVal[1] "FinalRes"
-    file=varName "_" subIter[varName]++
-    file="$outputDir/" file
-    extract(\$0, "Final residual = ", val)
-    print $timeName "\t" val[1] > file
+        varName=varNameVal[1] "FinalRes"
+        file=varName "_" subIter[varName]++
+        file="$outputDir/" file
+        extract(\$0, "Final residual = ", val)
+        print $timeName "\t" val[1] > file
 
-    varName=varNameVal[1] "Iters"
-    file=varName "_" subIter[varName]++
-    file="$outputDir/" file
-    extract(\$0, "No Iterations ", val)
-    print $timeName "\t" val[1] > file
-}
+        varName=varNameVal[1] "Iters"
+        file=varName "_" subIter[varName]++
+        file="$outputDir/" file
+        extract(\$0, "No Iterations ", val)
+        print $timeName "\t" val[1] > file
+    }
 
 AWK_CONTENTS
 # ----------
@@ -465,7 +476,7 @@ unset LINEQ1 LINEQ2 LINEQ3
 # Print found
 #-----------------------------
 myEcho "Generated XY files for:"
-getAllQueries $DBFILE $LOG
+[ "$quietOpt" = true ] || getAllQueries $DBFILE $LOG
 myEcho "End"
 
 #------------------------------------------------------------------------------

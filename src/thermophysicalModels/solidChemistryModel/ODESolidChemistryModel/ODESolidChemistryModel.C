@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ ODESolidChemistryModel
 
         IOobject header
         (
-            Ys_[fieldI].name() + "_0",
+            Ys_[fieldI].name() + "0",
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ
@@ -94,7 +94,7 @@ ODESolidChemistryModel
                 (
                     IOobject
                     (
-                        Ys_[fieldI].name() + "_0",
+                        Ys_[fieldI].name() + "0",
                         mesh.time().timeName(),
                         mesh,
                         IOobject::MUST_READ,
@@ -126,7 +126,7 @@ ODESolidChemistryModel
                 (
                     IOobject
                     (
-                        Ys_[fieldI].name() + "_0",
+                        Ys_[fieldI].name() + "0",
                         mesh.time().timeName(),
                         mesh,
                         IOobject::NO_READ,
@@ -135,11 +135,12 @@ ODESolidChemistryModel
                     Y0Default
                 )
             );
-        }
 
-        // Calculate inital values of Ysi0 = rho*delta*Yi
-        Ys0_[fieldI].internalField() =
-            this->solidThermo().rho()*max(Ys_[fieldI],scalar(0.001))*mesh.V();
+            // Calculate inital values of Ysi0 = rho*delta*Yi
+            Ys0_[fieldI].internalField() =
+                this->solidThermo().rho()
+               *max(Ys_[fieldI], scalar(0.001))*mesh.V();
+        }
    }
 
     forAll(RRg_, fieldI)

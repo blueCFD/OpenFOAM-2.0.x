@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,12 @@ inline const Foam::Time& Foam::regionModels::regionModel::time() const
 inline const Foam::Switch& Foam::regionModels::regionModel::active() const
 {
     return active_;
+}
+
+
+inline const Foam::Switch& Foam::regionModels::regionModel::infoOutput() const
+{
+    return infoOutput_;
 }
 
 

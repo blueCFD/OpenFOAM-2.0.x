@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,11 @@ Description
 int main(int argc, char *argv[])
 {
     argList::addBoolOption("writep", "write the final pressure field");
+    argList::addBoolOption
+    (
+        "initialiseUBCs",
+        "initialise U boundary conditions"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"

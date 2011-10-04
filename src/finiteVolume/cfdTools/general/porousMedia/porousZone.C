@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,6 +308,52 @@ void Foam::porousZone::addResistance(fvVectorMatrix& UEqn) const
                 U
             );
         }
+    }
+}
+
+
+void Foam::porousZone::addResistance
+(
+    fvVectorMatrix& UEqn,
+    const volScalarField& rho,
+    const volScalarField& mu
+) const
+{
+    if (cellZoneIds_.empty())
+    {
+        return;
+    }
+
+    const scalarField& V = mesh_.V();
+    scalarField& Udiag = UEqn.diag();
+    vectorField& Usource = UEqn.source();
+    const vectorField& U = UEqn.psi();
+
+    if (C0_ > VSMALL)
+    {
+        addPowerLawResistance
+        (
+            Udiag,
+            V,
+            rho,
+            U
+        );
+    }
+
+    const tensor& D = D_.value();
+    const tensor& F = F_.value();
+
+    if (magSqr(D) > VSMALL || magSqr(F) > VSMALL)
+    {
+        addViscousInertialResistance
+        (
+            Udiag,
+            Usource,
+            V,
+            rho,
+            mu,
+            U
+        );
     }
 }
 

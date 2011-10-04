@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,10 +75,15 @@ Foam::dictionary& Foam::debug::controlDict()
 {
     if (!controlDictPtr_)
     {
-        controlDictPtr_ = new dictionary
-        (
-            IFstream(findEtcFile("controlDict", true))()
-        );
+        fileNameList controlDictFiles = findEtcFiles("controlDict", true);
+        controlDictPtr_ = new dictionary();
+        forAllReverse(controlDictFiles, cdfi)
+        {
+            controlDictPtr_->merge
+            (
+                dictionary(IFstream(controlDictFiles[cdfi])())
+            );
+        }
     }
 
     return *controlDictPtr_;

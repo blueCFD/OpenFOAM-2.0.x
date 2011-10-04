@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ void Foam::specie::write(Ostream& os) const
     dictionary dict("specie");
     dict.add("nMoles", nMoles_);
     dict.add("molWeight", molWeight_);
-    os  << dict;
+    os  << indent << dict.dictName() << dict;
 }
 
 

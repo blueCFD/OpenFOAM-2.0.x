@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,6 +60,7 @@ void Foam::nearWallFields::createFields
 
                 IOobject io(fld);
                 io.readOpt() = IOobject::NO_READ;
+                io.writeOpt() = IOobject::NO_WRITE;
                 io.rename(sampleFldName);
 
                 sflds.set(sz, new vfType(io, fld));

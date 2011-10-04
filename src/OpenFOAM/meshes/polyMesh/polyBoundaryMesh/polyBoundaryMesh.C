@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -514,7 +514,8 @@ Foam::label Foam::polyBoundaryMesh::whichPatch(const label faceIndex) const
         FatalErrorIn
         (
             "polyBoundaryMesh::whichPatch(const label faceIndex) const"
-        )   << "given label greater than the number of geometric faces"
+        )   << "given label " << faceIndex
+            << " greater than the number of geometric faces " << mesh().nFaces()
             << abort(FatalError);
     }
 

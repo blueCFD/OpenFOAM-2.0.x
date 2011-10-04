@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2520,7 +2520,7 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findNearest
 {
     scalar nearestDistSqr = startDistSqr;
     label nearestShapeI = -1;
-    point nearestPoint;
+    point nearestPoint = vector::zero;
 
     if (nodes_.size())
     {
@@ -2533,10 +2533,6 @@ Foam::pointIndexHit Foam::indexedOctree<Type>::findNearest
             nearestShapeI,
             nearestPoint
         );
-    }
-    else
-    {
-        nearestPoint = vector::zero;
     }
 
     return pointIndexHit(nearestShapeI != -1, nearestPoint, nearestShapeI);

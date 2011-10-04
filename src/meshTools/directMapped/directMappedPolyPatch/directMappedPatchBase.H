@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,6 +105,10 @@ public:
             NORMAL              // use face normal + distance
         };
 
+        static const NamedEnum<sampleMode, 3> sampleModeNames_;
+
+        static const NamedEnum<offsetMode, 3> offsetModeNames_;
+
 
     //- Helper class for finding nearest
     // Nearest:
@@ -134,13 +138,10 @@ public:
         }
     };
 
+
 private:
 
     // Private data
-
-        static const NamedEnum<sampleMode, 3> sampleModeNames_;
-
-        static const NamedEnum<offsetMode, 3> offsetModeNames_;
 
         //- Patch to sample
         const polyPatch& patch_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,7 +169,7 @@ Foam::autoPtr<Foam::pointPatchField<Type> > Foam::pointPatchField<Type>::New
             typename dictionaryConstructorTable::iterator patchTypeCstrIter
                 = dictionaryConstructorTablePtr_->find(p.type());
 
-            if (patchTypeCstrIter == pointPatchConstructorTablePtr_->end())
+            if (patchTypeCstrIter == dictionaryConstructorTablePtr_->end())
             {
                 FatalIOErrorIn
                 (

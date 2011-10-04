@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,6 +192,10 @@ void temperatureThermoBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
         return;
     }
 
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag+1;
 
     const directMappedPatchBase& mpp = refCast<const directMappedPatchBase>
     (
@@ -355,6 +359,9 @@ void temperatureThermoBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
                 << endl;
         }
     }
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
 
     mixedFvPatchScalarField::updateCoeffs();
 }

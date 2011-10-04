@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ protected:
         Switch dumpLevel_;
 
         //- Fluxes to map
-        List<Pair<word> > correctFluxes_;
+        HashTable<word> correctFluxes_;
 
         //- Number of refinement/unrefinement steps done so far.
         label nRefinementIterations_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ void Foam::meshToMesh::calcAddressing()
         shiftedBb,      // overall bounding box
         8,              // maxLevel
         10,             // leafsize
-        3.0             // duplicity
+        6.0             // duplicity
     );
 
     if (debug)

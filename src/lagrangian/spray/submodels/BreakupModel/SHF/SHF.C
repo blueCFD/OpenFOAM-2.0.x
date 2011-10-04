@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,9 +153,6 @@ bool Foam::SHF<CloudType>::update
     // correct the Reynolds number. Reitz is using radius instead of diameter
     scalar reLiquid   = 0.5*Urmag*d/mu;
     scalar ohnesorge  = sqrt(weLiquid)/(reLiquid + VSMALL);
-
-    vector acceleration = Urel/tMom;
-    vector trajectory = U/mag(U);
 
     scalar weGasCorr = weGas/(1.0 + weCorrCoeff_*ohnesorge);
 

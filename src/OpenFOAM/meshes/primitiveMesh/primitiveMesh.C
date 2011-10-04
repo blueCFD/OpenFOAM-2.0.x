@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -375,7 +375,7 @@ Foam::primitiveMesh::cellTree() const
                 overallBb,
                 8,              // maxLevel
                 10,             // leafsize
-                3.0             // duplicity
+                5.0             // duplicity
             );
     }
 

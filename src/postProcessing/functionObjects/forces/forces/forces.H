@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,6 +165,9 @@ protected:
             //- Coordinate system used when evaluting forces/moments
             coordinateSystem coordSys_;
 
+            //- Flag to indicate whether we are using a local co-ordinate sys
+            bool localSystem_;
+
 
         //- Forces/moment file ptr
         autoPtr<OFstream> forcesFilePtr_;
@@ -211,6 +214,21 @@ public:
             const objectRegistry&,
             const dictionary&,
             const bool loadFromFiles = false
+        );
+
+
+        //- Construct from components
+        forces
+        (
+            const word& name,
+            const objectRegistry&,
+            const labelHashSet& patchSet,
+            const word& pName,
+            const word& UName,
+            const word& rhoName,
+            const scalar rhoInf,
+            const scalar pRef,
+            const coordinateSystem& coordSys
         );
 
 

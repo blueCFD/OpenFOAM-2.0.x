@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,12 +85,27 @@ public:
         //- Construct from type name and mesh
         noThermo(const word& modelType, const fvMesh& mesh);
 
+        //- Construct from components and dict
+        noThermo
+        (
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict
+
+        );
 
     //- Destructor
     virtual ~noThermo();
 
 
     // Member Functions
+
+
+         // Thermo properties
+
+            //- Return const reference to the basicSolidThermo
+            virtual const basicSolidThermo& thermo() const;
+
 
         // Fields
 

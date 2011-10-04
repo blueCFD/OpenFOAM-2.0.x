@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,6 +184,11 @@ void Foam::turbulentTemperatureCoupledBaffleFvPatchScalarField::updateCoeffs()
         return;
     }
 
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag+1;
+
     // Get the coupling information from the directMappedPatchBase
     const directMappedPatchBase& mpp = refCast<const directMappedPatchBase>
     (
@@ -267,6 +272,9 @@ void Foam::turbulentTemperatureCoupledBaffleFvPatchScalarField::updateCoeffs()
             << " avg:" << gAverage(*this)
             << endl;
     }
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }

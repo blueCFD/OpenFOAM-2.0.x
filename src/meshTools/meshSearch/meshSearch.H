@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ class polyMesh;
 class treeDataCell;
 class treeDataFace;
 template<class Type> class indexedOctree;
+class treeBoundBox;
 
 /*---------------------------------------------------------------------------*\
                            Class meshSearch Declaration
@@ -64,8 +65,10 @@ class meshSearch
         //- Whether to use face decomposition for all geometric tests
         const bool faceDecomp_;
 
-        //- demand driven octrees
+        //- data bounding box
+        mutable autoPtr<treeBoundBox> overallBbPtr_;
 
+        //- demand driven octrees
         mutable autoPtr<indexedOctree<treeDataFace> > boundaryTreePtr_;
         mutable autoPtr<indexedOctree<treeDataCell> > cellTreePtr_;
 
@@ -163,9 +166,19 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from components. Constructs bb slightly bigger than
+        //  mesh points bb.
         meshSearch(const polyMesh& mesh, const bool faceDecomp = true);
 
+        //- Construct with a custom bounding box. Any mesh element outside
+        //  bb will not be found. Up to user to make sure bb
+        //  extends slightly beyond wanted elements.
+        meshSearch
+        (
+            const polyMesh& mesh,
+            const treeBoundBox& bb,
+            const bool faceDecomp = true
+        );
 
     //- Destructor
     ~meshSearch();

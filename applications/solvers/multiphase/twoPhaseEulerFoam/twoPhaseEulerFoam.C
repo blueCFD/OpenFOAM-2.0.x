@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Application
 
 Description
     Solver for a system of 2 incompressible fluid phases with one phase
-    dispersed, e.g. gas bubbles in a liquid.
+    dispersed, e.g. gas bubbles in a liquid or solid particles in a gas.
 
 \*---------------------------------------------------------------------------*/
 
@@ -78,10 +78,13 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         for (pimple.start(); pimple.loop(); pimple++)
         {
+            if (pimple.nOuterCorr() != 1)
+            {
+                p.storePrevIter();
+            }
+
             #include "alphaEqn.H"
-
             #include "liftDragCoeffs.H"
-
             #include "UEqns.H"
 
             // --- PISO loop

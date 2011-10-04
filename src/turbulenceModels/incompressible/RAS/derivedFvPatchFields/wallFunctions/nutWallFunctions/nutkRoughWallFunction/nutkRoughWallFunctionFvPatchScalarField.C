@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2008-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,29 +87,25 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
         scalar KsPlus = uStar*Ks_[faceI]/nuw[faceI];
 
         scalar Edash = E_;
-
         if (KsPlus > 2.25)
         {
             Edash /= fnRough(KsPlus, Cs_[faceI]);
         }
 
-        if (yPlus > yPlusLam_)
-        {
-            scalar limitingNutw = max(nutw[faceI], nuw[faceI]);
+        scalar limitingNutw = max(nutw[faceI], nuw[faceI]);
 
-            // To avoid oscillations limit the change in the wall viscosity
-            // which is particularly important if it temporarily becomes zero
-            nutw[faceI] =
-                max
+        // To avoid oscillations limit the change in the wall viscosity
+        // which is particularly important if it temporarily becomes zero
+        nutw[faceI] =
+            max
+            (
+                min
                 (
-                    min
-                    (
-                        nuw[faceI]
-                       *(yPlus*kappa_/log(max(Edash*yPlus, 1+1e-4)) - 1),
-                        2*limitingNutw
-                    ), 0.5*limitingNutw
-                );
-        }
+                    nuw[faceI]
+                   *(yPlus*kappa_/log(max(Edash*yPlus, 1+1e-4)) - 1),
+                    2*limitingNutw
+                ), 0.5*limitingNutw
+            );
 
         if (debug)
         {

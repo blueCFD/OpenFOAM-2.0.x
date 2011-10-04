@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -124,7 +124,7 @@ case SunOS:
 default:
     echo
     echo "Your '$WM_ARCH' operating system is not supported by this release"
-    echo "of OpenFOAM. For further assistance, please contact www.OpenFOAM.com"
+    echo "of OpenFOAM. For further assistance, please contact www.OpenFOAM.org"
     echo
     breaksw
 
@@ -209,7 +209,7 @@ case ThirdParty:
         breaksw
     case Gcc46:
     case Gcc46++0x:
-        set gcc_version=gcc-4.6.0
+        set gcc_version=gcc-4.6.1
         set gmp_version=gmp-5.0.1
         set mpfr_version=mpfr-2.4.2
         set mpc_version=mpc-0.8.1
@@ -236,8 +236,8 @@ case ThirdParty:
         # using clang - not gcc
         setenv WM_CC 'clang'
         setenv WM_CXX 'clang++'
-        set clang_version=llvm-2.9
-        #set clang_version=llvm-svn
+        #set clang_version=llvm-2.9
+        set clang_version=llvm-svn
         breaksw
     default:
         echo
@@ -475,6 +475,14 @@ case FJMPI:
 case QSMPI:
     setenv FOAM_MPI qsmpi
     setenv MPI_ARCH_PATH /usr/lib/mpi
+
+    _foamAddPath    $MPI_ARCH_PATH/bin
+    _foamAddLib     $MPI_ARCH_PATH/lib
+    breaksw
+
+case SGIMPI:
+    setenv FOAM_MPI ${MPI_ROOT:t}
+    setenv MPI_ARCH_PATH $MPI_ROOT
 
     _foamAddPath    $MPI_ARCH_PATH/bin
     _foamAddLib     $MPI_ARCH_PATH/lib

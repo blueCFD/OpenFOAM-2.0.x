@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,6 +75,13 @@ Foam::CloudFunctionObject<CloudType>::~CloudFunctionObject()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
+void Foam::CloudFunctionObject<CloudType>::preEvolve()
+{
+    // do nothing
+}
+
+
+template<class CloudType>
 void Foam::CloudFunctionObject<CloudType>::postEvolve()
 {
     if (this->owner().time().outputTime())
@@ -85,20 +92,25 @@ void Foam::CloudFunctionObject<CloudType>::postEvolve()
 
 
 template<class CloudType>
+void Foam::CloudFunctionObject<CloudType>::postMove
+(
+    const typename CloudType::parcelType&,
+    const label,
+    const scalar
+)
+{
+    // do nothing
+}
+
+
+template<class CloudType>
 void Foam::CloudFunctionObject<CloudType>::postPatch
 (
     const typename CloudType::parcelType&,
     const label
 )
 {
-    notImplemented
-    (
-        "void Foam::CloudFunctionObject<CloudType>::postPatch"
-        "("
-            "const typename CloudType::parcelType&,"
-            "const label"
-        ")"
-    );
+    // do nothing
 }
 
 
@@ -108,13 +120,7 @@ void Foam::CloudFunctionObject<CloudType>::postFace
     const typename CloudType::parcelType&
 )
 {
-    notImplemented
-    (
-        "void Foam::CloudFunctionObject<CloudType>::postFace"
-        "("
-            "const typename CloudType::parcelType&"
-        ")"
-    );
+    // do nothing
 }
 
 

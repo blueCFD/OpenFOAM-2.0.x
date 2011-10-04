@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,6 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-scalar maxDi = pyrolysis->maxDiff();
+scalar maxDi = pyrolysis.maxDiff();
 
 // ************************************************************************* //

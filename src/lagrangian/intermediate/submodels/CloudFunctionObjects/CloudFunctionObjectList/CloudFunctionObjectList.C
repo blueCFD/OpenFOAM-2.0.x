@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,11 +108,36 @@ Foam::CloudFunctionObjectList<CloudType>::~CloudFunctionObjectList()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
+void Foam::CloudFunctionObjectList<CloudType>::preEvolve()
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).preEvolve();
+    }
+}
+
+
+template<class CloudType>
 void Foam::CloudFunctionObjectList<CloudType>::postEvolve()
 {
     forAll(*this, i)
     {
         this->operator[](i).postEvolve();
+    }
+}
+
+
+template<class CloudType>
+void Foam::CloudFunctionObjectList<CloudType>::postMove
+(
+    const typename CloudType::parcelType& p,
+    const label cellI,
+    const scalar dt
+)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).postMove(p, cellI, dt);
     }
 }
 

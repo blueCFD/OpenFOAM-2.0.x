@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -331,6 +331,7 @@ class autoLayerDriver
                 (
                     const addPatchCellLayer& addLayer,
                     const dictionary& motionDict,
+                    const bool additionalReporting,
                     const List<labelPair>& baffles,
                     const indirectPrimitivePatch& pp,
                     const fvMesh&,

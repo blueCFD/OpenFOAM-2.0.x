@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -512,6 +512,16 @@ inline void Foam::particle::crossEdgeConnectedFace
 
         if (edDir == 0)
         {
+            continue;
+        }
+        else if (f == pFaces[fI])
+        {
+            // This is a necessary condition if using duplicate baffles
+            // (so coincident faces). We need to make sure we don't cross into
+            // the face with the same vertices since we might enter a tracking
+            // loop where it never exits. This test should be cheap
+            // for most meshes so can be left in for 'normal' meshes.
+
             continue;
         }
         else

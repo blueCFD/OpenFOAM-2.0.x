@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,6 +136,11 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
 
     typedef regionModels::surfaceFilmModels::surfaceFilmModel modelType;
 
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag+1;
+
     bool ok =
         db().objectRegistry::foundObject<modelType>("surfaceFilmProperties");
 
@@ -205,6 +210,11 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
 
         alphat[faceI] = max(alphaEff - alphaw[faceI], 0.0);
     }
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
+
+    fixedValueFvPatchScalarField::updateCoeffs();
 }
 
 

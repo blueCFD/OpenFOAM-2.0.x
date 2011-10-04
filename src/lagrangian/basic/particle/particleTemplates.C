@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -738,7 +738,7 @@ void Foam::particle::hitWallFaces
         {
             // Get the decomposition of this wall face
 
-            const List<tetIndices>& faceTetIs =
+            const List<tetIndices> faceTetIs =
                 polyMeshTetDecomposition::faceTetIndices(mesh_, fI, cellI_);
 
             const Foam::face& f = pFaces[fI];

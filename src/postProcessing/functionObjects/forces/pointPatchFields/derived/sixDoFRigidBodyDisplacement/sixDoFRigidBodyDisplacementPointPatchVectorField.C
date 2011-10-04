@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
     // calculate the forces on the motion object from this data, then
     // update the positions
 
-    motion_.updatePosition(t.deltaTValue());
+    motion_.updatePosition(t.deltaTValue(), t.deltaT0Value());
 
     dictionary forcesDict;
 

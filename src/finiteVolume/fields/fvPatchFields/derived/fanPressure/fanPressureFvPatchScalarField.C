@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,9 @@ License
 namespace Foam
 {
     template<>
-    const char* Foam::NamedEnum
+    const char* NamedEnum
     <
-        Foam::fanPressureFvPatchScalarField::fanFlowDirection,
+        fanPressureFvPatchScalarField::fanFlowDirection,
         2
     >::names[] =
     {
@@ -59,10 +59,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
-    phiName_("phi"),
-    rhoName_("rho"),
-    p0_(p.size(), 0.0),
+    totalPressureFvPatchScalarField(p, iF),
     fanCurve_(),
     direction_(ffdOut)
 {}
@@ -76,10 +73,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_),
-    p0_(ptf.p0_, mapper),
+    totalPressureFvPatchScalarField(ptf, p, iF, mapper),
     fanCurve_(ptf.fanCurve_),
     direction_(ptf.direction_)
 {}
@@ -92,16 +86,10 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    p0_("p0", dict, p.size()),
+    totalPressureFvPatchScalarField(p, iF, dict),
     fanCurve_(dict),
     direction_(fanFlowDirectionNames_.read(dict.lookup("direction")))
-{
-    // Assign initial pressure by "value"
-    fvPatchField<scalar>::operator==(scalarField("value", dict, p.size()));
-}
+{}
 
 
 Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
@@ -109,10 +97,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
     const fanPressureFvPatchScalarField& pfopsf
 )
 :
-    fixedValueFvPatchScalarField(pfopsf),
-    phiName_(pfopsf.phiName_),
-    rhoName_(pfopsf.rhoName_),
-    p0_(pfopsf.p0_),
+    totalPressureFvPatchScalarField(pfopsf),
     fanCurve_(pfopsf.fanCurve_),
     direction_(pfopsf.direction_)
 {}
@@ -124,10 +109,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(pfopsf, iF),
-    phiName_(pfopsf.phiName_),
-    rhoName_(pfopsf.rhoName_),
-    p0_(pfopsf.p0_),
+    totalPressureFvPatchScalarField(pfopsf, iF),
     fanCurve_(pfopsf.fanCurve_),
     direction_(pfopsf.direction_)
 {}
@@ -144,7 +126,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
 
     // Retrieve flux field
     const surfaceScalarField& phi =
-        db().lookupObject<surfaceScalarField>(phiName_);
+        db().lookupObject<surfaceScalarField>(phiName());
 
     const fvsPatchField<scalar>& phip =
         patch().patchField<surfaceScalarField, scalar>(phi);
@@ -161,7 +143,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     else if (phi.dimensions() == dimVelocity*dimArea*dimDensity)
     {
         const scalarField& rhop =
-            patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+            patch().lookupPatchField<volScalarField, scalar>(rhoName());
         aveFlowRate = dir*gSum(phip/rhop)/gSum(patch().magSf());
     }
     else
@@ -174,51 +156,23 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
                 << exit(FatalError);
     }
 
-    // Normal flow through fan
-    if (aveFlowRate >= 0.0)
-    {
-        // Pressure drop for this flow rate
-        const scalar pdFan = fanCurve_(aveFlowRate);
+    // Pressure drop for this flow rate
+    const scalar pdFan = fanCurve_(max(aveFlowRate, 0.0));
 
-        operator==(p0_ - dir*pdFan);
-    }
-    // Reverse flow
-    else
-    {
-        // Assume that fan has stalled if flow reversed
-        // i.e. apply dp for zero flow rate
-        const scalar pdFan = fanCurve_(0);
-
-        // Flow speed across patch
-        scalarField Up = phip/(patch().magSf());
-
-        // Pressure drop associated withback flow = dynamic pressure
-        scalarField pdBackFlow = 0.5*magSqr(Up);
-
-        if (phi.dimensions() == dimVelocity*dimArea*dimDensity)
-        {
-            const scalarField& rhop =
-                patch().lookupPatchField<volScalarField, scalar>(rhoName_);
-            pdBackFlow /= rhop;
-        }
-
-        operator==(p0_ - dir*(pdBackFlow + pdFan));
-    }
-
-    fixedValueFvPatchScalarField::updateCoeffs();
+    totalPressureFvPatchScalarField::updateCoeffs
+    (
+        p0() - dir*pdFan,
+        patch().lookupPatchField<volVectorField, vector>(UName())
+    );
 }
 
 
 void Foam::fanPressureFvPatchScalarField::write(Ostream& os) const
 {
-    fvPatchScalarField::write(os);
-    os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
+    totalPressureFvPatchScalarField::write(os);
     fanCurve_.write(os);
     os.writeKeyword("direction")
         << fanFlowDirectionNames_[direction_] << token::END_STATEMENT << nl;
-    p0_.writeEntry("p0", os);
-    writeEntry("value", os);
 }
 
 

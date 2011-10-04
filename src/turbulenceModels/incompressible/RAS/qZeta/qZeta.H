@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,19 @@ Class
 Description
     Gibson and Dafa'Alla's q-zeta two-equation low-Re turbulence model
     for incompressible flows
+
+    References:
+    \verbatim
+        "Calculation of oscillating boundary layers with the
+        q-[zeta] turbulence model"
+        A.A. Dafa'Alla, E. Juntasaro and M.M. Gibson
+
+        Engineering Turbulence Modelling and Experiments 3:
+        Proceedings of the Third International Symposium,
+        Crete, Greece, May 27-29, 1996, p. 141.
+
+        Editors: Wolfgang Rodi and G. Bergeles
+    \endverbatim
 
 SourceFiles
     qZeta.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ void Foam::janafThermo<EquationOfState>::write(Ostream& os) const
     dict.add("Tcommon", Tcommon_);
     dict.add("highCpCoeffs", highCpCoeffs_);
     dict.add("lowCpCoeffs", lowCpCoeffs_);
-    os  << dict;
+    os  << indent << dict.dictName() << dict;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,7 @@ SourceFiles
 #define dlLibraryTable_H
 
 #include "label.H"
-#include "Hash.H"
-#include "HashTable.H"
+#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,10 +48,13 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class dlLibraryTable
-:
-    public HashTable<fileName, void*, Hash<void*> >
 {
     // Private Member Functions
+
+        DynamicList<void*> libPtrs_;
+
+        DynamicList<fileName> libNames_;
+
 
         //- Disallow default bitwise copy construct
         dlLibraryTable(const dlLibraryTable&);

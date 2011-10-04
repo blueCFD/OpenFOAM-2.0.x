@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2008-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,7 +226,6 @@ void Foam::KinematicCloud<CloudType>::postEvolve()
     this->dispersion().cacheFields(false);
 
     forces_.cacheFields(false);
-
     functions_.postEvolve();
 
     solution_.nextIter();
@@ -609,6 +608,8 @@ void Foam::KinematicCloud<CloudType>::preEvolve()
 
     pAmbient_ = constProps_.dict().template
         lookupOrDefault<scalar>("pAmbient", pAmbient_);
+
+    functions_.preEvolve();
 }
 
 

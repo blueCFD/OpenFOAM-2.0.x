@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,12 +200,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         {
             FatalErrorIn
             (
-                "turbulentHeatFluxTemperatureFvPatchScalarField"
-                "("
-                    "const fvPatch&, "
-                    "const DimensionedField<scalar, volMesh>&, "
-                    "const dictionary&"
-                ")"
+                "turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()"
             )   << "Unknown heat source type. Valid types are: "
                 << heatSourceTypeNames_ << nl << exit(FatalError);
         }
@@ -225,6 +220,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::write
         << token::END_STATEMENT << nl;
     temperatureCoupledBase::write(os);
     q_.writeEntry("q", os);
+    writeEntry("value", os);
 }
 
 

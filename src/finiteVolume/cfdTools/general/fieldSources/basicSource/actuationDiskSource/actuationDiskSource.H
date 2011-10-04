@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,10 @@ class actuationDiskSource
 :
     public basicSource
 {
-    // Private data
+
+protected:
+
+    // Protected data
 
         //- Sub dictionary with actuationDisk information
         const dictionary& dict_;
@@ -86,6 +89,8 @@ class actuationDiskSource
         //- Disk area
         scalar diskArea_;
 
+
+private:
 
     // Private Member Functions
 
@@ -122,6 +127,7 @@ public:
         actuationDiskSource
         (
             const word& name,
+            const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
         );

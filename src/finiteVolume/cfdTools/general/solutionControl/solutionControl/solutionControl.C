@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,8 @@ void Foam::solutionControl::read(const bool absTolOnly)
                 {
                     FatalErrorIn("bool Foam::solutionControl::read()")
                         << "Residual data for " << iter().keyword()
-                        << " must be specified as a dictionary";
+                        << " must be specified as a dictionary"
+                        << exit(FatalError);
                 }
             }
 

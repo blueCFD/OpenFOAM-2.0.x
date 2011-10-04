@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ public:
                 new volScalarField
                 (
                     "DnuTildaEff",
-                    rho_*nuTilda_/sigmaNut_ + mu()
+                    (rho_*nuTilda_ + mu())/sigmaNut_
                 )
             );
         }

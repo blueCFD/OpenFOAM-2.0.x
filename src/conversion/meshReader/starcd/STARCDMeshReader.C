@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "STARCDMeshReader.H"
-#include "cyclicPolyPatch.H"
+#include "oldCyclicPolyPatch.H"
 #include "emptyPolyPatch.H"
 #include "wallPolyPatch.H"
 #include "symmetryPolyPatch.H"
@@ -950,7 +950,7 @@ void Foam::meshReaders::STARCD::readBoundary(const fileName& inputName)
         {
             // incorrect. should be cyclicPatch but this
             // requires info on connected faces.
-            patchTypes_[patchI] = cyclicPolyPatch::typeName;
+            patchTypes_[patchI] = oldCyclicPolyPatch::typeName;
             patchPhysicalTypes_[patchI] = patchTypes_[patchI];
         }
         else if (origType == "baffle")

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,6 +105,7 @@ class layerParameters
 
         label nRelaxedIter_;
 
+        Switch additionalReporting_;
 
     // Private Member Functions
 
@@ -128,15 +129,15 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary - old syntax
-        layerParameters
-        (
-            const PtrList<dictionary>& surfaceDicts,
-            const refinementSurfaces& refineSurfaces,
-            const labelList& globalToPatch,
-            const dictionary& dict,
-            const polyBoundaryMesh& boundaryMesh
-        );
+        ////- Construct from dictionary - old syntax
+        //layerParameters
+        //(
+        //    const PtrList<dictionary>& surfaceDicts,
+        //    const refinementSurfaces& refineSurfaces,
+        //    const labelList& globalToPatch,
+        //    const dictionary& dict,
+        //    const polyBoundaryMesh& boundaryMesh
+        //);
 
         //- Construct from dictionary - new syntax
         layerParameters(const dictionary& dict, const polyBoundaryMesh&);
@@ -258,6 +259,12 @@ public:
             {
                 return nSnap_;
             }
+
+            const Switch& additionalReporting() const
+            {
+                return additionalReporting_;
+            }
+
 
             // Overall
 

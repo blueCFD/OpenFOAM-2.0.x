@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,16 +154,6 @@ protected:
         (
             const UList<face>&,
             const pointField&
-        );
-
-        //- Calculate typical tolerance per face. Is currently max distance
-        //  from face centre to any of the face vertices.
-        static scalarField calcFaceTol
-        (
-            const scalar matchTol,
-            const UList<face>& faces,
-            const pointField& points,
-            const pointField& faceCentres
         );
 
         //- Get the number of vertices face f needs to be rotated such that
@@ -332,6 +322,16 @@ public:
             labelList& faceMap,
             labelList& rotation
         ) const = 0;
+
+        //- Calculate typical tolerance per face. Is currently max distance
+        //  from face centre to any of the face vertices.
+        static scalarField calcFaceTol
+        (
+            const scalar matchTol,
+            const UList<face>& faces,
+            const pointField& points,
+            const pointField& faceCentres
+        );
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,6 +109,11 @@ Foam::SprayCloud<CloudType>::SprayCloud
         }
 
         Info << "Average parcel mass: " << averageParcelMass_ << endl;
+    }
+
+    if (this->solution().resetSourcesOnStartup())
+    {
+        CloudType::resetSourceTerms();
     }
 }
 

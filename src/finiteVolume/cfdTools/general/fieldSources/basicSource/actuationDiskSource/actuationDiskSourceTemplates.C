@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2010-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,28 +36,25 @@ void Foam::actuationDiskSource::addActuationDiskAxialInertialResistance
 (
     vectorField& Usource,
     const labelList& cells,
-    const scalarField& V,
+    const scalarField& Vcells,
     const RhoFieldType& rho,
     const vectorField& U
 ) const
 {
     scalar a = 1.0 - Cp_/Ct_;
-    scalar totVol = 0.0;
     scalarField T(cells.size());
     vector uniDiskDir = diskDir_/mag(diskDir_);
     tensor E(tensor::zero);
     E.xx() = uniDiskDir.x();
     E.yy() = uniDiskDir.y();
     E.zz() = uniDiskDir.z();
-    const vectorField U1((1.0 - a)*U);
     forAll(cells, i)
     {
-        totVol += V[cells[i]];
-        T[i] = 2.0*rho[cells[i]]*diskArea_*mag(U1[cells[i]])*a/(1.0 - a);
+        T[i] = 2.0*rho[cells[i]]*diskArea_*mag(U[cells[i]])*a/(1.0 - a);
     }
     forAll(cells, i)
     {
-        Usource[cells[i]] += ((V[cells[i]]/totVol)*T[i]*E) & U1[cells[i]];
+        Usource[cells[i]] += ((Vcells[cells[i]]/V())*T[i]*E) & U[cells[i]];
     }
 }
 

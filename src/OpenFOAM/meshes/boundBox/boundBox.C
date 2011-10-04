@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,6 +160,15 @@ Foam::tmp<Foam::pointField> Foam::boundBox::points() const
     pt[7] = point(min_.x(), max_.y(), max_.z());    // min-x, max-y, max-z
 
     return tPts;
+}
+
+
+void Foam::boundBox::inflate(const scalar s)
+{
+    vector ext = vector::one*s*mag();
+
+    min_ -= ext;
+    max_ += ext;
 }
 
 

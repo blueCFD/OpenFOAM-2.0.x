@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -744,7 +744,8 @@ void Foam::autoRefineDriver::doRefine
         100    // maxIter
     );
 
-    // Introduce baffles at surface intersections
+    // Introduce baffles at surface intersections. Remove sections unreachable
+    // from keepPoint.
     baffleAndSplitMesh(refineParams, prepareForSnapping, motionDict);
 
     // Mesh is at its finest. Do optional zoning.

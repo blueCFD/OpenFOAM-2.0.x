@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2010 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,9 @@ class directMappedFixedValueFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+protected:
+
+    // Protected data
 
         //- Name of field to sample - defaults to field associated with this
         //  patchField if not specified
@@ -88,13 +90,15 @@ class directMappedFixedValueFvPatchField
 
         mutable autoPtr<interpolation<Type> > interpolator_;
 
-    // Private Member Functions
+
+    // Protected Member Functions
 
         //- Field to sample. Either on my or nbr mesh
         const GeometricField<Type, fvPatchField, volMesh>& sampleField() const;
 
         //- Access the interpolation method
         const interpolation<Type>& interpolator() const;
+
 
 public:
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ void Foam::constTransport<Thermo>::constTransport::write(Ostream& os) const
     dictionary dict("transport");
     dict.add("mu", mu_);
     dict.add("Pr", 1.0/rPr_);
-    os  << dict;
+    os  << indent << dict.dictName() << dict;
 
     os  << decrIndent << token::END_BLOCK << nl;
 }

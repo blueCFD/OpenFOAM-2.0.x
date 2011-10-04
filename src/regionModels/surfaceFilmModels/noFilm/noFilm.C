@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,12 +62,12 @@ bool noFilm::read()
 
 noFilm::noFilm
 (
-    const word&,
+    const word& modelType,
     const fvMesh& mesh,
-    const dimensionedVector&
+    const dimensionedVector& g
 )
 :
-    surfaceFilmModel(mesh)
+    surfaceFilmModel(modelType, mesh, g)
 {}
 
 

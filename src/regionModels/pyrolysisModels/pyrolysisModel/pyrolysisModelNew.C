@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,33 @@ autoPtr<pyrolysisModel> pyrolysisModel::New(const fvMesh& mesh)
     }
 
     return autoPtr<pyrolysisModel>(cstrIter()(modelType, mesh));
+}
+
+
+autoPtr<pyrolysisModel> pyrolysisModel::New
+(
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+{
+
+    const word modelType = dict.lookup("pyrolysisModel");
+
+    Info<< "Selecting pyrolysisModel " << modelType << endl;
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(modelType);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorIn("pyrolysisModel::New(const fvMesh&, const dictionary&)")
+            << "Unknown pyrolysisModel type " << modelType
+            << nl << nl << "Valid pyrolisisModel types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<pyrolysisModel>(cstrIter()(modelType, mesh, dict));
 }
 
 

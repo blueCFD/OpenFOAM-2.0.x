@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2008-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ void Foam::polynomialTransport<Thermo, PolySize>::write(Ostream& os) const
         word("kappaCoeffs<" + Foam::name(PolySize) + '>'),
         kappaCoeffs_/this->W()
     );
-    os  << dict;
+    os  << indent << dict.dictName() << dict;
 
     os  << decrIndent << token::END_BLOCK << nl;
 }

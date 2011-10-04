@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,6 @@ public:                                                                       \
 //- Define the typeName as \a Name for template sub-classes
 # define defineTemplate2TypeNameWithName(Type, Name)                          \
     template<>                                                                \
-    template<>                                                                \
     defineTypeNameWithName(Type, Name)
 #endif
 
@@ -161,7 +160,6 @@ public:                                                                       \
     defineDebugSwitchWithName(Type, Name, DebugSwitch)
 //- Define the debug information for templates sub-classes, lookup as \a Name
 # define defineTemplate2DebugSwitchWithName(Type, Name, DebugSwitch)          \
-    template<>                                                                \
     template<>                                                                \
     defineDebugSwitchWithName(Type, Name, DebugSwitch)
 #endif

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2004-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,15 +158,18 @@ void Foam::primitiveEntry::readEntry(const dictionary& dict, Istream& is)
     }
     else
     {
-        FatalIOErrorIn
-        (
-            "primitiveEntry::readEntry(const dictionary&, Istream&)",
-            is
-        )   << "ill defined primitiveEntry starting at keyword '"
+        std::ostringstream os;
+        os  << "ill defined primitiveEntry starting at keyword '"
             << keyword() << '\''
             << " on line " << keywordLineNumber
-            << " and ending at line " << is.lineNumber()
-            << exit(FatalIOError);
+            << " and ending at line " << is.lineNumber();
+
+        SafeFatalIOErrorIn
+        (
+            "primitiveEntry::readEntry(const dictionary&, Istream&)",
+            is,
+            os.str()
+        );
     }
 }
 

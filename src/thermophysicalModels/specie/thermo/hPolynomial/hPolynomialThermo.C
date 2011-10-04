@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2008-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ void Foam::hPolynomialThermo<EquationOfState, PolySize>::write
         word("CpCoeffs<" + Foam::name(PolySize) + '>'),
         CpCoeffs_/this->W()
     );
-    os  << dict;
+    os  << indent << dict.dictName() << dict;
 }
 
 

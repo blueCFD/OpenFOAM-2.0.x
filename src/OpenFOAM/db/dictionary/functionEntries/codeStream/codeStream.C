@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,8 +212,25 @@ bool Foam::functionEntries::codeStream::execute
             }
         }
 
-        // all processes must wait for compile to finish
-        reduce(create, orOp<bool>());
+        //- We don't know whether this code was from IOdictionary
+        //  (possibly read on master only) or from e.g. Field so cannot
+        //  decide here.
+        //// all processes must wait for compile to finish - except if this
+        //// file is only read on the master
+        //bool masterOnly =
+        //    (
+        //        regIOobject::fileModificationChecking
+        //     == regIOobject::timeStampMaster
+        //    )
+        // || (
+        //        regIOobject::fileModificationChecking
+        //     == regIOobject::inotifyMaster
+        //    );
+        //
+        //if (!masterOnly)
+        //{
+            reduce(create, orOp<bool>());
+        //}
 
         if (isA<IOdictionary>(topDict(parentDict)))
         {
