@@ -80,9 +80,6 @@ SourceFiles
 
 #include "fixedValueFvPatchFields.H"
 
-#include <dlfcn.h>
-#include <link.h>
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

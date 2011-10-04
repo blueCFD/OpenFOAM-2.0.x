@@ -37,9 +37,6 @@ License
 #include "stringOps.H"
 #include "IOdictionary.H"
 
-#include <dlfcn.h>
-#include <link.h>
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>

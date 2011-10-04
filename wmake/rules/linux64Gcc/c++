@@ -17,5 +17,5 @@ cpptoo      = $(Ctoo)
 
 LINK_LIBS   = $(c++DBUG)
 
-LINKLIBSO   = $(CC) $(c++FLAGS) -shared
-LINKEXE     = $(CC) $(c++FLAGS) -Xlinker --add-needed
+LINKLIBSO   = $(CC) $(c++FLAGS) -shared -Xlinker --strip-all
+LINKEXE     = $(CC) $(c++FLAGS) -Xlinker --add-needed -Xlinker --strip-all

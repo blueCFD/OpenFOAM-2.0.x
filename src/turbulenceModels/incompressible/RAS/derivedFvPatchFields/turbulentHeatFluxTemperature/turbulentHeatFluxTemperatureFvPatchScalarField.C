@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "incompressible/transportModel/transportModel.H"
 #include "turbulentHeatFluxTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
@@ -111,8 +112,8 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     fixedGradientFvPatchScalarField(p, iF),
     heatSource_(heatSourceTypeNames_.read(dict.lookup("heatSource"))),
     q_("q", dict, p.size()),
-    alphaEffName_(dict.lookup("alphaEff")),
-    CpName_(dict.lookup("Cp"))
+    alphaEffName_(dict.lookupOrDefault<word>("alphaEff", "kappat")),
+    CpName_(dict.lookupOrDefault<word>("Cp", "Cp"))
 {
     fvPatchField<scalar>::operator=(patchInternalField());
     gradient() = 0.0;
@@ -190,7 +191,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
     // retrieve (constant) specific heat capacity from transport dictionary
     const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
-    const scalar Cp0(readScalar(rasModel.transport().lookup("Cp0")));
+    const scalar Cp0(dimensionedScalar(rasModel.transport().lookup(CpName_)).value());
 
     switch (heatSource_)
     {
@@ -202,7 +203,15 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         }
         case hsFlux:
         {
-            gradient() = q_/(Cp0*alphaEffp);
+	    // Assume alphaEffp = kappat,
+	    // need kappaEff = kappa(laminar) + kappat, where kappal = nu/Pr
+	    // See applications/solvers/heatTransfer/buoyantBoussinesqSimpleFoam/TEqn.H
+	    const label patchI = patch().index();
+	    const scalarField& nu = rasModel.nu()->boundaryField()[patchI];
+	    const scalar
+	      Pr(dimensionedScalar(rasModel.transport().lookup("Pr")).value());
+
+	    gradient() = q_/(Cp0*(nu / Pr + alphaEffp));
             break;
         }
         default:
@@ -231,6 +240,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::write(Ostream& os) const
         << token::END_STATEMENT << nl;
     q_.writeEntry("q", os);
     os.writeKeyword("alphaEff") << alphaEffName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("Cp") << CpName_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }
 

@@ -20,8 +20,8 @@ EXE_INC = \
 EXE_LIBS = \
     -lengine \
     -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
     -lreactionThermophysicalModels \
     -lfiniteVolume \
     -llagrangian \
@@ -35,4 +35,4 @@ EXE_LIBS = \
     -llaminarFlameSpeedModels \
     -lchemistryModel \
     -lODE \
-    -ldistributionModels
+    -ldistributionModels -u distributionModelsLoad

@@ -149,7 +149,6 @@ $(intersectedSurface)/edgeSurface.C
 
 triSurface/triSurfaceSearch/triSurfaceSearch.C
 triSurface/octreeData/octreeDataTriSurface.C
-triSurface/octreeData/octreeDataTriSurfaceTreeLeaf.C
 triSurface/triangleFuncs/triangleFuncs.C
 triSurface/surfaceFeatures/surfaceFeatures.C
 triSurface/triSurfaceTools/triSurfaceTools.C

@@ -76,6 +76,12 @@ inline Stream& Foam::IOobject::writeBanner(Stream& os, bool noHint)
         "\\*-----------------------------------------"
         "----------------------------------*/\n";
 
+#ifdef MSWIN
+    os <<
+        "/*  Windows port by Symscape (www.symscape.com)                              *\\\n"
+        "\\*---------------------------------------------------------------------------*/\n";
+#endif
+
     return os;
 }
 

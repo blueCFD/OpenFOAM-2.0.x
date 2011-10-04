@@ -6,7 +6,8 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lfiniteVolume \
-    -lgenericPatchFields \
-    -ldecompositionMethods -L$(FOAM_LIBBIN)/dummy -lmetisDecomp -lscotchDecomp \
+    -lgenericPatchFields -u genericPatchFieldsLoad \
+    -ldecompositionMethods \
+    -lscotchDecomp -u scotchDecompLoad \
     -llagrangian \
     -lmeshTools

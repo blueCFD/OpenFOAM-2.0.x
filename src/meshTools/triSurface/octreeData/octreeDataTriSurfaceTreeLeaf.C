@@ -29,6 +29,7 @@ License
 // * * * * * * * * * * * * * Template Specialisations  * * * * * * * * * * * //
 
 template<>
+inline
 bool Foam::treeLeaf<Foam::octreeDataTriSurface>::findNearest
 (
     const octreeDataTriSurface& shapes,

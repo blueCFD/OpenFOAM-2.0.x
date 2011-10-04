@@ -26,4 +26,6 @@ LIB_LIBS = \
     -lliquidMixtureProperties \
     -lthermophysicalFunctions \
     -lspecie \
-    -ldistributionModels
+    -ldistributionModels \
+    -lreactionThermophysicalModels \
+    -lbasicThermophysicalModels
