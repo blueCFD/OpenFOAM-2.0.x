@@ -9,5 +9,6 @@ timer.C
 fileStat.C
 cpuTime/cpuTime.C
 clockTime/clockTime.C
+memInfo/memInfo.C
 
 LIB = $(FOAM_LIBBIN)/libOSspecific

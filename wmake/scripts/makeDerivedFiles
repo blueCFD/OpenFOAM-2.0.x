@@ -69,7 +69,7 @@ if [ $TIS_MinGW -eq 1 ]; then
     MGW_OFversion=`wmakePrintBuild -update`
 
     #apply values to template
-    sed -e 's=1\.7\.\0\.0='$MGW_OFversion'=g' \
+    sed -e 's=2\.0\.\0\.0='$MGW_OFversion'=g' \
         -e 's=tmpintname='$MGW_FINALNAME'=' \
         -e 's=tmporigname='$MGW_FINALNAME'=' \
         tmpver.rc > version_of_build.rc

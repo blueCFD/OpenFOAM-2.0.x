@@ -1,12 +1,14 @@
 /*---------------------------------------------------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 1991-2009 OpenCFD Ltd.
-     \\/     M anipulation  |
--------------------------------------------------------------------------------
+
+    This file is based on the original version for POSIX:
+        OpenFOAM/src/OSspecific/POSIX/
+
 License
-    This file is part of OpenFOAM.
+    This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+    For more information about these patches, visit:
+         http://www.bluecape.com.pt/blueCFD
+
+    OpenFOAM's official site: http://www.openfoam.com
 
     OpenFOAM is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the
