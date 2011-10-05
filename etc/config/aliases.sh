@@ -54,6 +54,11 @@ alias wmSchedOFF='unset WM_SCHEDULER'
 alias wmSC='unset WM_NCOMPPROCS && echo "Building enabled for a single core"'
 alias wmMC='export WM_NCOMPPROCS=1; test -r /proc/cpuinfo && export WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l) && echo "Building enabled for $WM_NCOMPPROCS cores"'
 
+# Toggle WM_CONTINUE_ON_ERROR on/off
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+alias wmNONSTOP='export WM_CONTINUE_ON_ERROR=1'
+alias wmSTOPON1st='unset WM_CONTINUE_ON_ERROR'
+
 # Change ParaView version
 # ~~~~~~~~~~~~~~~~~~~~~~~
 unset foamPV
