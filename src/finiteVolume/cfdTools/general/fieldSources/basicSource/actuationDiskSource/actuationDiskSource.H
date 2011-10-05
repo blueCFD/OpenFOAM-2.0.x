@@ -69,7 +69,10 @@ class actuationDiskSource
 :
     public basicSource
 {
-    // Private data
+
+protected:
+
+    // Protected data
 
         //- Sub dictionary with actuationDisk information
         const dictionary& dict_;
@@ -86,6 +89,8 @@ class actuationDiskSource
         //- Disk area
         scalar diskArea_;
 
+
+private:
 
     // Private Member Functions
 
@@ -122,6 +127,7 @@ public:
         actuationDiskSource
         (
             const word& name,
+            const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
         );

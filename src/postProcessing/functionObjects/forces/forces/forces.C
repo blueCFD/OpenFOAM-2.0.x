@@ -190,6 +190,7 @@ Foam::forces::forces
     rhoRef_(VGREAT),
     pRef_(0),
     coordSys_(),
+    localSystem_(false),
     forcesFilePtr_(NULL)
 {
     // Check if the available mesh is an fvMesh otherise deactivate
@@ -211,6 +212,37 @@ Foam::forces::forces
 
     read(dict);
 }
+
+
+Foam::forces::forces
+(
+    const word& name,
+    const objectRegistry& obr,
+    const labelHashSet& patchSet,
+    const word& pName,
+    const word& UName,
+    const word& rhoName,
+    const scalar rhoInf,
+    const scalar pRef,
+    const coordinateSystem& coordSys
+)
+:
+    name_(name),
+    obr_(obr),
+    active_(true),
+    log_(false),
+    patchSet_(patchSet),
+    pName_(pName),
+    UName_(UName),
+    rhoName_(rhoName),
+    directForceDensity_(false),
+    fDName_(""),
+    rhoRef_(rhoInf),
+    pRef_(pRef),
+    coordSys_(coordSys),
+    localSystem_(false),
+    forcesFilePtr_(NULL)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -300,6 +332,7 @@ void Foam::forces::read(const dictionary& dict)
         if (!dict.readIfPresent<point>("CofR", coordSys_.origin()))
         {
             coordSys_ = coordinateSystem(dict, obr_);
+            localSystem_ = true;
         }
     }
 }
@@ -352,10 +385,17 @@ void Foam::forces::writeFileHeader()
     {
         forcesFilePtr_()
             << "# Time" << tab
-            << "forces(pressure, viscous) moment(pressure, viscous)"
-            << tab
-            << "local forces(pressure, viscous) local moment(pressure, viscous)"
-            << endl;
+            << "forces(pressure, viscous) moment(pressure, viscous)";
+
+        if (localSystem_)
+        {
+            forcesFilePtr_()
+                << tab
+                << "local forces(pressure, viscous) "
+                << "local moment(pressure, viscous)";
+        }
+
+        forcesFilePtr_()<< endl;
     }
 }
 
@@ -383,33 +423,42 @@ void Foam::forces::write()
 
         if (Pstream::master())
         {
-            forcesMoments fmLocal;
-
-            fmLocal.first().first() =
-                coordSys_.localVector(fm.first().first());
-
-            fmLocal.first().second() =
-                coordSys_.localVector(fm.first().second());
-
-            fmLocal.second().first() =
-                coordSys_.localVector(fm.second().first());
-
-            fmLocal.second().second() =
-                coordSys_.localVector(fm.second().second());
-
-            forcesFilePtr_() << obr_.time().value()
-                << tab << fm
-                << tab << fmLocal << endl;
-
             if (log_)
             {
                 Info<< "forces output:" << nl
                     << "    forces(pressure, viscous)" << fm.first() << nl
-                    << "    moment(pressure, viscous)" << fm.second() << nl
-                    << "  local:" << nl
-                    << "    forces(pressure, viscous)" << fmLocal.first() << nl
-                    << "    moment(pressure, viscous)" << fmLocal.second() << nl
-                    << endl;
+                    << "    moment(pressure, viscous)" << fm.second() << nl;
+
+                forcesFilePtr_() << obr_.time().value() << tab << fm;
+
+                if (localSystem_)
+                {
+                    forcesMoments fmLocal;
+
+                    fmLocal.first().first() =
+                        coordSys_.localVector(fm.first().first());
+
+                    fmLocal.first().second() =
+                        coordSys_.localVector(fm.first().second());
+
+                    fmLocal.second().first() =
+                        coordSys_.localVector(fm.second().first());
+
+                    fmLocal.second().second() =
+                        coordSys_.localVector(fm.second().second());
+
+                    forcesFilePtr_() << tab << fmLocal;
+
+
+                    Info<< "  local:" << nl
+                        << "    forces(pressure, viscous)" << fmLocal.first()
+                        << nl
+                        << "    moment(pressure, viscous)" << fmLocal.second()
+                        << nl;
+                }
+
+                forcesFilePtr_() << endl;
+                Info<< endl;
             }
         }
     }

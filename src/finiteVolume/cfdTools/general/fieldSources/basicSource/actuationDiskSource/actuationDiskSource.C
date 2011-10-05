@@ -69,12 +69,13 @@ void Foam::actuationDiskSource::checkData() const
 Foam::actuationDiskSource::actuationDiskSource
 (
     const word& name,
+    const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    basicSource(name, dict, mesh),
-    dict_(dict.subDict(typeName + "Coeffs")),
+    basicSource(name, modelType, dict, mesh),
+    dict_(dict.subDict(modelType + "Coeffs")),
     diskDir_(dict_.lookup("diskDir")),
     Cp_(readScalar(dict_.lookup("Cp"))),
     Ct_(readScalar(dict_.lookup("Ct"))),
@@ -97,31 +98,34 @@ void Foam::actuationDiskSource::addSu(fvMatrix<vector>& UEqn)
         compressible = true;
     }
 
-    const scalarField& V = this->mesh().V();
+    const scalarField& cellsV = this->mesh().V();
     vectorField& Usource = UEqn.source();
     const vectorField& U = UEqn.psi();
 
-    if (compressible)
+    if (V() > VSMALL)
     {
-        addActuationDiskAxialInertialResistance
-        (
-            Usource,
-            cells_,
-            V,
-            this->mesh().lookupObject<volScalarField>("rho"),
-            U
-        );
-    }
-    else
-    {
-        addActuationDiskAxialInertialResistance
-        (
-            Usource,
-            cells_,
-            V,
-            geometricOneField(),
-            U
-        );
+        if (compressible)
+        {
+            addActuationDiskAxialInertialResistance
+            (
+                Usource,
+                cells_,
+                cellsV,
+                this->mesh().lookupObject<volScalarField>("rho"),
+                U
+            );
+        }
+        else
+        {
+            addActuationDiskAxialInertialResistance
+            (
+                Usource,
+                cells_,
+                cellsV,
+                geometricOneField(),
+                U
+            );
+        }
     }
 }
 
