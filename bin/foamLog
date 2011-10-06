@@ -416,12 +416,12 @@ AWK_CONTENTS
     /Solving for/ {
         extract(\$0, "Solving for ", varNameVal)
 
-    varName=varNameVal[1]
-    extract(\$0, "Initial residual = ", val)
-    if(val[1]==varNameVal[1]) next;
-    file=varName "_" subIter[varName]++
-    file="$outputDir/" file
-    print $timeName "\t" val[1] > file
+        varName=varNameVal[1]
+        extract(\$0, "Initial residual = ", val)
+        if(val[1]==varNameVal[1]) next;
+        file=varName "_" subIter[varName]++
+        file="$outputDir/" file
+        print $timeName "\t" val[1] > file
 
         varName=varNameVal[1] "FinalRes"
         file=varName "_" subIter[varName]++
