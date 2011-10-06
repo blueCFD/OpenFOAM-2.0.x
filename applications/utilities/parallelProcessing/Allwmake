@@ -1,4 +1,6 @@
 #!/bin/sh
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeArguments
+
 set -x
 
 if [ -z "$WM_MPLIB" ]; then
