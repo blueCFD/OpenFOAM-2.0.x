@@ -69,6 +69,13 @@ for chtMultis in `find heatTransfer -name "chtMultiRegion*"`; do
   done
 done
 
+echo "Fixing PDRFoam* tutorials"
+for PDRFis in `find combustion -name "PDRFoam*"`; do
+  for PDRTuto in `find $PDRFis -maxdepth 1 -mindepth 1`; do
+    PDRFoamFixB $PDRTuto
+  done
+done
+
 echo "Fixing motorBike STL"
 cd incompressible/simpleFoam/motorBike
 chmod +x fixForWindows
