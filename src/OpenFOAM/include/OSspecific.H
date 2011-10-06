@@ -225,6 +225,14 @@ scalar osRandomDouble();
 //- Convert to unix path separators
 string toUnixPath(const string& path);
 
+//- Assign an OS specific time_t
+#ifdef WIN64
+typedef long time_t;
+#else
+typedef ::time_t time_t;
+#endif
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

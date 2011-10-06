@@ -42,9 +42,9 @@ const char *Foam::clock::monthNames[] =
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-time_t Foam::clock::getTime()
+Foam::time_t Foam::clock::getTime()
 {
-    return ::time(reinterpret_cast<time_t*>(0));
+    return ::time(reinterpret_cast<Foam::time_t*>(0));
 }
 
 
@@ -121,23 +121,14 @@ Foam::clock::clock()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-time_t Foam::clock::elapsedClockTime() const
+Foam::time_t Foam::clock::elapsedClockTime() const
 {
     newTime_ = getTime();
     return newTime_ - startTime_;
 }
 
-#ifdef WIN64
-//add a compatible definition, since "long long == long int" in GCC+WIN64
-long int Foam::clock::elapsedClockTime()
-{
-    newTime_ = getTime();
-    return (long int) (newTime_ - startTime_);
-}
-#endif
 
-
-time_t Foam::clock::clockTimeIncrement() const
+Foam::time_t Foam::clock::clockTimeIncrement() const
 {
     lastTime_ = newTime_;
     newTime_ = getTime();

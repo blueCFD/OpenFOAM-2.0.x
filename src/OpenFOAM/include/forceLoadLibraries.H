@@ -5,6 +5,6 @@
 #ifdef LIBS_TO_LOAD
   //example of LIBS_TO_LOAD: "OpenFOAM incompressibleRASModels Pstream"
   Foam::string libs_to_load(LIBS_TO_LOAD);
-  Foam::openLibrary(libs_to_load);
+  Foam::dlOpen(libs_to_load);
 #endif
 #endif
