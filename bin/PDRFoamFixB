@@ -21,12 +21,12 @@
 #    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#    chtMultiRegionFixK
+#    PDRFoamFixB
 #
 # Description
-#    Help script for creating Windows ready chtMultiRegion tutorials. This has
+#    Help script for creating Windows ready PDRFoam tutorials. This has
 #   to be executed while in a case sensitive file system. Basically it replaces
-#   all relevant K field entries with K_.
+#   all relevant B field entries with B_.
 #
 #------------------------------------------------------------------------------
 
@@ -36,9 +36,9 @@ usage() {
 
 usage: ${0##*/} tutorial_folder
 
-  This is a help script for creating Windows ready chtMultiRegion tutorials. This has
+  This is a help script for creating Windows ready PDRFoam tutorials. This has
   to be executed while in a case sensitive file system. Basically it replaces
-  all relevant K field entries with K_.
+  all relevant B field entries with B_.
 
 * This will change the pertinent tutorial irreversebly! Use it in a copy of the original!
 
@@ -53,33 +53,24 @@ fi
 
 tutorialFolder=$1
 
-if [ ! -d "$tutorialFolder/0" -o ! -d "$tutorialFolder/system" -o ! -e "$tutorialFolder/0/K" ]; then
-  echo "Invalid tutorial folder! This script should only be used with tutorial cases that work with chtMultiRegion*."
+if [ ! -d "$tutorialFolder/0" -o ! -d "$tutorialFolder/system" -o ! -e "$tutorialFolder/0/B" ]; then
+  echo "Invalid tutorial folder! This script should only be used with tutorial cases that work with PDRFoam*."
   exit 1
 fi
 
-#first copy with sed the 0/K file to 0/K_
-echo "Fixing 0/K..."
-sed -e 's=\(object\ *\)K=\1K_=g' "$tutorialFolder/0/K" > $tutorialFolder/0/K_
-rm $tutorialFolder/0/K
+#first copy with sed the 0/B file to 0/B_
+echo "Fixing 0/B..."
+sed -e 's=\(object\ *\)B=\1B_=g' "$tutorialFolder/0/B" > $tutorialFolder/0/B_
+rm $tutorialFolder/0/B
 
 #now sed every changeDict
 echo "Fixing system/*/changeDictionaryDict..."
 find $tutorialFolder/. -name changeDictionaryDict | \
 while read dict; do
-  sed -e 's=\(^\ *\)K$=\1K_=g' $dict > $dict.new   # -e 's=\(K\ \ *\)K;=\1K_;=g'
+  sed -e 's=\(^\ *\)B$=\1B_=g' $dict > $dict.new
   rm $dict
   mv $dict.new $dict
 done
-
-# #now sed every fvSchemes
-# echo "Fixing system/*/fvSchemes..."
-# find $tutorialFolder/. -name fvSchemes | \
-# while read file; do
-#   sed -e 's=\(laplacian(\)K=\1KK=g' $file > $file.new
-#   rm $file
-#   mv $file.new $file
-# done
 
 #now sed every Allrun
 echo "Fixing Allrun..."

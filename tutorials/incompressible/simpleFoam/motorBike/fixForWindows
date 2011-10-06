@@ -5,13 +5,13 @@ mv constant/triSurface/motorBike.stl constant/triSurface/motorBike.orig.stl
 echo "Creating motorBike.stl compatible with Windows filesystem"
 cat constant/triSurface/motorBike.orig.stl | sed 's/\(.*\):\(.*\)%/\1_\2_/' | sed 's/\(.*\)%/\1_/' > constant/triSurface/motorBike.stl
 
-echo "Moving system/snappyHexMeshDict system/snappyHexMeshDict.orig"
-mv system/snappyHexMeshDict system/snappyHexMeshDict.orig
-echo "Creating snappyHexMeshDict references to the motorBike.stl compatible with Windows filesystem"
-cat system/snappyHexMeshDict.orig | sed 's/\(.*\):\(.*\)%/\1_\2_/' | sed 's/\(.*\)%/\1_/' > system/snappyHexMeshDict
+# echo "Moving system/snappyHexMeshDict system/snappyHexMeshDict.orig"
+# mv system/snappyHexMeshDict system/snappyHexMeshDict.orig
+# echo "Creating snappyHexMeshDict references to the motorBike.stl compatible with Windows filesystem"
+# cat system/snappyHexMeshDict.orig | sed 's/\(.*\):\(.*\)%/\1_\2_/' | sed 's/\(.*\)%/\1_/' > system/snappyHexMeshDict
 
 echo "Removing originals..."
 rm constant/triSurface/motorBike.orig.stl
-rm system/snappyHexMeshDict.orig
+# rm system/snappyHexMeshDict.orig
 
 echo "The motorBike case is now compatible with the Windows filesystem."

@@ -481,7 +481,7 @@ SYSTEMOPENMPI)
     ;;
 
 MPICH)
-    export FOAM_MPI=mpich2-1.3.2
+    export FOAM_MPI=mpich2-1.4.1p1
     export MPI_HOME=$WM_THIRD_PARTY_DIR/$FOAM_MPI
     export MPI_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
 
@@ -553,18 +553,18 @@ QSMPI)
     _foamAddLib     $MPI_ARCH_PATH/lib
     ;;
 
-MSMPI)
-    export FOAM_MPI=msmpi-2008R2
-    export MPI_HOME=$WM_THIRD_PARTY_DIR/$FOAM_MPI
-    export MPI_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
+SGIMPI)
+    export FOAM_MPI=${MPI_ROOT##*/}
+    export MPI_ARCH_PATH=$MPI_ROOT
 
     _foamAddPath    $MPI_ARCH_PATH/bin
     _foamAddLib     $MPI_ARCH_PATH/lib
     ;;
 
-SGIMPI)
-    export FOAM_MPI=${MPI_ROOT##*/}
-    export MPI_ARCH_PATH=$MPI_ROOT
+MSMPI)
+    export FOAM_MPI=msmpi-2008R2
+    export MPI_HOME=$WM_THIRD_PARTY_DIR/$FOAM_MPI
+    export MPI_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
 
     _foamAddPath    $MPI_ARCH_PATH/bin
     _foamAddLib     $MPI_ARCH_PATH/lib
