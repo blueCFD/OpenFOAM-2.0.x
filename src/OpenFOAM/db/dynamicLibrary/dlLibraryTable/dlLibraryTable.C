@@ -27,6 +27,12 @@ License
 #include "OSspecific.H"
 #include "long.H"
 
+#ifdef WIN64
+    typedef intptr_t PointerType;
+#else
+    typedef long PointerType;
+#endif
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(Foam::dlLibraryTable, 0);
@@ -60,7 +66,7 @@ Foam::dlLibraryTable::~dlLibraryTable()
             {
                 Info<< "dlLibraryTable::~dlLibraryTable() : closing "
                     << libNames_[i]
-                    << " with handle " << long(libPtrs_[i]) << endl;
+                    << " with handle " << PointerType(libPtrs_[i]) << endl;
             }
             dlClose(libPtrs_[i]);
         }
@@ -83,7 +89,7 @@ bool Foam::dlLibraryTable::open
         if (debug)
         {
             Info<< "dlLibraryTable::open : opened " << functionLibName
-                << " resulting in handle " << long(functionLibPtr) << endl;
+                << " resulting in handle " << PointerType(functionLibPtr) << endl;
         }
 
         if (!functionLibPtr)
@@ -134,7 +140,7 @@ bool Foam::dlLibraryTable::close
         if (debug)
         {
             Info<< "dlLibraryTable::close : closing " << functionLibName
-                << " with handle " << long(libPtrs_[index]) << endl;
+                << " with handle " << PointerType(libPtrs_[index]) << endl;
         }
 
         bool ok = dlClose(libPtrs_[index]);

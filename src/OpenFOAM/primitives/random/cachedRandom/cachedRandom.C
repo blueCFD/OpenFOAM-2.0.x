@@ -79,7 +79,7 @@ Foam::cachedRandom::cachedRandom(const label seed, const label count)
     osRandomSeed(seed_);
     forAll(samples_, i)
     {
-        samples_[i] = drand48();
+        samples_[i] = osRandomDouble();
     }
 }
 
