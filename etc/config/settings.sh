@@ -81,11 +81,11 @@ Linux | CYGWIN* | MINGW*)
     # compiler specifics
     processor=`uname -m`
 
-    if [ "i686" = $processor -o "x86_64" = $processor ]; then
+    if [ "i686" = "$processor" -o "x86_64" = "$processor" ]; then
         export WM_CC=$WM_COMPILER'-gcc'
         export WM_CXX=$WM_COMPILER'-g++'
     else
-        echo Unknown processor type "$processor" for MinGW (cross-)compiler.
+        echo Unknown processor type "$processor" for MinGW \(cross-\)compiler.
         echo For further assistance, please contact www.bluecape.com.pt
     fi
     ;;
