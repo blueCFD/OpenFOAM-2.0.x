@@ -36,7 +36,7 @@ compilerInstall=ThirdParty
 
 # Specify openmpi
 # ~~~~~~~~~~~~~~~~~~~~~~
-export WM_MPLIB=OPENMPI
+export WM_MPLIB=MPICH
 
 #- Cross-compilers: WM_COMPILER = 
 #       i686-w64-mingw32  - using the 32bit compiler from mingw-w64 at sourceforge.net
