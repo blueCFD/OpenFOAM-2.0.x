@@ -20,19 +20,19 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     etc/prefs-mingw-w64.sh
+#     etc/prefs-mingw-w32.sh
 #
 # Description
 #     Preset variables for the OpenFOAM configuration - POSIX shell syntax.
 #
 #     This file will only be sourced if set when calling bashrc. Example:
-#         source $HOME/OpenFOAM/OpenFOAM-2.0.0/etc/bashrc etc/prefs-mingw-w64.sh
+#       source $HOME/OpenFOAM/OpenFOAM-2.0/etc/bashrc prefs-mingw-w32.sh
 #
 #------------------------------------------------------------------------------
 
 # Specify compiler mode: system or ThirdParty
 # ~~~~~~~~~~~~~~~~~~~~~~~
-compilerInstall=ThirdParty
+foamCompiler=ThirdParty
 
 # Specify openmpi
 # ~~~~~~~~~~~~~~~~~~~~~~
