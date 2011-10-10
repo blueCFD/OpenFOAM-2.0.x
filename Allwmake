@@ -27,7 +27,7 @@ else
   fi
 
   if [ "$filecount" = "0" -o ! -d "wmake/bin/$WM_ARCH$WM_COMPILER" ]; then
-    ( cd wmake/src && make cc="gcc" )
+    ( cd wmake/src && make cc="gcc" CC="g++" )
   fi
   filecount=`ls -1A "wmake/bin/$WM_ARCH$WM_COMPILER" | wc -l`
 
