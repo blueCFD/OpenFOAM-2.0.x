@@ -29,10 +29,10 @@ else
   if [ "$filecount" = "0" -o ! -d "wmake/bin/$WM_ARCH$WM_COMPILER" ]; then
     ( cd wmake/src && make cc="gcc" CC="g++" )
   fi
-  filecount=`ls -1A "wmake/bin/$WM_ARCH$WM_COMPILER" | wc -l`
+  filecount=`ls -1A "wmake/platforms/$WM_ARCH$WM_COMPILER" | wc -l`
 
   #use the wmake compiled for linux usage, if not built with system's gcc
-  if [ "$filecount" = "0" -o ! -d "wmake/bin/$WM_ARCH$WM_COMPILER" ]; then
+  if [ "$filecount" = "0" -o ! -d "wmake/platforms/$WM_ARCH$WM_COMPILER" ]; then
     echo "Aborting Allwmake, because a working wmake wasn't found nor built."
     exit 1
   fi
