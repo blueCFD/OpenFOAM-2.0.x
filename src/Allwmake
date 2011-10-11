@@ -59,8 +59,9 @@ wmake $makeType meshTools
 wmake $makeType edgeMesh
 wmake $makeType surfMesh
 
-# Decomposition methods needed by dummyThirdParty
+# Decomposition methods and finiteVolume needed by dummyThirdParty
 parallel/decompose/AllwmakeLnInclude
+wmakeLnInclude finiteVolume
 if isMinGW; then
   wmake $makeType parallel/decompose/decompositionMethods
 fi
