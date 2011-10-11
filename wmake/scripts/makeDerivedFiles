@@ -31,14 +31,16 @@
 #
 #------------------------------------------------------------------------------
 
-[ -d "$WM_OPTIONS" ] || {
-    echo "The '$WM_OPTIONS' directory does not exist, exiting" 1>&2
+[ -z "$WM_OPTIONS_LOCAL" ] && WM_OPTIONS_LOCAL=$WM_OPTIONS
+
+[ -d "$WM_OPTIONS_LOCAL" ] || {
+    echo "The '$WM_OPTIONS_LOCAL' directory does not exist, exiting" 1>&2
     exit 1
 }
 
 # change to the $WM_OPTIONS directory
-cd "$WM_OPTIONS" 2>/dev/null || {
-    echo "Could not change to directory '$WM_OPTIONS'" 1>&2
+cd "$WM_OPTIONS_LOCAL" 2>/dev/null || {
+    echo "Could not change to directory '$WM_OPTIONS_LOCAL'" 1>&2
     exit 1
 }
 
@@ -90,7 +92,7 @@ echo "" >> filesPlusBlank
 
 # Plug in the version resource file for being compiled along
 if [ $TIS_MinGW -eq 1 ]; then
-    echo "Make/$WM_OPTIONS/version_of_build.rc" >> filesPlusBlank
+    echo "Make/$WM_OPTIONS_LOCAL/version_of_build.rc" >> filesPlusBlank
     echo "" >> filesPlusBlank
 fi
 
