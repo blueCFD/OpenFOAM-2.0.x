@@ -59,6 +59,9 @@ wmake $makeType meshTools
 wmake $makeType edgeMesh
 wmake $makeType surfMesh
 
+# lagrangian is needed by finiteVolume
+wmake $makeType lagrangian/basic
+
 # finiteVolume is needed by the Decomposition methods
 wmake $makeType finiteVolume
 
@@ -70,7 +73,6 @@ fi
 # dummyThirdParty (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
 dummyThirdParty/Allwmake $OriginalOptions
 
-wmake $makeType lagrangian/basic
 wmake $makeType lagrangian/distributionModels
 wmake $makeType genericPatchFields
 
