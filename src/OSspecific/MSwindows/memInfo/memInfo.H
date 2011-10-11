@@ -30,7 +30,7 @@ Description
     Memory usage information for the process running this object.
 
 Note
-    Uses the information from /proc/\<pid\>/status
+    Uses the information from ::GetProcessMemoryInfo.
 
 SourceFiles
     memInfo.C
@@ -41,7 +41,7 @@ SourceFiles
 #define memInfo_H
 
 #include "OSspecific.H"
-#include "POSIX.H"
+#include "MSwindows.H"
 #include "IFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
