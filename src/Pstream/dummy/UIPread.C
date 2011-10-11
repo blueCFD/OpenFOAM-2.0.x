@@ -94,30 +94,6 @@ Foam::UIPstream::UIPstream
 }
 
 
-Foam::UIPstream::UIPstream(
-    const int fromProcNo,
-    PstreamBuffers& buffers
-)
-:
-    UPstream(buffers.commsType_),
-    Istream(buffers.format_, buffers.version_),
-    fromProcNo_(fromProcNo),
-    externalBuf_(buffers.recvBuf_[fromProcNo]),
-    externalBufPosition_(buffers.recvBufPos_[fromProcNo]),
-    tag_(buffers.tag_),
-    clearAtEnd_(true),
-    messageSize_(0)
-{
-    notImplemented
-    (
-        "UIPstream::UIPstream"
-        "("
-            "const int fromProcNo,"
-            "PstreamBuffers& buffers"
-        ")"
-    );
-}
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::label Foam::UIPstream::read
