@@ -234,7 +234,8 @@ fi
 # was created successfully
 #------------------------------------------------------------------------------
 
-OBJECTS_DIR=$MakeDir/$WM_OPTIONS
+[ -z "$WM_OPTIONS_LOCAL" ] && WM_OPTIONS_LOCAL=$WM_OPTIONS
+OBJECTS_DIR=$MakeDir/$WM_OPTIONS_LOCAL
 
 [ -r $OBJECTS_DIR/objectFiles ] || {
     echo "$Script error: file '$OBJECTS_DIR/objectFiles' could not be created in $PWD" 1>&2
