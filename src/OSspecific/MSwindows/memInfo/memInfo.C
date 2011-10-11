@@ -32,8 +32,8 @@ License
 #include <stdio.h>
 #include <psapi.h>
 
+// Define type for using the function GetProcessMemoryInfo
 typedef BOOL (*GetProcessMemoryInfoType)(HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD);
-    
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
