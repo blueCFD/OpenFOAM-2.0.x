@@ -59,16 +59,17 @@ wmake $makeType meshTools
 wmake $makeType edgeMesh
 wmake $makeType surfMesh
 
-# Decomposition methods and finiteVolume needed by dummyThirdParty
+# finiteVolume is needed by the Decomposition methods
+wmake $makeType finiteVolume
+
+# Decomposition methods needed by dummyThirdParty
 parallel/decompose/AllwmakeLnInclude
-wmakeLnInclude finiteVolume
 if isMinGW; then
   wmake $makeType parallel/decompose/decompositionMethods
 fi
 # dummyThirdParty (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
 dummyThirdParty/Allwmake $OriginalOptions
 
-wmake $makeType finiteVolume
 wmake $makeType lagrangian/basic
 wmake $makeType lagrangian/distributionModels
 wmake $makeType genericPatchFields
