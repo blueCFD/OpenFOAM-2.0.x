@@ -8,9 +8,9 @@ EXE_INC = -I$(OBJECTS_DIR) \
     $(PFLAGS) $(PINC)
 
 ifeq ("$(WM_PSTREAMLINK)","LINKTOPSTREAM")
-  LIB_LIBS = -L$(FOAM_MPI_LIBBIN) -lPstream
+  LIB_LIBS = -L$(FOAM_LIBBIN)/$(FOAM_MPI)/ -lPstream
 else
-  LIB_LIBS = $(FOAM_MPI_LIBBIN)/libPstream.o
+  LIB_LIBS = $(FOAM_LIBBIN)/$(FOAM_MPI)/libPstream.o
 endif
 
 LIB_LIBS += \

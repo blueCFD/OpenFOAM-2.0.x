@@ -12,4 +12,4 @@
               $(FOAM_LIBBIN)/libGKlib.o \
               -lregex \
               $(PLIBS) \
-              $(FOAM_MPI_LIBBIN)/libPstream.o
+              $(FOAM_LIBBIN)/$(FOAM_MPI)/libPstream.o
