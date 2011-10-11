@@ -41,6 +41,14 @@ set -x
 
 wmakeLnInclude decompositionMethods
 
+if [ -n "$WM_MPLIB" ]; then
+
+#this is to guarantee that scotchDecomp is built with the correct headers
+if [ -e "scotchDecomp/scotchDecomp.dep" ]; then
+  rm scotchDecomp/scotchDecomp.dep
+fi
+
+
 if [ -n "$SCOTCH_ARCH_PATH" ]
 then
     wmake $makeType scotchDecomp
@@ -49,6 +57,8 @@ else
     echo
     echo "Skipping scotchDecomp (ptscotchDecomp)"
     echo
+fi
+
 fi
 
 wmake $makeType decompositionMethods
