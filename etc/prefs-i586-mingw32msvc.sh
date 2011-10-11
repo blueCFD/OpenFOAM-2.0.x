@@ -31,8 +31,8 @@
 #------------------------------------------------------------------------------
 
 #- Operating System:
-#    WM_OSTYPE = POSIX | MSWindows
-export WM_OSTYPE=MSWindows
+#    WM_OSTYPE = POSIX | MSwindows
+export WM_OSTYPE=MSwindows
 
 # Specify compiler mode: system or ThirdParty
 # ~~~~~~~~~~~~~~~~~~~~~~~

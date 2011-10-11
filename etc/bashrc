@@ -96,7 +96,7 @@ export WM_COMPILE_OPTION=Opt
 export WM_MPLIB=OPENMPI
 
 #- Operating System:
-#    WM_OSTYPE = POSIX | MSWindows
+#    WM_OSTYPE = POSIX | MSwindows
 export WM_OSTYPE=POSIX
 
 #- Floating-point signal handling:
