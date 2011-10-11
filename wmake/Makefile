@@ -158,7 +158,7 @@ $(EXECUTABLE):  $(OBJECTS)
 	     $(GLIBS) -o $(EXECUTABLE)
 
 exe:     $(SEXECUTABLE)
-      @echo \`$(SEXECUTABLE)\' is up to date.
+	     @echo \`$(SEXECUTABLE)\' is up to date.
 
 $(SEXECUTABLE): $(OBJECTS)
 	     @$(WM_SCRIPTS)/mkObjectDir $(SEXECUTABLE)
