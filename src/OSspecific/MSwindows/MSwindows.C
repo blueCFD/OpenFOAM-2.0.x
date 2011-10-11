@@ -313,7 +313,7 @@ pid_t ppid()
 
     if (MSwindows::debug)
     {
-        Info<< "ppid not supported under MSwindows" << endl;
+        std::cout<< "ppid not supported under MSwindows" << endl;
     }
 
     return 0;
@@ -326,7 +326,7 @@ pid_t pgid()
 
     if (MSwindows::debug)
     {
-        Info<< "pgid not supported under MSwindows" << endl;
+        std::cout<< "pgid not supported under MSwindows" << endl;
     }
 
     return 0;
@@ -817,7 +817,7 @@ fileNameList readDir
 
     if (MSwindows::debug)
     {
-        Info<< "readDir(const fileName&, const fileType, const bool filtergz)"
+        std::cout<< "readDir(const fileName&, const fileType, const bool filtergz)"
             << " : reading directory " << directory << endl;
     }
 
@@ -876,7 +876,7 @@ fileNameList readDir
     }
     else if (MSwindows::debug)
     {
-        Info<< "readDir(const fileName&, const fileType, "
+        std::cout<< "readDir(const fileName&, const fileType, "
                "const bool filtergz) : cannot open directory "
             << directory << endl;
     }
@@ -966,7 +966,7 @@ bool cp(const fileName& src, const fileName& dest)
         {
             if (MSwindows::debug)
             {
-                Info<< "Copying : " << src/contents[i] 
+                std::cout<< "Copying : " << src/contents[i] 
                     << " to " << destFile/contents[i] << endl;
             }
 
@@ -980,7 +980,7 @@ bool cp(const fileName& src, const fileName& dest)
         {
             if (MSwindows::debug)
             {
-                Info<< "Copying : " << src/subdirs[i]
+                std::cout<< "Copying : " << src/subdirs[i]
                     << " to " << destFile << endl;
             }
 
@@ -1002,7 +1002,7 @@ bool ln(const fileName& src, const fileName& dest)
 
     if (MSwindows::debug)
     {
-        Info<< "MSwindows does not support ln - softlinking" << endl;
+        std::cout<< "MSwindows does not support ln - softlinking" << endl;
     }
 
     return false;
@@ -1014,7 +1014,7 @@ bool mv(const fileName& srcFile, const fileName& destFile)
 {
     if (MSwindows::debug)
     {
-        Info<< "Move : " << srcFile << " to " << destFile << endl;
+        std::cout<< "Move : " << srcFile << " to " << destFile << endl;
     }
 
     const fileName destName = 
@@ -1036,7 +1036,7 @@ bool mvBak(const fileName& src, const std::string& ext)
 {
     if (MSwindows::debug)
     {
-        Info<< "mvBak : " << src << " to extension " << ext << endl;
+        std::cout<< "mvBak : " << src << " to extension " << ext << endl;
     }
 
     if (exists(src, false))
@@ -1073,7 +1073,7 @@ bool rm(const fileName& file)
 {
     if (MSwindows::debug)
     {
-        Info<< "Removing : " << file << endl;
+        std::cout<< "Removing : " << file << endl;
     }
 
     bool success = (0 == std::remove(file.c_str()));
@@ -1094,7 +1094,7 @@ bool rmDir(const fileName& directory)
 {
     if (MSwindows::debug)
     {
-        Info<< "rmdir(const fileName&) : "
+        std::cout<< "rmdir(const fileName&) : "
             << "removing directory " << directory << endl;
     }
 
@@ -1195,7 +1195,7 @@ bool ping
 
     if (MSwindows::debug)
     {
-        Info<< "MSwindows does not support ping" << endl;
+        std::cout<< "MSwindows does not support ping" << endl;
     }
 
     return false;
@@ -1245,7 +1245,7 @@ void* dlOpen(const fileName& libName)
 
       if (MSwindows::debug)
       {
-          Info<< "Libraries to be loaded: " <<  libsToLoad << endl;
+          std::cout<< "Libraries to be loaded: " <<  libsToLoad << endl;
       }
 
       //generate the word list
@@ -1263,7 +1263,7 @@ void* dlOpen(const fileName& libName)
     {
       if (MSwindows::debug)
       {
-          Info<< "dlOpen(const fileName&)"
+          std::cout<< "dlOpen(const fileName&)"
               << " : LoadLibrary of " << libName << endl;
       }
 
@@ -1293,12 +1293,12 @@ void* dlOpen(const fileName& libName)
       }
       else
       {
-          getLoadedLibs()[handle] = libName;
+          getLoadedLibs()[libHandle] = libName;
       }
       
       if (MSwindows::debug)
       {
-          Info<< "Library " <<  libName << " loaded "
+          std::cout<< "Library " <<  libName << " loaded "
               << (libHandle != NULL ? "with success!" : "without success.")
               << endl;
       }
@@ -1313,8 +1313,8 @@ bool dlClose(void* libHandle)
 {
     if (MSwindows::debug)
     {
-        Info<< "dlClose(void*)"
-            << " : FreeLibrary of handle " << handle << endl;
+        std::cout<< "dlClose(void*)"
+            << " : FreeLibrary of handle " << libHandle << endl;
     }
 
     const bool success = 
@@ -1329,7 +1329,7 @@ bool dlClose(void* libHandle)
     }
     else
     {
-        getLoadedLibs().erase(handle);
+        getLoadedLibs().erase(libHandle);
     }
     
     return success;
@@ -1341,7 +1341,7 @@ void* dlSym(void* handle, const std::string& symbol)
 {
     if (MSwindows::debug)
     {
-        Info<< "dlSym(void*, const std::string&)"
+        std::cout<< "dlSym(void*, const std::string&)"
             << " : dlsym of " << symbol << std::endl;
     }
 
@@ -1366,7 +1366,7 @@ bool dlSymFound(void* handle, const std::string& symbol)
     {
         if (MSwindows::debug)
         {
-            Info<< "dlSymFound(void*, const std::string&)"
+            std::cout<< "dlSymFound(void*, const std::string&)"
                 << " : dlSym of " << symbol << std::endl;
         }
 
@@ -1395,7 +1395,7 @@ fileNameList dlLoaded()
 
     if (MSwindows::debug)
     {
-        Info<< "dlLoaded()"
+        std::cout<< "dlLoaded()"
             << " : determined loaded libraries :" << libs.size() << endl;
     }
     return libs;
