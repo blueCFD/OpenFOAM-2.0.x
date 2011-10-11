@@ -36,6 +36,7 @@ SourceFiles
 #define clock_H
 
 #include <ctime>
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
