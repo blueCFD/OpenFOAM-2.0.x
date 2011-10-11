@@ -39,9 +39,17 @@ Foam::memInfo::memInfo()
 :
     peak_(-1),
     size_(-1),
-    rss_(-1)
+    rss_(-1),
+    GetProcessMemoryInfo(NULL)
 {
-    update();
+  GetProcessMemoryInfo = (GetProcessMemoryInfoType)(
+                            GetProcAddress(
+                                            LoadLibrary("kernel32.dll"),
+                                            "GetProcessMemoryInfo"
+                                          )
+                                                   );
+
+  update();
 }
 
 
@@ -67,15 +75,28 @@ const Foam::memInfo& Foam::memInfo::update()
                              pid() );
     if (NULL != hProcess)
     {
+        if(GetProcessMemoryInfo!=NULL)
+        {
+            if ( GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc)) )
+            {
+                peak_ = pmc.PeakWorkingSetSize;
+                size_ = pmc.WorkingSetSize;
+                rss_ = pmc.QuotaPagedPoolUsage;
+            }
+            else
+            {
+                WarningIn("memInfo::update()")
+                  << "GetProcessMemoryInfo function was unable to "
+                  << "retrieve information." << endl;
+            }
+        }
+        else
+        {
+            WarningIn("memInfo::update()")
+              << "Unable to access the GetProcessMemoryInfo function." << endl;
+        }
 
-      if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
-      {
-          peak_ = pmc.PeakWorkingSetSize;
-          size_ = pmc.WorkingSetSize;
-          rss_ = pmc.QuotaPagedPoolUsage;
-      }
-
-      CloseHandle( hProcess );
+        CloseHandle( hProcess );
     }
 
     return *this;
