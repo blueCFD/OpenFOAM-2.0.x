@@ -30,6 +30,10 @@
 #
 #------------------------------------------------------------------------------
 
+#- Operating System:
+#    WM_OSTYPE = POSIX | MSWindows
+export WM_OSTYPE=MSWindows
+
 # Specify compiler mode: system or ThirdParty
 # ~~~~~~~~~~~~~~~~~~~~~~~
 foamCompiler=ThirdParty
