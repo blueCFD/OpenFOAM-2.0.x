@@ -55,10 +55,6 @@ namespace Foam
 
 class memInfo
 {
-    // Private definitions
-    
-        typedef BOOL (*GetProcessMemoryInfoType)(HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD);
-    
     // Private data
 
         //- Peak memory used by the process (analogous to VmPeak in /proc/\<pid\>/status)
@@ -71,7 +67,7 @@ class memInfo
         int rss_;
         
         //- Function pointer for the kernel based function
-        GetProcessMemoryInfoType GetProcessMemoryInfo;
+        void *GetProcessMemoryInfo_;
 
 
 public:

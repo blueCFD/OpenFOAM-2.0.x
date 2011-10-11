@@ -32,6 +32,8 @@ License
 #include <stdio.h>
 #include <psapi.h>
 
+typedef BOOL (*GetProcessMemoryInfoType)(HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD);
+    
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -40,14 +42,13 @@ Foam::memInfo::memInfo()
     peak_(-1),
     size_(-1),
     rss_(-1),
-    GetProcessMemoryInfo(NULL)
+    GetProcessMemoryInfo_(NULL)
 {
-  GetProcessMemoryInfo = (GetProcessMemoryInfoType)(
-                            GetProcAddress(
+  GetProcessMemoryInfo_ = (void *)(GetProcAddress(
                                             LoadLibrary("kernel32.dll"),
                                             "GetProcessMemoryInfo"
-                                          )
-                                                   );
+                                                 )
+                                  );
 
   update();
 }
@@ -75,9 +76,9 @@ const Foam::memInfo& Foam::memInfo::update()
                              pid() );
     if (NULL != hProcess)
     {
-        if(GetProcessMemoryInfo!=NULL)
+        if(GetProcessMemoryInfo_!=NULL)
         {
-            if ( GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc)) )
+            if ( (GetProcessMemoryInfoType(GetProcessMemoryInfo_))(hProcess, &pmc, sizeof(pmc)) )
             {
                 peak_ = pmc.PeakWorkingSetSize;
                 size_ = pmc.WorkingSetSize;
