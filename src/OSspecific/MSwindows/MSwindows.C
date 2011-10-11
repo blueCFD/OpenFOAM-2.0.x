@@ -1346,7 +1346,7 @@ void* dlSym(void* handle, const std::string& symbol)
     }
 
     // get address of symbol
-    void* fun = static_cast<void *>(::GetProcAddress(static_cast<HMODULE>(handle), symbol.c_str()));
+    void* fun = (void *)(::GetProcAddress(static_cast<HMODULE>(handle), symbol.c_str()));
 
     if(fun == NULL)
     {
