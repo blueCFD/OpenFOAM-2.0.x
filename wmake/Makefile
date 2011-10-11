@@ -57,7 +57,8 @@ WM_SCRIPTS   = $(WM_DIR)/scripts
 
 LIB_SRC            = $(WM_PROJECT_DIR)/src
 LIB_PLATFORMS      = $(WM_PROJECT_DIR)/platforms/$(WM_OPTIONS)/lib
-OBJECTS_DIR        = $(MAKE_DIR)/$(WM_OPTIONS)
+WM_OPTIONS_LOCAL  ?= $(WM_OPTIONS)
+OBJECTS_DIR        = $(MAKE_DIR)/$(WM_OPTIONS_LOCAL)
 CLASSES_DIR        = $(MAKE_DIR)/classes
 
 SYS_INC            =

@@ -25,9 +25,9 @@ wmakeMpiLib()
     for libName
     do
     (
-        WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
-        whichmpi="$libName/Make/$WM_OPTIONS/using:$FOAM_MPI"
-        whichscotch="$libName/Make/$WM_OPTIONS/using:$SCOTCH_VERSION"
+        WM_OPTIONS_LOCAL="$WM_OPTIONS$WM_MPLIB"
+        whichmpi="$libName/Make/$WM_OPTIONS_LOCAL/using:$FOAM_MPI"
+        whichscotch="$libName/Make/$WM_OPTIONS_LOCAL/using:$SCOTCH_VERSION"
         [ -e "$whichmpi" -a -e "$whichscotch" ] || wclean $libName
         echo "wmake $makeType $libName"
         wmake $makeType $libName
