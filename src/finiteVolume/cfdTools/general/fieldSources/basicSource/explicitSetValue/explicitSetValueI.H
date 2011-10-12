@@ -23,30 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeParcelCloudFunctionObjects_H
-#define makeParcelCloudFunctionObjects_H
+#include "explicitSetValue.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-#include "FacePostProcessing.H"
-#include "ParticleTracks.H"
-#include "PatchPostProcessing.H"
-#include "VoidFraction.H"
+inline const Foam::List<Foam::point>&
+Foam::explicitSetValue::points() const
+{
+    return points_;
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define makeParcelCloudFunctionObjects(CloudType)                             \
-                                                                              \
-    makeCloudFunctionObject(CloudType);                                       \
-                                                                              \
-    makeCloudFunctionObjectType(FacePostProcessing, CloudType);               \
-    makeCloudFunctionObjectType(ParticleTracks, CloudType);                   \
-    makeCloudFunctionObjectType(PatchPostProcessing, CloudType);              \
-    makeCloudFunctionObjectType(VoidFraction, CloudType);
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

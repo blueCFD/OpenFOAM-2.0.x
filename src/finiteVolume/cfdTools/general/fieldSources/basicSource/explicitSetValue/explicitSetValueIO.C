@@ -23,55 +23,57 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "kinematicSingleLayer.H"
+#include "explicitSetValue.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
+void Foam::explicitSetValue::writeData(Ostream& os) const
 {
-namespace regionModels
-{
-namespace surfaceFilmModels
-{
+    os  << indent << name_ << nl
+        << indent << token::BEGIN_BLOCK << incrIndent << nl;
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void kinematicSingleLayer::constrainFilmField
-(
-    Type& field,
-    const typename Type::cmptType& value
-)
-{
-    forAll(intCoupledPatchIDs_, i)
+    if (scalarFields_.size() > 0)
     {
-        label patchI = intCoupledPatchIDs_[i];
-        field.boundaryField()[patchI] = value;
-        if (debug)
-        {
-            Info<< "Constraining " << field.name()
-                << " boundary " << field.boundaryField()[patchI].patch().name()
-                << " to " << value << endl;
-        }
+        os.writeKeyword("scalarFields") << scalarFields_
+            << token::END_STATEMENT << nl;
     }
-    forAll(passivePatchIDs_, i)
+
+    if (vectorFields_.size() > 0)
     {
-        label patchI = passivePatchIDs_[i];
-        field.boundaryField()[patchI] = value;
-        if (debug)
-        {
-            Info<< "Constraining " << field.name()
-                << " boundary " << field.boundaryField()[patchI].patch().name()
-                << " to " << value << endl;
-        }
+        os.writeKeyword("vectorFields") << vectorFields_
+            << token::END_STATEMENT << nl;
+    }
+
+    os << decrIndent << indent << token::END_BLOCK << endl;
+}
+
+
+bool Foam::explicitSetValue::read(const dictionary& dict)
+{
+    if (basicSource::read(dict))
+    {
+        const dictionary& sourceDict = dict.subDict(name());
+        const dictionary& subDictCoeffs = sourceDict.subDict
+        (
+            typeName + "Coeffs"
+        );
+        setFieldData(subDictCoeffs.subDict("fieldData"));
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-} // end namespace Foam
-} // end namespace regionModels
-} // end namespace surfaceFilmModels
+Foam::Ostream& Foam::operator<<(Ostream& os, const explicitSetValue& source)
+{
+    source.writeData(os);
+    return os;
+}
+
 
 // ************************************************************************* //
