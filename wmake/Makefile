@@ -153,7 +153,7 @@ EXECUTABLE  = $(EXE)$(EXE_EXT)
 SEXECUTABLE = $(SEXE)$(EXE_EXT)
 
 $(EXECUTABLE):  $(OBJECTS)
-	     @$(WM_SCRIPTS)/mkObjectDir $(EXECUTABLE)
+	     @$(WM_SCRIPTS)/makeTargetDir $(EXECUTABLE)
 	     $(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	     $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) $(LINK_LIBS) \
 	     $(GLIBS) -o $(EXECUTABLE)
@@ -162,7 +162,7 @@ exe:     $(SEXECUTABLE)
 	     @echo \`$(SEXECUTABLE)\' is up to date.
 
 $(SEXECUTABLE): $(OBJECTS)
-	     @$(WM_SCRIPTS)/mkObjectDir $(SEXECUTABLE)
+	     @$(WM_SCRIPTS)/makeTargetDir $(SEXECUTABLE)
 	     $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
 	     $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXECUTABLE)
 
