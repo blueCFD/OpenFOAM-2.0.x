@@ -24,7 +24,9 @@ wmake $makeType SLGThermo
 
 # Should be combined with solids&solidMixture
 wmake $makeType basicSolidThermo
-wmake $makeType solidChemistryModel
+
+# Can't build here as solidChemistryModel also depends on RAS/turbulenceModels/compressible
+#wmake $makeType solidChemistryModel
 
 wmake $makeType radiationModels
 

@@ -93,8 +93,15 @@ wmake $makeType randomProcesses
 thermophysicalModels/Allwmake $OriginalOptions
 transportModels/Allwmake $OriginalOptions
 turbulenceModels/Allwmake $OriginalOptions
-wmake $makeType combustionModels
+
+# Depends on RAS/turbulenceModels/compressible
+# hence not in thermophysicalModels
+wmake $makeType thermophysicalModels/chemistryModel
+wmake $makeType thermophysicalModels/solidChemistryModel
 regionModels/Allwmake $OriginalOptions
+
+wmake $makeType combustionModels
+
 lagrangian/Allwmake $OriginalOptions
 postProcessing/Allwmake $OriginalOptions
 mesh/Allwmake $OriginalOptions
