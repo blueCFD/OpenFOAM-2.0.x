@@ -28,7 +28,7 @@ License
 #include "long.H"
 
 #ifdef WIN64
-    typedef long int PointerType;
+    typedef long long PointerType;
 #else
     typedef long PointerType;
 #endif
