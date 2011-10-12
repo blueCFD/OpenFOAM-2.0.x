@@ -43,10 +43,11 @@ Description
 // For EOF only
 #include <cstdio>
 
-using namespace Foam;
-
 #include "argList.H"
 #include "Time.H"
+
+using namespace Foam;
+
 #include "polyMesh.H"
 #include "emptyPolyPatch.H"
 #include "preservePatchTypes.H"
