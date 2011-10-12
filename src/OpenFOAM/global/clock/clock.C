@@ -44,14 +44,14 @@ const char *Foam::clock::monthNames[] =
 
 Foam::time_t Foam::clock::getTime()
 {
-    return ::time(reinterpret_cast<Foam::time_t*>(0));
+    return Foam::time(reinterpret_cast<::time_t*>(0));
 }
 
 
 const struct tm Foam::clock::rawDate()
 {
     time_t t = getTime();
-    struct tm *timeStruct = localtime(&t);
+    struct tm *timeStruct = localtime(reinterpret_cast<::time_t*>(&t));
     return *timeStruct;
 }
 
@@ -61,7 +61,7 @@ Foam::string Foam::clock::dateTime()
     std::ostringstream osBuffer;
 
     time_t t = getTime();
-    struct tm *timeStruct = localtime(&t);
+    struct tm *timeStruct = localtime(reinterpret_cast<::time_t*>(&t));
 
     osBuffer
         << std::setfill('0')
@@ -81,7 +81,7 @@ Foam::string Foam::clock::date()
     std::ostringstream osBuffer;
 
     time_t t = getTime();
-    struct tm *timeStruct = localtime(&t);
+    struct tm *timeStruct = localtime(reinterpret_cast<::time_t*>(&t));
 
     osBuffer
         << monthNames[timeStruct->tm_mon]
@@ -97,7 +97,7 @@ Foam::string Foam::clock::clockTime()
     std::ostringstream osBuffer;
 
     time_t t = getTime();
-    struct tm *timeStruct = localtime(&t);
+    struct tm *timeStruct = localtime(reinterpret_cast<::time_t*>(&t));
 
     osBuffer
         << std::setfill('0')
