@@ -44,7 +44,7 @@ const char *Foam::clock::monthNames[] =
 
 Foam::time_t Foam::clock::getTime()
 {
-    return Foam::time(reinterpret_cast<::time_t*>(0));
+    return ::time(reinterpret_cast<::time_t*>(0));
 }
 
 
