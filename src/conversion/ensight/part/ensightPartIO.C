@@ -80,7 +80,7 @@ void Foam::ensightPart::writeFieldList
         // no idList => perNode
         forAll(field, i)
         {
-            if (isnan(field[i]))
+            if (std::isnan(field[i]))
             {
                 os.writeUndef();
             }
