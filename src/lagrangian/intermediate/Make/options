@@ -40,7 +40,6 @@ LIB_LIBS = \
     -lODE \
     -lcompressibleRASModels \
     -lcompressibleLESModels \
-    -lradiation \
     -ldynamicFvMesh \
-    -lsurfaceFilmModels
-
+    -lsurfaceFilmModels \
+    -lsampling
