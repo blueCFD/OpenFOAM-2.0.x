@@ -28,4 +28,5 @@ EXE_LIBS = \
     -lmeshTools \
     -lregionModels \
     -lsurfaceFilmModels \
+    -lincompressibleTurbulenceModel \
     -lsampling

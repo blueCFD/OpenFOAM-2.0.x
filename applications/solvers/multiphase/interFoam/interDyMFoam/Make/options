@@ -20,5 +20,4 @@ EXE_LIBS = \
     -lmeshTools \
     -ldynamicFvMesh \
     -ltopoChangerFvMesh \
-    -lincompressibleTurbulenceModel \
     -linterfaceProperties

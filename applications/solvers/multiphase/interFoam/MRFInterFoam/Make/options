@@ -13,5 +13,4 @@ EXE_LIBS = \
     -lincompressibleRASModels \
     -lincompressibleLESModels \
     -lfiniteVolume \
-    -lincompressibleTurbulenceModel \
     -linterfaceProperties

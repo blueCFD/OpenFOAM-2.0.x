@@ -49,4 +49,6 @@ EXE_LIBS = \
     -lpyrolysisModels \
     -llagrangianIntermediate \
     -lODE \
+    -lcompressibleTurbulenceModel \
+    -llagrangian
     -lsampling
