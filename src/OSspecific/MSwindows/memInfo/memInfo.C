@@ -76,7 +76,7 @@ const Foam::memInfo& Foam::memInfo::update()
                              pid() );
     if (NULL != hProcess)
     {
-        if(GetProcessMemoryInfo_!=NULL)
+        if(GetProcessMemoryInfo_==NULL)
         {
             if ( (GetProcessMemoryInfoType(GetProcessMemoryInfo_))(hProcess, &pmc, sizeof(pmc)) )
             {
