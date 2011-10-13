@@ -416,7 +416,9 @@ word userName()
 bool isAdministrator()
 {
     //FIXME: This is going to be needed as well... for building dynamic code.
-    return true;
+    //Going to assume to be false, so this way it's possible to build dynamic code!
+    //Besides, in Windows XP the usual default is to be the administrator...
+    return false;
 }
 
 
