@@ -45,7 +45,7 @@ Foam::memInfo::memInfo()
     GetProcessMemoryInfo_(NULL)
 {
   GetProcessMemoryInfo_ = (void *)(GetProcAddress(
-                                            LoadLibrary("kernel32.dll"),
+                                            LoadLibrary("Psapi.dll"),
                                             "GetProcessMemoryInfo"
                                                  )
                                   );
