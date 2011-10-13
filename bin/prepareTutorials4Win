@@ -32,11 +32,11 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} tutorial_folder final_tar_ball
+usage: ${0##*/} /full/path/to/tutorial_folder /full/path/to/final_tar_ball
 
   Help script for preparing tutorials for the Windows environment.
-  It will prepare the tutorials at "tutorial_folder" and then pack the 
-  tutorials into "final_tar_ball".tar.bz2
+  It will prepare the tutorials at "/full/path/to/tutorial_folder" and then pack the 
+  tutorials into "/full/path/to/final_tar_ball".tar.bz2
 
 USAGE
     exit 1
@@ -119,10 +119,13 @@ cd combustion/XiFoam/ras
 sed -i -e 's=\.\./moriyoshiHomogeneous/0.005=\`find ../moriyoshiHomogeneous -name "0.*" | sort -u | tail -n 1\`=' Allrun
 cd -
 
+#go back to the parent folder
+cd ..
+
 echo "Packing Tutorials to here: '${finalTarBall}.tar.bz2'"
-if [ -e "${finalTarBall}.tar.bz2" ]; then rm "${finalTarBall}.tar.bz2"; fi
-tar -cjhf "${finalTarBall}.tar.bz2" .
+if [ -e "${finalTarBall}.tar.bz2" ]; then rm ${finalTarBall}.tar.bz2; fi
+tar -cjhf ${finalTarBall}.tar.bz2 ${tutorialFolder}
 
 echo "Removing temporary folder."
 cd ..
-rm -rf "$tutorialFolder"
+rm -rf ${tutorialFolder}
