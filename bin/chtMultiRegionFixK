@@ -58,12 +58,12 @@ if [ ! -d "$tutorialFolder/system" -a -z "`grep chtMultiRegion system/controlDic
   exit 1
 fi
 
-#first copy with sed the 0/K file to 0/K_
-echo "Fixing 0/K..."
-sed -e 's=\(object\ *\)K=\1K_=g' "$tutorialFolder/0/K" > $tutorialFolder/0/K_
-rm $tutorialFolder/0/K
+#simply move 0/K file to 0/K_
+if [ -e "$tutorialFolder/0/K" ]; then
+  mv ${tutorialFolder}/0/K ${tutorialFolder}/0/K_
+fi
 
-#now sed every changeDict
+#now sed every changeDictionaryDict
 echo "Fixing system/*/changeDictionaryDict..."
 find $tutorialFolder/. -name changeDictionaryDict | \
 while read dict; do
