@@ -32,22 +32,23 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} tutorial_folder
+usage: ${0##*/} tutorial_folder final_tar_ball
 
   Help script for preparing tutorials for the Windows environment.
   It will prepare the tutorials at "tutorial_folder" and then pack the 
-  tutorials into $WM_PROJECT_DIR/tutorials_win.tar.bz2
+  tutorials into "final_tar_ball".tar.bz2
 
 USAGE
     exit 1
 }
 
-if [ $# -lt 1 -o "$1" = "--help" ]
+if [ $# -lt 2 -o "$1" = "--help" ]
 then
     usage
 fi
 
 tutorialFolder=$1
+finalTarBall=$1
 
 #prepare the folder for processing and copy the original tutorials
 #remove the build files, since their useless in Windows.
@@ -114,9 +115,9 @@ cd combustion/XiFoam/ras
 sed -i -e 's=\.\./moriyoshiHomogeneous/0.005=\`find ../moriyoshiHomogeneous -name "0.*" | sort -u | tail -n 1\`=' Allrun
 cd -
 
-echo "Packing Tutorials to here: '$WM_PROJECT_DIR/tutorials_win.tar.bz2'"
-if [ -e "$WM_PROJECT_DIR/tutorials_win.tar.bz2" ]; then rm "$WM_PROJECT_DIR/tutorials_win.tar.bz2"; fi
-tar -cjhf $WM_PROJECT_DIR/tutorials_win.tar.bz2 .
+echo "Packing Tutorials to here: '$WM_PROJECT_DIR/${finalTarBall}.tar.bz2'"
+if [ -e "${finalTarBall}.tar.bz2" ]; then rm "${finalTarBall}.tar.bz2"; fi
+tar -cjhf "${finalTarBall}.tar.bz2" .
 
 echo "Removing temporary folder."
 cd ..
