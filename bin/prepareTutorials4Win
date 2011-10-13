@@ -55,8 +55,12 @@ finalTarBall=$1
 mkdir -p "$tutorialFolder"
 cd "$tutorialFolder"
 cp -r $FOAM_TUTORIALS/. .
-find . -name "*.dep" | xargs rm
-find . -type d -name "linux*" | grep "/Make/" | xargs rm -rf
+for files2rm in `find . -name "*.dep"`; do
+  rm $files2rm
+done
+for folders2rm in `find . -type d -name "linux*" | grep "/Make/"`; do
+  rm -rf $folders2rm
+done
 
 if [ -d "$WM_PROJECT_USER_DIR/contribsExtend/viscoelasticSource" ]; then
   #also copy the tutorials from viscoelasticSource
@@ -115,7 +119,7 @@ cd combustion/XiFoam/ras
 sed -i -e 's=\.\./moriyoshiHomogeneous/0.005=\`find ../moriyoshiHomogeneous -name "0.*" | sort -u | tail -n 1\`=' Allrun
 cd -
 
-echo "Packing Tutorials to here: '$WM_PROJECT_DIR/${finalTarBall}.tar.bz2'"
+echo "Packing Tutorials to here: '${finalTarBall}.tar.bz2'"
 if [ -e "${finalTarBall}.tar.bz2" ]; then rm "${finalTarBall}.tar.bz2"; fi
 tar -cjhf "${finalTarBall}.tar.bz2" .
 
