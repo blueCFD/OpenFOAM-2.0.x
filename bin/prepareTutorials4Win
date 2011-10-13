@@ -124,7 +124,7 @@ cd ..
 
 echo "Packing Tutorials to here: '${finalTarBall}.tar.bz2'"
 if [ -e "${finalTarBall}.tar.bz2" ]; then rm ${finalTarBall}.tar.bz2; fi
-tar -cjhf ${finalTarBall}.tar.bz2 ${tutorialFolder}
+tar -cjhf ${finalTarBall}.tar.bz2 ${tutorialFolder} --transform='s=${tutorialFolder}=tutorials='
 
 echo "Removing temporary folder."
 cd ..

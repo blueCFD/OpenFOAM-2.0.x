@@ -53,7 +53,7 @@ fi
 
 tutorialFolder=$1
 
-if [ ! -d "$tutorialFolder/0" -o ! -d "$tutorialFolder/system" -o ! -e "$tutorialFolder/0/K" ]; then
+if [ ! -d "$tutorialFolder/system" -a -z "`grep chtMultiRegion system/controlDict`" ]; then
   echo "Invalid tutorial folder! This script should only be used with tutorial cases that work with chtMultiRegion*."
   exit 1
 fi
