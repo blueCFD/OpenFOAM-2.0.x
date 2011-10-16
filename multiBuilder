@@ -64,8 +64,7 @@ buildIt()
     echo "Building $WM_OPTIONS ..."
     time ./Allwmake -j > $logFile 2>&1 && \
     time tutorials/Allwmake -j >> $logFile 2>&1 || \
-    echo "There seems to have been problems with this build. Check the log:" && \
-    echo $logFile
+    echo "There seems to have been problems with this build. Check the log: $logFile"
 
     if isMinGW; then
       fixPatchExeNames >> $logFile 2>&1
