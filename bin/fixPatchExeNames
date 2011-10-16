@@ -54,29 +54,31 @@ fi
 
 switchTheExecutable()
 {
-  echo "Processing files in folder $1"
-  cd $1
+  if [ -d "$1" ]; then
+    echo "Processing files in folder $1"
+    cd $1
 
-  find * -iname "*patch*.exe" | \
-  while read file
-  do
-    echo "Processing file: " $file
+    find * -iname "*patch*.exe" | \
+    while read file
+    do
+      echo "Processing file: " $file
 
-    #rename it
-    newName=`echo $file | sed -e 's=\([Pp]\)atch=\1tch=g'`
-    mv $file $newName
+      #rename it
+      newName=`echo $file | sed -e 's=\([Pp]\)atch=\1tch=g'`
+      mv $file $newName
 
-    #strip the extension
-    justName=`echo $file | sed -e 's=\.exe$==g'`
+      #strip the extension
+      justName=`echo $file | sed -e 's=\.exe$==g'`
 
-    #create sh script
-    echo '#!/bin/sh' > $justName
-    echo "$newName \$*" >> $justName
+      #create sh script
+      echo '#!/bin/sh' > $justName
+      echo "$newName \$*" >> $justName
 
-    #create batch file
-    echo "@$newName %*" > ${justName}.bat
+      #create batch file
+      echo "@$newName %*" > ${justName}.bat
 
-  done
+    done
+  fi
 }
 
 switchTheExecutable $FOAM_APPBIN

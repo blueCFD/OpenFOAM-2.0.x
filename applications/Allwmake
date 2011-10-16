@@ -22,16 +22,14 @@ wmake all solvers
 
 if isMinGW; then
   #since we advise to build these in the wiki, lets just put them here to get built too
-  wmake all utilities/mesh/conversion/Optional #ccmio26ToFoam
-  wmake all test/parallel #parallelTest
-
-  if [ ! -x "$WM_DIR/wmakeVerifyExeDependencies" ]; then chmod +x $WM_DIR/wmakeVerifyExeDependencies; fi
+  ( set +e; wmake all utilities/mesh/conversion/Optional ) #ccm26ToFoam - use a containment shell since it depends on license.
+  wmake all test/parallel #Test-parallel
 
   wmakeVerifyExeDependencies utilities || wmake all utilities
   wmakeVerifyExeDependencies solvers || wmake all solvers
   
-  wmake all utilities/mesh/conversion/Optional
-  wmakeVerifyExeDependencies test/parallel || wmake all test/parallel #parallelTest
+  ( set +e; wmake all utilities/mesh/conversion/Optional ) #ccm26ToFoam - use a containment shell since it depends on license.
+  wmakeVerifyExeDependencies test/parallel || wmake all test/parallel #Test-parallel
 fi
 
 # ----------------------------------------------------------------- end-of-file
