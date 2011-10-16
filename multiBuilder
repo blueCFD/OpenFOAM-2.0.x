@@ -62,8 +62,8 @@ buildIt()
     logFile="../buildLogs/Allwmake_${WM_OPTIONS}_${timeStamp}.log"
 
     echo "Building $WM_OPTIONS ..."
-    time ./Allwmake > $logFile 2>&1 && \
-    time wmake all tutorials >> $logFile 2>&1
+    time ./Allwmake -j > $logFile 2>&1 && \
+    time tutorials/Allwmake -j >> $logFile 2>&1
 
     if isMinGW; then
       fixPatchExeNames >> $logFile 2>&1
@@ -110,7 +110,7 @@ then
   # buildIt prefs-mingw32.sh WM_MPLIB=MSMPI
 
   buildIt prefs-mingw-w32.sh WM_MPLIB=MSMPI
-  buildIt prefs-mingw-w32.sh WM_MPLIB=MSMPI  WM_PRECISION_OPTION=SP
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MSMPI WM_PRECISION_OPTION=SP
   buildIt prefs-mingw-w64.sh WM_MPLIB=MSMPI
 
   # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MSMPI
