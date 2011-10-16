@@ -22,13 +22,13 @@ wmake all solvers
 
 if isMinGW; then
   #since we advise to build these in the wiki, lets just put them here to get built too
-  ( set +e; wmake all utilities/mesh/conversion/Optional ) #ccm26ToFoam - use a containment shell since it depends on license.
+  ( set +e; wmake all utilities/mesh/conversion/Optional ; exit 0 ) #ccm26ToFoam - use a containment shell since it depends on license.
   wmake all test/parallel #Test-parallel
 
   wmakeVerifyExeDependencies utilities || wmake all utilities
   wmakeVerifyExeDependencies solvers || wmake all solvers
   
-  ( set +e; wmake all utilities/mesh/conversion/Optional ) #ccm26ToFoam - use a containment shell since it depends on license.
+  ( set +e; wmake all utilities/mesh/conversion/Optional ; exit 0 ) #ccm26ToFoam - use a containment shell since it depends on license.
   wmakeVerifyExeDependencies test/parallel || wmake all test/parallel #Test-parallel
 fi
 
