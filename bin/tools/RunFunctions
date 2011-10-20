@@ -7,7 +7,7 @@
 #   This is just a fork for sourcing the correct file.
 #------------------------------------------------------------------------------
 
-if [ "x$DEBUG_MAXRUNTIME" = "x" ]; then
+if [ -z "$DEBUG_MAXRUNTIME" ]; then
   . $WM_PROJECT_DIR/bin/tools/RunFunctionsOrig
 else
   . $WM_PROJECT_DIR/bin/tools/RunFunctionsMod
