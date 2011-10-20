@@ -90,7 +90,7 @@ fi
 if [ "x$1" != "x--sourceonly" ]
 then
 
-  #build with MPICH2 ----------------
+  #build with Open-MPI ----------------
 
   # buildIt prefs-mingw32.sh
 
@@ -105,6 +105,22 @@ then
   # buildIt prefs-i686-w64-mingw32.sh
   # buildIt prefs-i686-w64-mingw32.sh  WM_PRECISION_OPTION=SP
   # buildIt prefs-x86_64-w64-mingw32.sh
+
+
+  #build with MPICH2 ----------------
+  # buildIt prefs-mingw32.sh WM_MPLIB=MPICH
+
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MPICH
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MPICH WM_PRECISION_OPTION=SP
+  buildIt prefs-mingw-w64.sh WM_MPLIB=MPICH
+
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MPICH
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MPICH WM_PRECISION_OPTION=SP
+  # buildIt prefs-amd64-mingw32msvc.sh WM_MPLIB=MPICH
+
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MPICH
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MPICH WM_PRECISION_OPTION=SP
+  # buildIt prefs-x86_64-w64-mingw32.sh WM_MPLIB=MPICH
 
 
   #build with MSMPI ----------------

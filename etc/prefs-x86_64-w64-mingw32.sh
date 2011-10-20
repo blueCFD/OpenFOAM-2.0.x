@@ -40,7 +40,7 @@ foamCompiler=ThirdParty
 
 # Specify openmpi
 # ~~~~~~~~~~~~~~~~~~~~~~
-export WM_MPLIB=MPICH
+export WM_MPLIB=OPENMPI
 
 #- Cross-compilers: WM_COMPILER = 
 #       i686-w64-mingw32  - using the 32bit compiler from mingw-w64 at sourceforge.net
