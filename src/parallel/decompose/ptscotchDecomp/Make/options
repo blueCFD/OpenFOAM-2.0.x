@@ -12,7 +12,7 @@ EXE_INC = \
 EXE_INC += $(GFLAGS) -DSCOTCH_PTSCOTCH
 LIB_LIBS = \
     -L$(SCOTCH_ROOT)/lib -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lptscotch -lptscotcherrexit \
-    -ldecompositionMethods
+    -ldecompositionMethods $(PLIBS)
 #else
 LIB_LIBS = \
     -L$(SCOTCH_ROOT)/lib -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lptscotch -lptscotcherrexit -lrt
