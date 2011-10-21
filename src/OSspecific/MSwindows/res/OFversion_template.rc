@@ -12,7 +12,7 @@ BEGIN
     BEGIN
       VALUE "FileVersion", "2.0.0.0\0"
       VALUE "ProductVersion", "2.0.0.0\0"
-      VALUE "FileDescription", "Unofficial build of OpenFOAM: The Open Source CFD Toolbox\n\
+      VALUE "FileDescription", "tmpintname - Part of an unofficial build of OpenFOAM: The Open Source CFD Toolbox\n\
 OpenFOAM TM 2011 OpenFOAM Foundation.\n\
 Unofficial Windows 32 and 64 bit porting by blueCAPE: http://www.bluecape.com.pt\n\
 Based on Windows porting (2.0.x v4) by Symscape: http://www.symscape.com\0"

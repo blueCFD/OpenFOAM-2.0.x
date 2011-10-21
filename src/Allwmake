@@ -42,12 +42,7 @@ if isMinGW; then
 
   unset WM_PSTREAMLINK
 
-  #copy the mpi libraries, if any are available
-  if [ "NONE" != "$WM_MPLIB" ]; then
-    cp $MPI_ARCH_PATH/lib/* $FOAM_LIBBIN/$FOAM_MPI/
-  fi
-
-  # mingw excludes default compiler path so 
+  # mingw excludes default compiler path so copy
   # missing /usr/include/FlexLexer.h for flex
   cp /usr/include/FlexLexer.h "$FOAM_SRC/OpenFOAM/lnInclude/"
 fi
