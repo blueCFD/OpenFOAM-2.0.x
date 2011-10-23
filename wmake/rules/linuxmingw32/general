@@ -1,5 +1,5 @@
 CPP        = cpp -traditional-cpp $(GFLAGS)
-LD         = i686-pc-mingw32-ld
+LD         = $(WM_COMPILER_ARCH)-ld
 
 PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_LIBBIN)/$(FOAM_MPI) -lPstream
 PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \

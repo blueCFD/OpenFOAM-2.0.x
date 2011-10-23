@@ -74,6 +74,37 @@ export WM_ARCH=`uname -s`
 if $WM_PROJECT_DIR/bin/isMinGW ; then # MinGW cross-compiler
 #-----------------------------
 
+case "$WM_COMPILER" in
+mingw32)
+    WM_COMPILER_ARCH=i686-pc-mingw32
+    ;;
+mingw-w32)
+    WM_COMPILER_ARCH=i686-pc-mingw32
+    ;;
+mingw-w64)
+    WM_COMPILER_ARCH=x86_64-w64-mingw32
+    ;;
+i686-w64-mingw32)
+    WM_COMPILER_ARCH=i686-w64-mingw32
+    ;;
+x86_64-w64-mingw32)
+    WM_COMPILER_ARCH=x86_64-w64-mingw32
+    ;;
+i586-mingw32msvc)
+    WM_COMPILER_ARCH=i586-mingw32msvc
+    ;;
+amd64-mingw32msvc)
+    WM_COMPILER_ARCH=amd64-mingw32msvc
+    ;;
+*)
+    echo
+    echo "Warning in $WM_PROJECT_DIR/etc/config/settings.sh:"
+    echo "    Unknown OpenFOAM compiler type '$WM_COMPILER'"
+    echo "    Please check your settings"
+    echo
+    ;;
+esac
+
 case "$WM_ARCH" in
 Linux | CYGWIN* | MINGW*)
     WM_ARCH=linux
@@ -82,8 +113,8 @@ Linux | CYGWIN* | MINGW*)
     processor=`uname -m`
 
     if [ "i686" = "$processor" -o "x86_64" = "$processor" ]; then
-        export WM_CC=$WM_COMPILER'-gcc'
-        export WM_CXX=$WM_COMPILER'-g++'
+        export WM_CC=$WM_COMPILER_ARCH'-gcc'
+        export WM_CXX=$WM_COMPILER_ARCH'-g++'
     else
         echo Unknown processor type "$processor" for MinGW \(cross-\)compiler.
         echo For further assistance, please contact www.bluecape.com.pt
@@ -295,7 +326,7 @@ OpenFOAM | ThirdParty)
         clang_version=llvm-svn
         ;;
     mingw32 | mingw-w32 | mingw-w64 | i686-w64-mingw32 | x86_64-w64-mingw32)
-        export WM_COMPILER_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_COMPILER_ARCH/mingw
+        export WM_COMPILER_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/mingw
         _foamAddPath $WM_COMPILER_DIR/bin
         _foamAddLib $WM_COMPILER_DIR/mingw/lib
         if [ -d $WM_COMPILER_DIR/mingw/lib64 ]; then
