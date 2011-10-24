@@ -226,6 +226,13 @@ _foamSource $WM_PROJECT_DIR/etc/config/aliases.sh
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/paraview.sh`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/ensight.sh`
 
+# Auto load other packages files present in the global config.d
+if [ -d "$WM_PROJECT_DIR/etc/config.d" ]; then
+  for configdsh in "$WM_PROJECT_DIR/etc/config.d/*.sh"; do
+    _foamSource ${configdsh}
+  done
+fi
+
 
 # Clean environment paths again. Only remove duplicates
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,10 +254,10 @@ then
     export LD_PRELOAD
 fi
 
-
 # cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
 unset cleaned foamClean foamInstall foamOldDirs
 unset _foamSource _foamEval
+unset configdsh
 
 # ----------------------------------------------------------------- end-of-file
