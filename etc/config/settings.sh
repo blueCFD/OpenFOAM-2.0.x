@@ -105,6 +105,10 @@ amd64-mingw32msvc)
     ;;
 esac
 
+#finally export WM_COMPILER_ARCH
+export WM_COMPILER_ARCH
+
+
 case "$WM_ARCH" in
 Linux | CYGWIN* | MINGW*)
     WM_ARCH=linux
