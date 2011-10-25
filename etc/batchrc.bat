@@ -83,7 +83,7 @@ set FOAM_UTILITIES=%FOAM_APP%\utilities
 set FOAM_SOLVERS=%FOAM_APP%\solvers
 set FOAM_RUN=%WM_PROJECT_USER_DIR%\run
 
-IF "%WM_MPLIB%"=="" set mpi_version=dummy
+IF "%WM_MPLIB%"=="""" set mpi_version=dummy
 IF "%WM_MPLIB%"=="OPENMPI" set mpi_version=openmpi-1.5.3
 IF "%WM_MPLIB%"=="MPICH" set mpi_version=mpich2-1.4.1p1
 IF "%WM_MPLIB%"=="MSMPI" set mpi_version=msmpi-2008R2
