@@ -165,7 +165,7 @@ done
 
 # use foamExec for a specified version
 # also need foamExec for remote (parallel) runs
-if [ -n "$version" -o "$parallelOpt" = true ]
+if [ -n "$version" -o "$parallelOpt" = true ] && ! isMinGW
 then
     # when possible, determine if application even exists
     if [ -z "$version" ]
