@@ -246,7 +246,7 @@ then
         #
         # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
         #
-        mpiopts="$mpiopts -x FOAM_SETTINGS"
+        ! isMinGW && mpiopts="$mpiopts -x FOAM_SETTINGS"
         ;;
     MPICH | MSMPI)
         # add hostfile info
@@ -267,7 +267,7 @@ then
         #
         # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
         #
-        mpiopts="$mpiopts -env FOAM_SETTINGS \"$FOAM_SETTINGS\""
+        ! isMinGW && mpiopts="$mpiopts -env FOAM_SETTINGS \"${FOAM_SETTINGS}\""
         ;;
     esac
 
