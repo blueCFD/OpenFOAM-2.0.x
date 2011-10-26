@@ -85,15 +85,16 @@ findExec() {
 
 #find mpirun or mpiexec, by checking if MPI_ARCH_PATH matches the path for each
 findMpirun() {
+set -x
   path2mpirun=`findExec mpirun`
   path2mpiexec=`findExec mpiexec`
 
-  if [ -n "$path2mpirun" -a "${path2mpirun%/*}" = "$MPI_ARCH_PATH" ]; then
+  if [ -n "$path2mpirun" -a "${path2mpirun%/*}" = "$MPI_ARCH_PATH/bin" ]; then
     echo $path2mpirun
     return 0
   fi
 
-  if [ -n "$path2mpiexec" -a "${path2mpiexec%/*}" = "$MPI_ARCH_PATH" ]; then
+  if [ -n "$path2mpiexec" -a "${path2mpiexec%/*}" = "$MPI_ARCH_PATH/bin" ]; then
     echo $path2mpiexec
     return 0
   fi
