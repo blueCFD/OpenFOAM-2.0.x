@@ -1,14 +1,291 @@
+#---------------------------------*- sh -*-------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
 #------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Modifications
+#     This file has been modified by blueCAPE's unofficial mingw patches for OpenFOAM.
+#     For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
+#
 # Script
 #     RunFunctions
 #
 # Description
-#
-#   This is just a fork for sourcing the correct file.
+#     Miscellaneous functions for running tutorial cases
 #------------------------------------------------------------------------------
 
-if [ -z "$DEBUG_MAXRUNTIME" ]; then
-  . $WM_PROJECT_DIR/bin/tools/RunFunctionsOrig
-else
-  . $WM_PROJECT_DIR/bin/tools/RunFunctionsMod
-fi
+getApplication()
+{
+    sed -ne 's/^ *application *\([a-zA-Z]*\) *;.*$/\1/p' system/controlDict
+}
+
+#------------------------------------------------------------------------------
+if [ -z "$DEBUG_MAXRUNTIME" ]; then #FUNCTIONS FOR NORMAL MODE
+#------------------------------------------------------------------------------
+
+runApplication()
+{
+    APP_RUN=$1
+    APP_NAME=${1##*/}
+    shift
+
+    if [ -f log.$APP_NAME ]
+    then
+        echo "$APP_NAME already run on $PWD: remove log file to re-run"
+    else
+        echo "Running $APP_RUN on $PWD"
+        $APP_RUN $* > log.$APP_NAME 2>&1
+    fi
+}
+
+runParallel()
+{
+    APP_RUN=$1
+    APP_NAME=${1##*/}
+    shift
+
+    if [ -f log.$APP_NAME ]
+    then
+        echo "$APP_NAME already run on $PWD: remove log file to re-run"
+    else
+        nProcs=$1
+        shift
+        echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
+
+        load_mpi_opts
+
+        #if [ "$WM_SCHEDULER" ]
+        #then
+        #    echo "$PWD: $WM_SCHEDULER -np $nProcs" 1>&2
+        #    $WM_SCHEDULER -np $nProcs "( mpirun -np $nProcs $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1 )"
+        #else
+
+            ( mpirun -np $nProcs $mpiopts $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1 )
+        #fi
+    fi
+}
+
+#------------------------------------------------------------------------------
+else #FUNCTIONS FOR TIME LIMITED EXECUTION MODE
+#------------------------------------------------------------------------------
+
+runApplication ()
+{
+    APP_RUN=$1; shift
+    APP_NAME=${APP_RUN##*/}
+
+    if [ -f log.$APP_NAME ] ; then
+        echo "$APP_NAME already run on $PWD: remove log file to run"
+    else
+        echo "Running $APP_RUN on $PWD"
+        $APP_RUN $* > log.$APP_NAME 2>&1 &
+        pid=$!
+        sleep 10;
+
+        #special run time scenarios
+        case $APP_NAME in
+          md*Foam)
+          DEBUG_MAXRUNTIME=`expr $DEBUG_MAXRUNTIME + 360`
+          ;;
+        esac
+
+        count=0
+        while kill -0 $pid > /dev/null 2>&1; do
+          sleep 1;
+          count=`expr $count + 1`
+          case $APP_NAME in
+            #reconstructPar | decomposePar | blockMesh | snappyHexMesh | mdInitialise | dsmcInitialise | changeDictionary | extrudeMesh | 
+            #autoPatch | createPatch | mapFields | setSet | setsToZones
+            *ToFoam | *tofoam)
+              if [ $count -gt $DEBUG_MAXMAXRUNTIME ]; then
+                break;
+              fi
+            ;;
+            *Foam | *foam)
+              if [ $count -gt $DEBUG_MAXRUNTIME ]; then
+                break;
+              fi
+            ;;
+            *)
+              if [ $count -gt $DEBUG_MAXMAXRUNTIME ]; then
+                break;
+              fi
+            ;;
+          esac
+        done
+        if kill -0 $pid > /dev/null 2>&1; then
+          echo "Runtime: maxmin:$DEBUG_MAXRUNTIME < current:$count < maxmax:$DEBUG_MAXMAXRUNTIME - killing $pid"
+          kill $pid
+        fi
+    fi
+}
+
+runParallel ()
+{
+    APP_RUN=$1
+    APP_NAME=${1##*/}
+    shift
+
+    if [ -f log.$APP_NAME ]
+       echo "$APP_NAME already run on $PWD: remove log file to run"
+    else
+       echo "Running $APP_RUN in parallel on $PWD using $1 processes"
+       (
+        nProcs=$1
+        shift
+        echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
+
+        load_mpi_opts
+
+        mpirun -np $nProcs $mpiopts $APP_RUN -parallel < /dev/null > log.$APP_NAME 2>&1  &
+        pid=$!
+        sleep 10;
+
+        #special run time scenarios
+        case $APP_NAME in
+          md*Foam)
+          DEBUG_MAXRUNTIME=`expr $DEBUG_MAXRUNTIME + 360`
+          ;;
+        esac
+
+        count=0
+        while kill -0 $pid > /dev/null 2>&1; do
+          sleep 1;
+          count=`expr $count + 1`
+          case $APP_NAME in
+            #snappyHexMesh | mdInitialise | dsmcInitialise | changeDictionary | extrudeMesh | autoPatch | createPatch | mapFields | setSet | setsToZones
+            *ToFoam | *tofoam)
+              if [ $count -gt $DEBUG_MAXMAXRUNTIME ]; then
+                break;
+              fi
+            ;;
+            *Foam | *foam)
+              if [ $count -gt $DEBUG_MAXRUNTIME ]; then
+                break;
+              fi
+            ;;
+            *)
+              if [ $count -gt $DEBUG_MAXMAXRUNTIME ]; then
+                break;
+              fi
+            ;;
+          esac
+        done
+        if kill -0 $pid > /dev/null 2>&1; then
+          echo "Runtime: maxmin:$DEBUG_MAXRUNTIME < current:$count < maxmax:$DEBUG_MAXMAXRUNTIME - killing $pid"
+          kill $pid
+        fi
+       )
+    fi
+}
+
+#------------------------------------------------------------------------------
+fi #END OF NORMAL vs TIME LIMITED EXECUTION
+#------------------------------------------------------------------------------
+
+load_mpi_opts()
+{
+    mpiopts=""
+
+    case "$WM_MPLIB" in
+    *OPENMPI)
+        # add hostfile info
+        for hostfile in \
+            hostfile \
+            machines \
+            system/hostfile \
+            system/machines \
+            ;
+        do
+            if [ -r $hostfile ]
+            then
+                mpiopts="$mpiopts -hostfile $hostfile"
+                break
+            fi
+        done
+
+        #
+        # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
+        #
+        mpiopts="$mpiopts -x FOAM_SETTINGS"
+        ;;
+    MPICH | MSMPI)
+        # add hostfile info
+        for hostfile in \
+            hostfile \
+            machines \
+            system/hostfile \
+            system/machines \
+            ;
+        do
+           if [ -r $hostfile ]
+           then
+              mpiopts="$mpiopts -machinefile $hostfile"
+              break
+           fi
+        done
+
+        #
+        # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
+        #
+        mpiopts="$mpiopts -env FOAM_SETTINGS \"$FOAM_SETTINGS\""
+        ;;
+    esac
+
+    #
+    # Add additional options that the user might need, such as disabling lo or eth0
+    #
+    mpiopts="$mpiopts $MPI_ACCESSORY_OPTIONS"
+
+    #make sure the variable is visible by forking shells
+    export mpiopts
+}
+
+compileApplication()
+{
+    echo "Compiling $1 application"
+    wmake $1
+}
+
+cloneCase()
+{
+    if [ -d $2 ]
+    then
+        echo "Case already cloned: remove case directory $2 to clone"
+    else
+        echo "Cloning $2 case from $1"
+        mkdir $2
+        cpfiles="0 system constant"
+        for f in $cpfiles
+        do
+            cp -r $1/$f $2
+        done
+    fi
+}
+
+sedIt()
+{
+  sed -e "$1" $2 > $2.tmp
+  mv $2.tmp $2
+}
+
+#------------------------------------------------------------------------------
