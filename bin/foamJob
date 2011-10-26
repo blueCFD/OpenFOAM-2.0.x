@@ -85,7 +85,6 @@ findExec() {
 
 #find mpirun or mpiexec, by checking if MPI_ARCH_PATH matches the path for each
 findMpirun() {
-set -x
   path2mpirun=`findExec mpirun`
   path2mpiexec=`findExec mpiexec`
 
