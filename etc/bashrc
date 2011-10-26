@@ -228,8 +228,8 @@ _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config/ensight.sh`
 
 # Auto load other packages files present in the global config.d
 if [ -d "$WM_PROJECT_DIR/etc/config.d" ]; then
-  for configdsh in "$WM_PROJECT_DIR/etc/config.d/*.sh"; do
-    _foamSource ${configdsh}
+  for configdsh in "$WM_PROJECT_DIR/etc/config.d"/*.sh; do
+    [ -e ${configdsh} ] && _foamSource ${configdsh}
   done
 fi
 
