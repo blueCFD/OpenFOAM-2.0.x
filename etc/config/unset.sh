@@ -51,6 +51,7 @@ unset WM_ARCH_OPTION
 unset WM_CC
 unset WM_CFLAGS
 unset WM_COMPILER
+unset WM_COMPILER_ARCH
 unset WM_COMPILER_LIB_ARCH
 unset WM_COMPILER_DIR
 unset WM_COMPILE_OPTION
@@ -107,6 +108,7 @@ unset FOAM_UTILITIES
 unset MPI_ARCH_PATH
 unset MPI_BUFFER_SIZE
 unset OPAL_PREFIX
+unset MPI_ACCESSORY_OPTIONS
 
 #------------------------------------------------------------------------------
 # unset Ensight/ParaView-related environment variables
