@@ -45,6 +45,14 @@ set WM_OS=MSwindows
 set WM_ARCH=linux
 set WM_COMPILE_OPTION=Opt
 
+IF "%WM_COMPILER%"=="i686-w64-mingw32"    set WM_ARCH_OPTION=32
+IF "%WM_COMPILER%"=="x86_64-w64-mingw32"  set WM_ARCH_OPTION=64
+IF "%WM_COMPILER%"=="mingw32"             set WM_ARCH_OPTION=32
+IF "%WM_COMPILER%"=="mingw-w32"           set WM_ARCH_OPTION=32
+IF "%WM_COMPILER%"=="mingw-w64"           set WM_ARCH_OPTION=64
+IF "%WM_COMPILER%"=="i586-mingw32msvc"    set WM_ARCH_OPTION=32
+IF "%WM_COMPILER%"=="amd64-mingw32msvc"   set WM_ARCH_OPTION=64
+
 rem - Floating-point signal handling:
 rem     set or unset
 set FOAM_SIGFPE=""
