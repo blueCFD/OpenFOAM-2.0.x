@@ -37,18 +37,21 @@ usage: ${0##*/} /full/path/to/tutorial_folder /full/path/to/final_tar_ball
   Help script for preparing tutorials for the Windows environment.
   It will prepare the tutorials at "/full/path/to/tutorial_folder" and then pack the 
   tutorials into "/full/path/to/final_tar_ball".tar.bz2
+  If "/full/path/to/final_tar_ball" is ommited, then the first argument will be
+  used as the base name for the target tarball.
 
 USAGE
     exit 1
 }
 
-if [ $# -lt 2 -o "$1" = "--help" ]
+if [ $# -lt 1 -o "$1" = "--help" ]
 then
     usage
 fi
 
 tutorialFolder=$1
-finalTarBall=$1
+[ $# -eq 1 ] && finalTarBall=$1
+[ $# -eq 2 ] && finalTarBall=$2
 
 #prepare the folder for processing and copy the original tutorials
 #remove the build files, since their useless in Windows.
