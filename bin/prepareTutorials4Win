@@ -70,6 +70,12 @@ if [ -d "$WM_PROJECT_USER_DIR/contribsExtend/viscoelasticSource" ]; then
   cp -r $WM_PROJECT_USER_DIR/contribsExtend/viscoelasticSource/tutorials/. .
 fi
 
+if [ -d "$WM_PROJECT_USER_DIR/contribsExtend/swak4foam" ]; then
+  #also copy the Examples from swak4foam
+  mkdir -p Examples/swak4foam
+  cp -r $WM_PROJECT_USER_DIR/contribsExtend/swak4foam/Examples/. Examples/swak4foam/.
+fi
+
 echo "Fixing chtMultiRegion* tutorials"
 for chtMultis in `find heatTransfer -name "chtMultiRegion*"`; do
   for chtTuto in `find $chtMultis -maxdepth 1 -mindepth 1`; do
@@ -127,7 +133,8 @@ cd ..
 
 echo "Packing Tutorials to here: '${finalTarBall}.tar.bz2'"
 if [ -e "${finalTarBall}.tar.bz2" ]; then rm ${finalTarBall}.tar.bz2; fi
-tar -cjhf ${finalTarBall}.tar.bz2 ${tutorialFolder} --transform='s=${tutorialFolder}=tutorials='
+cd ${tutorialFolder%/*}
+tar -cjhf ${finalTarBall}.tar.bz2 ${tutorialFolder##*/} --transform='s='${tutorialFolder##*/}'=tutorials='
 
 echo "Removing temporary folder."
 cd ..
