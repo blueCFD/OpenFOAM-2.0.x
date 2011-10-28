@@ -42,16 +42,16 @@ const char *Foam::clock::monthNames[] =
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-Foam::time_t Foam::clock::getTime()
+time_t Foam::clock::getTime()
 {
-    return ::time(reinterpret_cast< ::time_t* >(0));
+    return ::time(reinterpret_cast<time_t*>(0));
 }
 
 
 const struct tm Foam::clock::rawDate()
 {
     time_t t = getTime();
-    struct tm *timeStruct = localtime(reinterpret_cast< ::time_t*>(&t));
+    struct tm *timeStruct = localtime(&t);
     return *timeStruct;
 }
 
@@ -61,7 +61,7 @@ Foam::string Foam::clock::dateTime()
     std::ostringstream osBuffer;
 
     time_t t = getTime();
-    struct tm *timeStruct = localtime(reinterpret_cast< ::time_t*>(&t));
+    struct tm *timeStruct = localtime(&t);
 
     osBuffer
         << std::setfill('0')
@@ -81,7 +81,7 @@ Foam::string Foam::clock::date()
     std::ostringstream osBuffer;
 
     time_t t = getTime();
-    struct tm *timeStruct = localtime(reinterpret_cast< ::time_t*>(&t));
+    struct tm *timeStruct = localtime(&t);
 
     osBuffer
         << monthNames[timeStruct->tm_mon]
@@ -97,7 +97,7 @@ Foam::string Foam::clock::clockTime()
     std::ostringstream osBuffer;
 
     time_t t = getTime();
-    struct tm *timeStruct = localtime(reinterpret_cast< ::time_t*>(&t));
+    struct tm *timeStruct = localtime(&t);
 
     osBuffer
         << std::setfill('0')
@@ -121,14 +121,14 @@ Foam::clock::clock()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::time_t Foam::clock::elapsedClockTime() const
+time_t Foam::clock::elapsedClockTime() const
 {
     newTime_ = getTime();
     return newTime_ - startTime_;
 }
 
 
-Foam::time_t Foam::clock::clockTimeIncrement() const
+time_t Foam::clock::clockTimeIncrement() const
 {
     lastTime_ = newTime_;
     newTime_ = getTime();

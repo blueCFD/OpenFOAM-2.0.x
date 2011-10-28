@@ -26,8 +26,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "Time.H"
 #include "starMesh.H"
+#include "Time.H"
 #include "wallPolyPatch.H"
 #include "oldCyclicPolyPatch.H"
 #include "symmetryPolyPatch.H"
