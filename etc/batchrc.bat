@@ -112,19 +112,7 @@ set ParaView_DIR=%WM_THIRD_PARTY_DIR%\platforms\%WM_ARCH%%WM_COMPILER%\paraview-
 
 set PATH=%PATH%;%MPI_ARCH_PATH%\lib;%MPI_ARCH_PATH%\bin;%FOAM_MPI_LIBBIN%;%FOAM_USER_APPBIN%;%FOAM_USER_LIBBIN%;%FOAM_APPBIN%;%FOAM_LIBBIN%;%FOAM_EXT_LIBBIN%;%WM_DIR%;%WM_PROJECT_DIR%\bin;%ParaView_DIR%\bin
 
-
-rem Copy mpiexec.exe from MS-MPI's place to the desired place with the name mpirun.exe
-IF NOT "%WM_MPLIB%"=="MSMPI" GOTO THIRDPARTY
-IF EXIST "%MPI_ARCH_PATH%\bin\mpirun.exe" GOTO THIRDPARTY
-where mpiexec.exe > tmp.variable
-set /p PATHTOMPIEXEC= < tmp.variable
-del /Q tmp.variable > NUL:
-mkdir "%MPI_ARCH_PATH%\bin" > NUL:
-copy /Y "%PATHTOMPIEXEC%" "%MPI_ARCH_PATH%\bin\mpirun.exe" > NUL:
-set PATHTOMPIEXEC=
-
-:THIRDPARTY
-rem source all *.bat files present at "%WM_PROJECT_DIR%\etc\config.d"
+rem Source all *.bat files present at "%WM_PROJECT_DIR%\etc\config.d"
 for %%A in (%WM_PROJECT_DIR%\etc\config.d\*.bat) DO CALL %%A
 GOTO END
 
