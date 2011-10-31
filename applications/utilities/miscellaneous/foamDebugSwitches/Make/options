@@ -73,6 +73,7 @@ EXE_LIBS = \
 
 EXE_LIBS += \
     -lscotchDecomp
+    -lptscotchDecomp
 
 /*no longer supported.*/
 /*    -lmetisDecomp \ */

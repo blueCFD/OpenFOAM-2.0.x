@@ -14,7 +14,7 @@ EXE_LIBS = \
 #if (defined( WIN32 ) || defined( WIN64 ))
 
 EXE_LIBS += \
-    -lscotchDecomp
+    -lptscotchDecomp
 
 /*no longer supported.*/
 /*    -lmetisDecomp \ */
