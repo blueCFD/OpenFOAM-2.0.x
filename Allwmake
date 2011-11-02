@@ -26,7 +26,8 @@ else
     filecount=`ls -1A "wmake/bin/$WM_ARCH$WM_COMPILER" | wc -l`
   fi
 
-  if [ "$filecount" = "0" -o ! -d "wmake/bin/$WM_ARCH$WM_COMPILER" ]; then
+  if [ "$filecount" = "0" -o ! -d "wmake/platforms/$WM_ARCH$WM_COMPILER" ]; then
+    ( cd wmake/src && make WMAKE_BIN="${WM_DIR}/platforms/${WM_ARCH}${WM_COMPILER}_win" EXE_EXTENSION=".exe" )
     ( cd wmake/src && make cc="gcc" CC="g++" )
   fi
   filecount=`ls -1A "wmake/platforms/$WM_ARCH$WM_COMPILER" | wc -l`
