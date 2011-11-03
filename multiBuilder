@@ -59,7 +59,7 @@ buildIt()
     timeStamp=$(date +%Y-%m-%d_%H-%M)
     logFile="../buildLogs/Allwmake_${WM_OPTIONS}_${timeStamp}.log"
 
-    echo "Building $WM_OPTIONS ..."
+    echo "Building $WM_OPTIONS with $WM_MPLIB ..."
     time ./Allwmake -j > $logFile 2>&1 && \
     time tutorials/Allwmake -j >> $logFile 2>&1 || \
     echo "There seems to have been problems with this build. Check the log: $logFile"
@@ -134,5 +134,11 @@ then
   # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MSMPI
   # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MSMPI WM_PRECISION_OPTION=SP
   # buildIt prefs-x86_64-w64-mingw32.sh WM_MPLIB=MSMPI
+
+
+  #Linux builds ----------------------------------------------------
+  # buildIt WM_ARCH_OPTION=32
+  # buildIt WM_ARCH_OPTION=32 WM_PRECISION_OPTION=SP
+  # buildIt
 
 fi
