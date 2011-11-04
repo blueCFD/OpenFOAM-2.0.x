@@ -157,6 +157,7 @@ unset foamPV
 unalias src
 unalias lib
 unalias run
+unalias user
 unalias foam
 unalias foamsrc
 unalias foamfv

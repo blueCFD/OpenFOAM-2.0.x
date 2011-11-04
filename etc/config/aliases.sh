@@ -74,6 +74,7 @@ foamPV()
 alias src='cd $FOAM_SRC'
 alias lib='cd $FOAM_LIBBIN'
 alias run='cd $FOAM_RUN'
+alias user='cd ${FOAM_RUN%/*}'
 alias foam='cd $WM_PROJECT_DIR'
 alias foamsrc='cd $FOAM_SRC/$WM_PROJECT'
 alias foamfv='cd $FOAM_SRC/finiteVolume'
