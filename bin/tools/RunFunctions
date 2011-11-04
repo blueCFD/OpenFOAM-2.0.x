@@ -284,8 +284,12 @@ cloneCase()
 
 sedIt()
 {
-  sed -e "$1" $2 > $2.tmp
-  mv $2.tmp $2
+  if [ -z "`sed --help | grep -e '--in-place'`" ]; then
+    sed -e "$1" $2 > $2.tmp
+    mv $2.tmp $2
+  else
+    sed -i -e "$1" $2
+  fi
 }
 
 #------------------------------------------------------------------------------
