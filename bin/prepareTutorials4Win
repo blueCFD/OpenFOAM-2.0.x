@@ -73,7 +73,9 @@ fi
 if [ -d "$WM_PROJECT_USER_DIR/contribsExtend/swak4foam" ]; then
   #also copy the Examples from swak4foam
   mkdir -p Examples/swak4foam
+  mkdir -p Examples/PyFoam
   cp -r $WM_PROJECT_USER_DIR/contribsExtend/swak4foam/Examples/. Examples/swak4foam/.
+  cp -r $WM_PROJECT_USER_DIR/contribsExtend/PyFoam/examples/. Examples/PyFoam/.
 fi
 
 echo "Fixing chtMultiRegion* tutorials"
