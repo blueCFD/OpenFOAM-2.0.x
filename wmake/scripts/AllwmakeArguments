@@ -110,7 +110,7 @@ getNCOMPPROCS()
         WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
         [ $WM_NCOMPPROCS -le 8 ] || WM_NCOMPPROCS=8
     else
-        WM_NCOMPPROCS=1
+        WM_NCOMPPROCS=${NUMBER_OF_PROCESSORS:-1}
     fi
 
     export WM_NCOMPPROCS
