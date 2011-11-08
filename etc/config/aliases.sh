@@ -52,7 +52,7 @@ alias wmSchedOFF='unset WM_SCHEDULER'
 #wmSC - single core machine
 #wmMC - multi-core machine
 alias wmSC='unset WM_NCOMPPROCS && echo "Building enabled for a single core"'
-alias wmMC='export WM_NCOMPPROCS=1; test -r /proc/cpuinfo && export WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l) && echo "Building enabled for $WM_NCOMPPROCS cores"'
+alias wmMC='export WM_NCOMPPROCS=${NUMBER_OF_PROCESSORS:-1}; test -r /proc/cpuinfo && export WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l); echo "Building enabled for $WM_NCOMPPROCS cores"'
 
 # Toggle WM_CONTINUE_ON_ERROR on/off
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
