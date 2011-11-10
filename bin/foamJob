@@ -191,7 +191,7 @@ else
 fi
 
 
-if [ "$parallelOpt" = true ]
+if [ "$parallelOpt" = true && -z "FOAM_MPI_OVERRIDE_PARALLEL" ]
 then
     # parallel
     # ~~~~~~~~
@@ -289,7 +289,13 @@ then
         pid=$!
         if [ "$waitOpt" = true ]; then wait $pid; fi
     fi
-
+elif [ "$parallelOpt" = true && -n "MPI_OVERRIDE_PARALLEL" ]
+then
+    #
+    # The override is used for corner case scenarios for when the conventional
+    # foamJob script isn't enough.
+    #
+    $MPI_OVERRIDE_PARALLEL $APPLICATION $@
 else
     #
     # run (on single processor)
