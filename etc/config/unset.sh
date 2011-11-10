@@ -142,6 +142,8 @@ unset cleaned foamClean foamOldDirs
 #------------------------------------------------------------------------------
 # cleanup aliases
 
+if [ -n "$(type -t wmSET)" ]; then
+
 unalias wmSET
 unalias wm64
 unalias wm32
@@ -173,5 +175,6 @@ unalias foamUtils
 unalias foam3rdParty
 unalias foamSite
 
+fi
 
 # ----------------------------------------------------------------- end-of-file

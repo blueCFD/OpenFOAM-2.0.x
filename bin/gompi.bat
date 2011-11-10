@@ -27,23 +27,37 @@ rem  Description
 rem      This batch file is analogous to foamJob, but for Windows Command Line.
 rem 
 rem ------------------------------------------------------------------------------
-@echo on
-@set /A x_numprocs=0
-@for /D %%a in (processor*) do @set /A x_numprocs=x_numprocs+1
 
-@GOTO %WM_MPLIB%
+set /A x_numprocs=0
+for /D %%a in (processor*) do @set /A x_numprocs=x_numprocs+1
+set MACHINEFILE=
+
+IF EXIST "hostfile" set MACHINEFILE=hostfile
+IF EXIST "machines" set MACHINEFILE=machines
+IF EXIST "system\hostfile" set MACHINEFILE=system\hostfile
+IF EXIST "system\machines" set MACHINEFILE=system\machines
+
+GOTO %WM_MPLIB%
 
 :OPENMPI
-@for /f "delims=" %%a in ('where %1') do @set APPLICATIONTORUN=%%a
-mpirun -n %x_numprocs% -x HOME -x PATH -x USERNAME -x WM_PROJECT_DIR -x WM_PROJECT_INST_DIR -x WM_OPTIONS -x FOAM_LIBBIN -x FOAM_APPBIN -x FOAM_USER_APPBIN -x MPI_BUFFER_SIZE %APPLICATIONTORUN% -parallel %2 %3 %4 %5 %6 %7 %8 %9
-@GOTO end
+for /f "delims=" %%a in ('where %1') do set APPLICATIONTORUN=%%a
+IF NOT "%MACHINEFILE%" == "" set MACHINEFILE=-hostfile %MACHINEFILE%
+
+@echo on
+mpirun -n %x_numprocs% %MACHINEFILE% -x HOME -x PATH -x USERNAME -x WM_PROJECT_DIR -x WM_PROJECT_INST_DIR -x WM_OPTIONS -x FOAM_LIBBIN -x FOAM_APPBIN -x FOAM_USER_APPBIN -x MPI_BUFFER_SIZE %APPLICATIONTORUN% -parallel %2 %3 %4 %5 %6 %7 %8 %9
+@echo off
+GOTO end
 
 
 :MSMPI
 :MPICH
-mpiexec -n %x_numprocs% -genvlist HOME,PATH,USERNAME,WM_PROJECT_DIR,WM_PROJECT_INST_DIR,WM_OPTIONS,FOAM_LIBBIN,FOAM_APPBIN,FOAM_USER_APPBIN,MPI_BUFFER_SIZE %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9
-@GOTO end
+IF NOT "%MACHINEFILE%" == "" set MACHINEFILE=-machinefile %MACHINEFILE%
+
+@echo on
+mpiexec -n %x_numprocs% %MACHINEFILE% -genvlist HOME,PATH,USERNAME,WM_PROJECT_DIR,WM_PROJECT_INST_DIR,WM_OPTIONS,FOAM_LIBBIN,FOAM_APPBIN,FOAM_USER_APPBIN,MPI_BUFFER_SIZE %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9
+@echo off
+GOTO end
 
 
 :end
-@set x_numprocs=
+set x_numprocs=
