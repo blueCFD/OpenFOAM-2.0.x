@@ -21,7 +21,11 @@ fi
 
 # ensure that created files are readable by everyone
 umask 22
+if isMinGW; then
+doxygen DoxyfileMinGWQt
+else
 doxygen
+fi
 
 # fix permissions (NB: '+X' and not '+x'!)
 for folder in html latex man; do
