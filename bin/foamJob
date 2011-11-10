@@ -161,6 +161,7 @@ do
 done
 
 [ "$#" -ge 1 ] || usage "No application specified"
+ORIGAPPLICATION=$1
 
 
 # use foamExec for a specified version
@@ -295,7 +296,7 @@ then
     # The override is used for corner case scenarios for when the conventional
     # foamJob script isn't enough.
     #
-    $MPI_OVERRIDE_PARALLEL $APPLICATION $@
+    $MPI_OVERRIDE_PARALLEL $ORIGAPPLICATION $@
 else
     #
     # run (on single processor)
