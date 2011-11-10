@@ -7,7 +7,7 @@
         <enableFilterFunctionality>false</enableFilterFunctionality>
         <enableDocumentationManager>false</enableDocumentationManager>
         <enableAddressBar visible="true">true</enableAddressBar>
-        <cacheDirectory>OpenCFD/OpenFOAM</cacheDirectory>
+        <cacheDirectory>SGI/OpenFOAM</cacheDirectory>
     </assistant>
     <docFiles>
         <register>

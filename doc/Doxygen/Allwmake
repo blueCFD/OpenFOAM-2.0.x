@@ -14,8 +14,10 @@ set -x
 rm -rf latex man qt_qch
 
 # remove html directory in background
-mv html html-stagedRemove$$ 2> /dev/null
-rm -rf html-stagedRemove$$ >/dev/null 2>&1 &
+if [ -d "html" ]; then
+  mv html html-stagedRemove$$ 2> /dev/null
+  rm -rf html-stagedRemove$$ >/dev/null 2>&1 &
+fi
 
 # ensure that created files are readable by everyone
 umask 22
@@ -32,5 +34,9 @@ cp openfoam-code.qhcp qt_qch/
 cd qt_qch
 qcollectiongenerator openfoam-code.qhcp -o openfoam-code.qhc
 cd ..
+
+echo
+echo "Done Qt collection generation."
+echo
 
 # ----------------------------------------------------------------- end-of-file
