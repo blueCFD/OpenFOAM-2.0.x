@@ -3,7 +3,7 @@
     <assistant>
         <title>OpenFOAM programmer's C++ documentation</title>
         <startPage>qthelp://org.openfoam/openfoam-code/index.html</startPage>
-        <applicationIcon>../OpenFOAMlogo.jpg</applicationIcon>
+        <applicationIcon>../OpenFOAMdocIcon.png</applicationIcon>
         <enableFilterFunctionality>false</enableFilterFunctionality>
         <enableDocumentationManager>false</enableDocumentationManager>
         <enableAddressBar visible="true">true</enableAddressBar>

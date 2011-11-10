@@ -24,7 +24,9 @@ umask 22
 doxygen
 
 # fix permissions (NB: '+X' and not '+x'!)
-chmod -R a+rX html latex man 2>/dev/null
+for folder in html latex man; do
+  [ -d "$folder" ] && chmod -R a+rX $folder 2>/dev/null
+done
 
 echo
 echo "Done doxygen"
