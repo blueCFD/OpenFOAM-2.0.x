@@ -105,7 +105,7 @@ IF "%WM_MPLIB%"=="MPICH" set MPICH_ROOT=%MPI_ARCH_PATH%
 set FOAM_MPI_LIBBIN=%FOAM_LIBBIN%\%mpi_version%
 set MPI_BUFFER_SIZE=20000000
 
-set ParaView_VERSION=3.10.1
+set ParaView_VERSION=3.12.0
 
 set ParaView_INST_DIR=%WM_THIRD_PARTY_DIR%\paraview-%ParaView_VERSION%
 set ParaView_DIR=%WM_THIRD_PARTY_DIR%\platforms\%WM_ARCH%%WM_COMPILER%\paraview-%ParaView_VERSION%
