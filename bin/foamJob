@@ -296,7 +296,10 @@ then
     # The override is used for corner case scenarios for when the conventional
     # foamJob script isn't enough.
     #
-    $MPI_OVERRIDE_PARALLEL $ORIGAPPLICATION $@
+    overrideOptions=""
+    [ "$screenOpt" = true ] && overrideOptions="$overrideOptions -s"
+    [ "$waitOpt" = true ] && overrideOptions="$overrideOptions -w"
+    $MPI_OVERRIDE_PARALLEL $overrideOptions $ORIGAPPLICATION $@
 else
     #
     # run (on single processor)
