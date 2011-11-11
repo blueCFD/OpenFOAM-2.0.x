@@ -24,7 +24,7 @@
 #     codeHelp
 #
 # Description
-#     This batch file launches the OpenFOAM code C++ documentation, using 
+#     This script launches the OpenFOAM code C++ documentation, using 
 #   Qt Assistant.
 #
 #------------------------------------------------------------------------------

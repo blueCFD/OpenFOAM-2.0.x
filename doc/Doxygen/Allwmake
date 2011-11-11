@@ -23,6 +23,8 @@ fi
 umask 22
 if isMinGW; then
 doxygen DoxyfileMinGWQt
+cp -r css html/
+cp *.png html/
 else
 doxygen
 fi

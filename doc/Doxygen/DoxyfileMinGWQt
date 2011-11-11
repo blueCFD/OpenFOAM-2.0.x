@@ -808,7 +808,7 @@ HTML_FILE_EXTENSION    = .html
 # each generated HTML page. If it is left blank doxygen will generate a
 # standard header.
 
-HTML_HEADER            = $(WM_PROJECT_DIR)/doc/Doxygen/_Header
+HTML_HEADER            = $(WM_PROJECT_DIR)/doc/Doxygen/_HeaderMinGWQt
 
 # The HTML_FOOTER tag can be used to specify a personal HTML footer for
 # each generated HTML page. If it is left blank doxygen will generate a
