@@ -30,4 +30,4 @@
 #------------------------------------------------------------------------------
 
 cd $WM_PROJECT_DIR/doc/Doxygen/html
-assistant -collectionFile openfoam-code.qhc
+assistant -collectionFile openfoam-code.qhc &
