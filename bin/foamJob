@@ -192,7 +192,7 @@ else
 fi
 
 
-if [ "$parallelOpt" = true -a -z "FOAM_MPI_OVERRIDE_PARALLEL" ]
+if [ "$parallelOpt" = true -a -z "$MPI_OVERRIDE_PARALLEL" ]
 then
     # parallel
     # ~~~~~~~~
@@ -290,7 +290,7 @@ then
         pid=$!
         if [ "$waitOpt" = true ]; then wait $pid; fi
     fi
-elif [ "$parallelOpt" = true -a -n "MPI_OVERRIDE_PARALLEL" ]
+elif [ "$parallelOpt" = true -a -n "$MPI_OVERRIDE_PARALLEL" ]
 then
     #
     # The override is used for corner case scenarios for when the conventional

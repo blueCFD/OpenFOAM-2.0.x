@@ -71,7 +71,7 @@ runParallel()
         shift
         echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
 
-      if [ -z "MPI_OVERRIDE_RUN_PARALLEL" ]
+      if [ -z "$MPI_OVERRIDE_RUN_PARALLEL" ]
         
         load_mpi_opts
 
@@ -166,7 +166,7 @@ runParallel ()
         shift
         echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
 
-      if [ -z "MPI_OVERRIDE_RUN_PARALLEL" ]
+      if [ -z "$MPI_OVERRIDE_RUN_PARALLEL" ]
 
         load_mpi_opts
 
