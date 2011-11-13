@@ -11,17 +11,20 @@ cd ${0%/*} || exit 1    # run from this directory
 
 set -x
 
-rm -rf latex man qt_qch
-
-# remove html directory in background
-if [ -d "html" ]; then
-  mv html html-stagedRemove$$ 2> /dev/null
-  rm -rf html-stagedRemove$$ >/dev/null 2>&1 &
-fi
+for folder in html latex man qt_qch; do
+  # remove $folder directory in background
+  if [ -d "$folder" ]; then
+    mv $folder ${folder}-stagedRemove$$ 2> /dev/null
+    rm -rf ${folder}-stagedRemove$$ >/dev/null 2>&1 &
+  fi
+done
 
 # ensure that created files are readable by everyone
 umask 22
 if isMinGW; then
+mkdir html
+cp -r css html/
+cp *.png html/
 doxygen DoxyfileMinGWQt
 else
 doxygen

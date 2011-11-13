@@ -30,8 +30,6 @@
 #------------------------------------------------------------------------------
 
 cd ..
-cp -r css html/
-cp *.png html/
 
 filelist="`find css -mindepth 1` `find . -maxdepth 1 -name "*.png"`"
 
