@@ -71,6 +71,8 @@ runParallel()
         shift
         echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
 
+      if [ -z "MPI_OVERRIDE_RUN_PARALLEL" ]
+        
         load_mpi_opts
 
         #if [ "$WM_SCHEDULER" ]
@@ -81,6 +83,16 @@ runParallel()
 
             ( mpirun -np $nProcs $mpiopts $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1 )
         #fi
+
+      else
+
+        #
+        # The override is used for corner case scenarios for when the conventional
+        # RunParallel function isn't enough.
+        #
+        $MPI_OVERRIDE_RUN_PARALLEL log.$APP_NAME $nProcs $APP_RUN $*
+
+      fi
     fi
 }
 
@@ -154,9 +166,22 @@ runParallel ()
         shift
         echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
 
+      if [ -z "MPI_OVERRIDE_RUN_PARALLEL" ]
+
         load_mpi_opts
 
         mpirun -np $nProcs $mpiopts $APP_RUN -parallel < /dev/null > log.$APP_NAME 2>&1  &
+
+      else
+
+        #
+        # The override is used for corner case scenarios for when the conventional
+        # RunParallel function isn't enough.
+        #
+        $MPI_OVERRIDE_RUN_PARALLEL log.$APP_NAME $nProcs $APP_RUN $* &
+
+      fi
+
         pid=$!
         sleep 10;
 
