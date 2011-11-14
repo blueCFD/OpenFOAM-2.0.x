@@ -101,6 +101,8 @@ runParallel()
 else #FUNCTIONS FOR TIME LIMITED EXECUTION MODE
 #------------------------------------------------------------------------------
 
+export DEBUG_MAXMAXRUNTIME=`expr $DEBUG_MAXRUNTIME \* 10`
+
 runApplication ()
 {
     APP_RUN=$1; shift
