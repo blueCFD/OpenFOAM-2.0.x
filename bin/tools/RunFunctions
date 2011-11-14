@@ -173,7 +173,7 @@ runParallel ()
 
           load_mpi_opts
 
-          mpirun -np $nProcs $mpiopts $APP_RUN -parallel < /dev/null > log.$APP_NAME 2>&1  &
+          mpirun -np $nProcs $mpiopts $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1  &
 
         else
 
