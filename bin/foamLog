@@ -127,11 +127,11 @@ do
         shift
         ;;
     -l | -list)
-        mergeOpt=true
+        listOpt=true
         shift
         ;;
     -m | -merge)
-        listOpt=true
+        mergeOpt=true
         shift
         ;;
     -q | -quiet | -s | -silent)
