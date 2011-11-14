@@ -163,7 +163,6 @@ runParallel ()
     if [ -f log.$APP_NAME ] ; then
        echo "$APP_NAME already run on $PWD: remove log file to run"
     else
-       echo "Running $APP_RUN in parallel on $PWD using $1 processes"
        (
         nProcs=$1
         shift
