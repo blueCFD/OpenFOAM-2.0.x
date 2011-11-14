@@ -220,7 +220,12 @@ runParallel ()
         done
         if kill -0 $pid > /dev/null 2>&1; then
           echo "Runtime: maxmin:$DEBUG_MAXRUNTIME < current:$count < maxmax:$DEBUG_MAXMAXRUNTIME - killing $pid"
-          kill $pid
+          echo "... Issuing job termination at `date` ..."
+          foamEndJob -now
+          if kill -0 $pid > /dev/null 2>&1; then
+            echo "Final kill issued at `date`"
+            kill $pid
+          fi
         fi
        )
     fi
