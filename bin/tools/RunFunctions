@@ -220,9 +220,7 @@ runParallel ()
         done
         if kill -0 $pid > /dev/null 2>&1; then
           echo "Runtime: maxmin:$DEBUG_MAXRUNTIME < current:$count < maxmax:$DEBUG_MAXMAXRUNTIME - killing $pid"
-          pid2=`grep -e "PID\ *:\ " log.$APP_NAME | head -n1 | sed -e 's=PID\ *:\ =='`
           kill $pid
-          [ -n "$pid2" ] && [ $pid2 -gt 0 ] && kill -0 $pid2 > /dev/null 2>&1 && kill $pid2
         fi
        )
     fi
