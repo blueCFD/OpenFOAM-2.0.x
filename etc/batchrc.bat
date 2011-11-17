@@ -144,7 +144,7 @@ set PATH=%PATH%;%MPI_ARCH_PATH%\lib;%MPI_ARCH_PATH%\bin;%FOAM_MPI_LIBBIN%;%FOAM_
 
 rem add (non-dummy) MPI implementation
 rem dummy MPI already added to LD_LIBRARY_PATH and has no external libraries
-IF "%FOAM_MPI%"=="dummy" set PATH=%PATH%;%FOAM_EXT_LIBBIN%\%FOAM_MPI%
+IF NOT "%FOAM_MPI%"=="dummy" set PATH=%PATH%;%FOAM_EXT_LIBBIN%\%FOAM_MPI%
 
 rem Source all *.bat files present at "%WM_PROJECT_DIR%\etc\config.d"
 for %%A in (%WM_PROJECT_DIR%\etc\config.d\*.bat) DO CALL %%A
