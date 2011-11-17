@@ -121,18 +121,18 @@ set FOAM_UTILITIES=%FOAM_APP%\utilities
 set FOAM_SOLVERS=%FOAM_APP%\solvers
 set FOAM_RUN=%WM_PROJECT_USER_DIR%\run
 
-IF "%WM_MPLIB%"=="""" set mpi_version=dummy
-IF "%WM_MPLIB%"=="OPENMPI" set mpi_version=openmpi-1.5.3
-IF "%WM_MPLIB%"=="MPICH" set mpi_version=mpich2-1.4.1p1
-IF "%WM_MPLIB%"=="MSMPI" set mpi_version=msmpi-2008R2
+IF "%WM_MPLIB%"=="""" set FOAM_MPI=dummy
+IF "%WM_MPLIB%"=="OPENMPI" set FOAM_MPI=openmpi-1.5.3
+IF "%WM_MPLIB%"=="MPICH" set FOAM_MPI=mpich2-1.4.1p1
+IF "%WM_MPLIB%"=="MSMPI" set FOAM_MPI=msmpi-2008R2
 
-set MPI_HOME=%WM_THIRD_PARTY_DIR%\%mpi_version%
-set MPI_ARCH_PATH=%WM_THIRD_PARTY_DIR%\platforms\%WM_ARCH%%WM_COMPILER%\%mpi_version%
+set MPI_HOME=%WM_THIRD_PARTY_DIR%\%FOAM_MPI%
+set MPI_ARCH_PATH=%WM_THIRD_PARTY_DIR%\platforms\%WM_ARCH%%WM_COMPILER%\%FOAM_MPI%
 
 IF "%WM_MPLIB%"=="OPENMPI" set OPAL_PKGDATADIR=%MPI_ARCH_PATH%\share\openmpi
 IF "%WM_MPLIB%"=="MPICH" set MPICH_ROOT=%MPI_ARCH_PATH%
 
-set FOAM_MPI_LIBBIN=%FOAM_LIBBIN%\%mpi_version%
+set FOAM_MPI_LIBBIN=%FOAM_LIBBIN%\%FOAM_MPI%
 set MPI_BUFFER_SIZE=20000000
 
 set ParaView_VERSION=3.12.0
@@ -141,6 +141,10 @@ set ParaView_INST_DIR=%WM_THIRD_PARTY_DIR%\paraview-%ParaView_VERSION%
 set ParaView_DIR=%WM_THIRD_PARTY_DIR%\platforms\%WM_ARCH%%WM_COMPILER%\paraview-%ParaView_VERSION%
 
 set PATH=%PATH%;%MPI_ARCH_PATH%\lib;%MPI_ARCH_PATH%\bin;%FOAM_MPI_LIBBIN%;%FOAM_USER_APPBIN%;%FOAM_USER_LIBBIN%;%FOAM_APPBIN%;%FOAM_LIBBIN%;%FOAM_EXT_LIBBIN%;%WM_DIR%;%WM_PROJECT_DIR%\bin;%ParaView_DIR%\bin
+
+rem add (non-dummy) MPI implementation
+rem dummy MPI already added to LD_LIBRARY_PATH and has no external libraries
+IF "%FOAM_MPI%"=="dummy" set PATH=%PATH%;%FOAM_EXT_LIBBIN%\%FOAM_MPI%
 
 rem Source all *.bat files present at "%WM_PROJECT_DIR%\etc\config.d"
 for %%A in (%WM_PROJECT_DIR%\etc\config.d\*.bat) DO CALL %%A
