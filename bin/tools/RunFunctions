@@ -84,6 +84,7 @@ runParallel()
         #else
 
             ( $mpirun -np $nProcs $mpiopts $APP_RUN -parallel $* < /dev/null > log.$APP_NAME 2>&1 )
+
         #fi
 
       else
@@ -259,8 +260,9 @@ load_mpi_opts()
 
         #
         # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
+        # Note: don't send for now, simply because foamExec isn't being called here
         #
-        mpiopts="$mpiopts -x FOAM_SETTINGS"
+        #mpiopts="$mpiopts -x FOAM_SETTINGS"
         ;;
     MPICH | MSMPI)
         # add hostfile info
@@ -280,8 +282,9 @@ load_mpi_opts()
 
         #
         # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
+        # Note: don't send for now, simply because foamExec isn't being called here
         #
-        mpiopts="$mpiopts -env FOAM_SETTINGS \"$FOAM_SETTINGS\""
+        #mpiopts="$mpiopts -env FOAM_SETTINGS \"${FOAM_SETTINGS}\""
         ;;
     esac
 
