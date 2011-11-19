@@ -151,7 +151,7 @@ runApplication ()
         done
         if kill -0 $pid > /dev/null 2>&1; then
           echo "Runtime: maxmin:$DEBUG_MAXRUNTIME < current:$count < maxmax:$DEBUG_MAXMAXRUNTIME - killing $pid"
-          kill $pid
+          kill $pid && wait $pid 2>/dev/null
         fi
     fi
 }
@@ -224,7 +224,7 @@ runParallel ()
         if kill -0 $pid > /dev/null 2>&1; then
           echo "Runtime: maxmin:$DEBUG_MAXRUNTIME < current:$count < maxmax:$DEBUG_MAXMAXRUNTIME - killing $pid"
           if [ -z "$MPI_OVERRIDE_KILL_PARALLEL" ]; then
-            kill $pid
+            kill $pid && wait $pid 2>/dev/null
           else
             $MPI_OVERRIDE_KILL_PARALLEL $pid log.$APP_NAME
           fi
