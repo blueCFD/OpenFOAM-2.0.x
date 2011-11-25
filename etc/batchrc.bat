@@ -156,3 +156,4 @@ set HOME=%HOME:~0,-1%
 GOTO :EOF
 
 :END
+cd "%WM_PROJECT_INST_DIR%"
