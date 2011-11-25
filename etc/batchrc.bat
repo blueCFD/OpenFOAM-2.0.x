@@ -31,8 +31,8 @@ rem
 rem ------------------------------------------------------------------------------
 
 %~d0
-cd %~dp0..
-call :SETHOME %CD%
+cd "%~dp0.."
+call :SETHOME "%CD%"
 
 rem BEGGINING of Default options --------------------------------------
 
@@ -147,11 +147,11 @@ rem dummy MPI already added to LD_LIBRARY_PATH and has no external libraries
 IF NOT "%FOAM_MPI%"=="dummy" set PATH=%PATH%;%FOAM_EXT_LIBBIN%\%FOAM_MPI%
 
 rem Source all *.bat files present at "%WM_PROJECT_DIR%\etc\config.d"
-for %%A in (%WM_PROJECT_DIR%\etc\config.d\*.bat) DO CALL %%A
+for %%A in ("%WM_PROJECT_DIR%\etc\config.d\*.bat") DO CALL "%%A"
 GOTO END
 
 :SETHOME
-set HOME=%~dps1
+set HOME=%~dp1
 set HOME=%HOME:~0,-1%
 GOTO :EOF
 
