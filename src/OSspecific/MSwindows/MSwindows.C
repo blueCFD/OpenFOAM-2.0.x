@@ -1233,7 +1233,7 @@ getLoadedLibs()
 
 
 //- Open shared library
-void* dlOpen(const fileName& libName)
+void* dlOpen(const fileName& libName, const bool check)
 {
     //Lets check if this is a list of libraries to be loaded
     //NOTE: should only be used for "force loading libraries"
@@ -1286,7 +1286,7 @@ void* dlOpen(const fileName& libName)
           libHandle = ::LoadLibrary(winLibName.c_str());
       }
       
-      if (NULL == libHandle) 
+      if (NULL == libHandle && check)
       {
           WarningIn("dlOpen(const fileName&)")
             << "LoadLibrary failed. "
