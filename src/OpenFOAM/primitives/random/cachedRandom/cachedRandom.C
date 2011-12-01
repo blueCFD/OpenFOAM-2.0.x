@@ -26,11 +26,6 @@ License
 #include "cachedRandom.H"
 #include "OSspecific.H"
 
-#if INT_MAX    != 2147483647
-#    error "INT_MAX    != 2147483647"
-#    error "The random number generator may not work!"
-#endif
-
 // * * * * * * * * * * * * * private Member Functions  * * * * * * * * * * * //
 
 Foam::scalar Foam::cachedRandom::scalar01()

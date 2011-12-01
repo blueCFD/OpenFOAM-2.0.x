@@ -32,32 +32,6 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::FacePostProcessing<CloudType>::applyToFace
-(
-    const label faceIn,
-    label& zoneI,
-    label& faceI
-) const
-{
-    const faceZoneMesh& fzm = this->owner().mesh().faceZones();
-
-    forAll(faceZoneIDs_, i)
-    {
-        const faceZone& fz = fzm[faceZoneIDs_[i]];
-        forAll(fz, j)
-        {
-            if (fz[j] == faceIn)
-            {
-                zoneI = i;
-                faceI = j;
-                return;
-            }
-        }
-    }
-}
-
-
-template<class CloudType>
 void Foam::FacePostProcessing<CloudType>::makeLogFile
 (
     const word& zoneName,
@@ -306,6 +280,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
     DynamicList<label> zoneIDs;
     const faceZoneMesh& fzm = owner.mesh().faceZones();
     const surfaceScalarField& magSf = owner.mesh().magSf();
+    const polyBoundaryMesh& pbm = owner.mesh().boundaryMesh();
     forAll(faceZoneNames, i)
     {
         const word& zoneName = faceZoneNames[i];
@@ -314,16 +289,37 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
         {
             zoneIDs.append(zoneI);
             const faceZone& fz = fzm[zoneI];
+            mass_[i].setSize(fz.size(), 0.0);
+            massTotal_[i].setSize(fz.size(), 0.0);
+            massFlux_[i].setSize(fz.size(), 0.0);
+
             label nFaces = returnReduce(fz.size(), sumOp<label>());
-            mass_[i].setSize(nFaces, 0.0);
-            massTotal_[i].setSize(nFaces, 0.0);
-            massFlux_[i].setSize(nFaces, 0.0);
             Info<< "        " << zoneName << " faces: " << nFaces << nl;
 
             scalar totArea = 0.0;
             forAll(fz, j)
             {
-                totArea += magSf[fz[j]];
+                label faceI = fz[j];
+                if (faceI < owner.mesh().nInternalFaces())
+                {
+                    totArea += magSf[fz[j]];
+                }
+                else
+                {
+                    label bFaceI = faceI - owner.mesh().nInternalFaces();
+                    label patchI = pbm.patchID()[bFaceI];
+                    const polyPatch& pp = pbm[patchI];
+
+                    if
+                    (
+                        !pp.coupled()
+                     || refCast<const coupledPolyPatch>(pp).owner()
+                    )
+                    {
+                        label localFaceI = pp.whichFace(faceI);
+                        totArea += magSf.boundaryField()[patchI][localFaceI];
+                    }
+                }
             }
             totArea = returnReduce(totArea, sumOp<scalar>());
 
@@ -367,16 +363,11 @@ Foam::FacePostProcessing<CloudType>::~FacePostProcessing()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::FacePostProcessing<CloudType>::postPatch
+void Foam::FacePostProcessing<CloudType>::postFace
 (
-    const parcelType&,
-    const label
+    const parcelType& p,
+    const label faceI
 )
-{}
-
-
-template<class CloudType>
-void Foam::FacePostProcessing<CloudType>::postFace(const parcelType& p)
 {
     if
     (
@@ -384,13 +375,26 @@ void Foam::FacePostProcessing<CloudType>::postFace(const parcelType& p)
      || this->owner().solution().transient()
     )
     {
-        label zoneI = -1;
-        label faceI = -1;
-        applyToFace(p.face(), zoneI, faceI);
+        const faceZoneMesh& fzm = this->owner().mesh().faceZones();
 
-        if ((zoneI != -1) && (faceI != -1))
+        forAll(faceZoneIDs_, i)
         {
-            mass_[zoneI][faceI] += p.mass()*p.nParticle();
+            const faceZone& fz = fzm[faceZoneIDs_[i]];
+
+            label faceId = -1;
+            forAll(fz, j)
+            {
+                if (fz[j] == faceI)
+                {
+                    faceId = j;
+                    break;
+                }
+            }
+
+            if (faceId != -1)
+            {
+                mass_[i][faceId] += p.mass()*p.nParticle();
+            }
         }
     }
 }
