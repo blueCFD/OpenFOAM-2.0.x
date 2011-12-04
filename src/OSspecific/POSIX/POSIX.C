@@ -1260,6 +1260,21 @@ void Foam::osRandomSeed(const label seed)
 #endif
 }
 
+int Foam::osRandomBit()
+{
+#ifdef USE_RANDOM
+    if (random() > INT_MAX/2)
+#else
+    if (lrand48() > INT_MAX/2)
+#endif
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 Foam::label Foam::osRandomInteger()
 {

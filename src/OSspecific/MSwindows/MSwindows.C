@@ -1412,6 +1412,18 @@ void osRandomSeed(const label seed)
     srandom((unsigned int)seed);
 }
 
+int osRandomBit()
+{
+    if (random() > INT_MAX/2)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 label osRandomInteger()
 {
     return random();
@@ -1419,7 +1431,7 @@ label osRandomInteger()
 
 scalar osRandomDouble()
 {
-    return (scalar)random();
+    return (scalar)random() / (scalar)INT_MAX;
 }
 
 string toUnixPath(const string & path)
