@@ -34,6 +34,13 @@ License
 
 void Foam::error::printStack(Ostream& os)
 {
+  if (env("FOAM_STACKTRACE_DISABLE"))
+  {
+    os << "Stack tracing is disabled (FOAM_STACKTRACE_DISABLE is set), so print stack will not be provided."
+       << endl;
+    return;
+  }
+
   std::stringstream callstacktext(std::stringstream::in | std::stringstream::out);
   StackTrace *traceUs = new StackTrace();
 
