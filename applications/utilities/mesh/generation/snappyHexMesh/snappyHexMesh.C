@@ -66,7 +66,7 @@ scalar getMergeDistance(const polyMesh& mesh, const scalar mergeTol)
     // check writing tolerance
     if (mesh.time().writeFormat() == IOstream::ASCII)
     {
-        const scalar writeTol = std::pow
+        scalar writeTol = std::pow
         (
             scalar(10.0),
             -scalar(IOstream::defaultPrecision())
