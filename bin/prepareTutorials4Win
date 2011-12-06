@@ -96,7 +96,6 @@ echo "Fixing motorBike STL"
 cd incompressible/simpleFoam/motorBike
 chmod +x fixForWindows
 ./fixForWindows
-sed -i -e 's=sed \-i=sedIt=' Allrun
 cd -
 
 echo "Fixing multiphase/interFoam/les/nozzleFlow2D/Allrun (exponencial issue)"
@@ -129,6 +128,10 @@ echo "Fixing combustion/XiFoam/ras/Allrun (rounding issue in SP mode)"
 cd combustion/XiFoam/ras
 sed -i -e 's=\.\./moriyoshiHomogeneous/0.005=\`find ../moriyoshiHomogeneous -name "0.*" | sort -u | tail -n 1\`=' Allrun
 cd -
+
+echo "Change all usages of 'sed -i' to sedIt"
+find . -name "Allrun*" | xargs grep 'sed -i' -sl | xargs sed -i -e 's=sed \-i=sedIt='
+
 
 #go back to the parent folder
 cd ..

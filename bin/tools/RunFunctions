@@ -321,12 +321,13 @@ cloneCase()
 
 sedIt()
 {
-  if [ -z "`sed --help | grep -e '--in-place'`" ]; then
+  #"sed -i" in MSys still doesn't work properly, due to mount issues or ACL.
+  #if [ -z "`sed --help | grep -e '--in-place'`" ]; then
     sed -e "$1" $2 > $2.tmp
     mv $2.tmp $2
-  else
-    sed -i -e "$1" $2
-  fi
+  #else
+  #  sed -i -e "$1" $2
+  #fi
 }
 
 #Functions bellow this line were copied from foamJob --------------------------
