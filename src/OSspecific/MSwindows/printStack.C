@@ -27,6 +27,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "error.H"
+#include "OSspecific.H"
 #include "stack_trace.h"
 #include <sstream>
 
