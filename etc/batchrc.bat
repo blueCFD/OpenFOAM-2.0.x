@@ -140,7 +140,7 @@ set ParaView_VERSION=3.12.0
 set ParaView_INST_DIR=%WM_THIRD_PARTY_DIR%\paraview-%ParaView_VERSION%
 set ParaView_DIR=%WM_THIRD_PARTY_DIR%\platforms\%WM_ARCH%%WM_COMPILER%\paraview-%ParaView_VERSION%
 
-set PATH=%PATH%;%MPI_ARCH_PATH%\lib;%MPI_ARCH_PATH%\bin;%FOAM_MPI_LIBBIN%;%FOAM_USER_APPBIN%;%FOAM_USER_LIBBIN%;%FOAM_APPBIN%;%FOAM_LIBBIN%;%FOAM_EXT_LIBBIN%;%WM_DIR%;%WM_PROJECT_DIR%\bin;%ParaView_DIR%\bin
+set PATH=%PATH%;%WM_DIR%;%MPI_ARCH_PATH%\lib;%MPI_ARCH_PATH%\bin;%FOAM_MPI_LIBBIN%;%FOAM_USER_APPBIN%;%FOAM_USER_LIBBIN%;%FOAM_APPBIN%;%FOAM_LIBBIN%;%FOAM_EXT_LIBBIN%;%WM_DIR%;%WM_PROJECT_DIR%\bin;%ParaView_DIR%\bin
 
 rem add (non-dummy) MPI implementation
 rem dummy MPI already added to LD_LIBRARY_PATH and has no external libraries
