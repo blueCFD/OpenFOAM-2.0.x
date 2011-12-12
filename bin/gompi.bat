@@ -29,30 +29,28 @@ rem
 rem ------------------------------------------------------------------------------
 
 set /A x_numprocs=0
+for /D %%a in (processor*) do @set /A x_numprocs=x_numprocs+1
 set MACHINEFILE=
-
-rem simple count
-rem for /D %%a in (processor*) do @set /A x_numprocs=x_numprocs+1
-
-rem read directly from decomposeParDict
-setlocal enableextensions enabledelayedexpansion
-FOR /F "eol=; tokens=1,2 delims= " %%i in (system\decomposeParDict) do (
-  IF "%%i" == "numberOfSubdomains" set x_numprocs=%%j
-)
 
 IF EXIST "hostfile" set MACHINEFILE=hostfile
 IF EXIST "machines" set MACHINEFILE=machines
 IF EXIST "system\hostfile" set MACHINEFILE=system\hostfile
 IF EXIST "system\machines" set MACHINEFILE=system\machines
 
+rem Generate temporary batch file name, which is necessary in cases with long path names
+set RNDBATCH=%TIME:~6,2%%RANDOM%.bat
+
 GOTO %WM_MPLIB%
 
 :OPENMPI
-for /f "delims=" %%a in ('where %1') do set APPLICATIONTORUN=%%a
+rem for /f "delims=" %%a in ('where %1') do set APPLICATIONTORUN=%%a
 IF NOT "%MACHINEFILE%" == "" set MACHINEFILE=-hostfile %MACHINEFILE%
 
+rem generate batch file for launching
+echo %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9 > %RNDBATCH%
+
 @echo on
-mpirun -n %x_numprocs% %MPI_ACCESSORY_OPTIONS% %MACHINEFILE% -x HOME -x PATH -x USERNAME -x WM_PROJECT_DIR -x WM_PROJECT_INST_DIR -x WM_OPTIONS -x FOAM_LIBBIN -x FOAM_APPBIN -x FOAM_USER_APPBIN -x MPI_BUFFER_SIZE %APPLICATIONTORUN% -parallel %2 %3 %4 %5 %6 %7 %8 %9
+mpirun -n %x_numprocs% %MPI_ACCESSORY_OPTIONS% %MACHINEFILE% -x HOME -x PATH -x USERNAME -x WM_PROJECT_DIR -x WM_PROJECT_INST_DIR -x WM_OPTIONS -x FOAM_LIBBIN -x FOAM_APPBIN -x FOAM_USER_APPBIN -x MPI_BUFFER_SIZE %RNDBATCH%
 @echo off
 GOTO end
 
@@ -60,8 +58,11 @@ GOTO end
 :MPICH
 IF NOT "%MACHINEFILE%" == "" set MACHINEFILE=-machinefile %MACHINEFILE%
 
+rem generate batch file for launching
+echo %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9 > %RNDBATCH%
+
 @echo on
-mpiexec -n %x_numprocs% %MPI_ACCESSORY_OPTIONS% %MACHINEFILE% -genvlist HOME,PATH,USERNAME,WM_PROJECT_DIR,WM_PROJECT_INST_DIR,WM_OPTIONS,FOAM_LIBBIN,FOAM_APPBIN,FOAM_USER_APPBIN,MPI_BUFFER_SIZE %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9
+mpiexec -n %x_numprocs% %MPI_ACCESSORY_OPTIONS% %MACHINEFILE% -genvlist HOME,PATH,USERNAME,WM_PROJECT_DIR,WM_PROJECT_INST_DIR,WM_OPTIONS,FOAM_LIBBIN,FOAM_APPBIN,FOAM_USER_APPBIN,MPI_BUFFER_SIZE %RNDBATCH%
 @echo off
 GOTO end
 
@@ -77,3 +78,4 @@ GOTO end
 
 :end
 set x_numprocs=
+IF EXIST %RNDBATCH% del %RNDBATCH%
