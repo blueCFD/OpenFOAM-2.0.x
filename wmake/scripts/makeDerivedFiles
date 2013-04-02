@@ -92,7 +92,10 @@ echo "" >> filesPlusBlank
 
 # Plug in the version resource file for being compiled along
 if [ $TIS_MinGW -eq 1 ]; then
-    echo "Make/$WM_OPTIONS_LOCAL/version_of_build.rc" >> filesPlusBlank
+    MGW_PatchCapture=$(pwd)
+    MGW_PatchCapture=$(echo ${MGW_PatchCapture%/*})
+    MGW_PatchCapture=$(echo ${MGW_PatchCapture##*/})
+    echo "$MGW_PatchCapture/$WM_OPTIONS_LOCAL/version_of_build.rc" >> filesPlusBlank
     echo "" >> filesPlusBlank
 fi
 
