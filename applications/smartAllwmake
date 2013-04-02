@@ -1,0 +1,66 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # run from this directory
+
+wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
+    echo "Error: Current directory is not \$WM_PROJECT_DIR/applications"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+[ -n "$FOAM_EXT_LIBBIN" ] || {
+    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+
+[ "$#" -gt 0 ] || {
+    echo "Error: missing argument."
+    echo "    Please provide the folder to be processed."
+    exit 1
+}
+
+folder2process=$1
+hashfolder=${folder2process}.$$
+mkdir "$hashfolder" || {
+    echo "Error: Unable to create the folder '$hashfolder'"
+    exit 1
+}
+
+allwmakes=$(find $folder2process -name "Allwmake" | grep -v "/Optional")
+allmakes=$(find $folder2process -name "Make" | grep -v "/Optional")
+
+allmakes2=${allmakes}
+
+for p2n in $(echo -e "$allwmakes" | sed 's=/Allwmake$=='); do
+  
+  allmakes2=$(echo -e "${allmakes2}" | grep -v "$p2n")
+
+done
+
+count=0
+for line in $(echo -e "$allwmakes"); do
+  
+  mkdir "$hashfolder/make.$count"
+  echo '#!/bin/sh' > "$hashfolder/make.$count/Allwmake"
+  echo "../../$line" >> "$hashfolder/make.$count/Allwmake"
+  chmod +x "$hashfolder/make.$count/Allwmake"
+
+  count=$(expr $count + 1)
+  
+done
+
+for line in $(echo -e "$allmakes2" | sed 's=/Make$=='); do
+  
+  mkdir "$hashfolder/make.$count"
+  echo '#!/bin/sh' > "$hashfolder/make.$count/Allwmake"
+  echo "wmake all ../../$line" >> "$hashfolder/make.$count/Allwmake"
+  chmod +x "$hashfolder/make.$count/Allwmake"
+
+  count=$(expr $count + 1)
+  
+done
+
+wmake all $hashfolder
+
+rm -r "$hashfolder"

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -306,6 +306,13 @@ OpenFOAM | ThirdParty)
         mpfr_version=mpfr-2.4.2
         mpc_version=mpc-0.8.2
         ;;
+    Gcc47 | Gcc47++0x)
+        gcc_version=gcc-4.7.0
+        gmp_version=gmp-5.0.2
+        mpfr_version=mpfr-3.0.1
+        mpc_version=mpc-0.9
+        gmpPACKAGE=gmp-5.0.2
+        ;;
     Gcc45 | Gcc45++0x)
         gcc_version=gcc-4.5.3
         gmp_version=gmp-5.0.1
@@ -370,14 +377,7 @@ OpenFOAM | ThirdParty)
         _foamAddPath    $gccDir/bin
 
         # add compiler libraries to run-time environment
-        # 64-bit needs lib64, but 32-bit needs lib (not lib32)
-        if [ "$WM_ARCH_OPTION" = 64 ]
-        then
-            _foamAddLib     $gccDir/lib$WM_COMPILER_LIB_ARCH
-        else
-            _foamAddLib     $gccDir/lib
-        fi
-
+        _foamAddLib     $gccDir/lib$WM_COMPILER_LIB_ARCH
 
         # add gmp/mpfr libraries to run-time environment
         _foamAddLib     $gmpDir/lib
@@ -470,6 +470,20 @@ unset boost_version cgal_version
 unset MPI_ARCH_PATH MPI_HOME FOAM_MPI_LIBBIN
 
 case "$WM_MPLIB" in
+SYSTEMOPENMPI)
+    # Use the system installed openmpi, get library directory via mpicc
+    export FOAM_MPI=openmpi-system
+
+    libDir=`mpicc --showme:link | sed -e 's/.*-L\([^ ]*\).*/\1/'`
+
+    # Bit of a hack: strip off 'lib' and hope this is the path to openmpi
+    # include files and libraries.
+    export MPI_ARCH_PATH="${libDir%/*}"
+
+    _foamAddLib     $libDir
+    unset libDir
+    ;;
+
 OPENMPI)
     export FOAM_MPI=openmpi-1.5.3
     # optional configuration tweaks:
@@ -481,33 +495,12 @@ OPENMPI)
     export OPAL_PREFIX=$MPI_ARCH_PATH
 
     _foamAddPath    $MPI_ARCH_PATH/bin
+
+    # 64-bit on OpenSuSE 12.1 uses lib64 others use lib
+    _foamAddLib     $MPI_ARCH_PATH/lib$WM_COMPILER_LIB_ARCH
     _foamAddLib     $MPI_ARCH_PATH/lib
+
     _foamAddMan     $MPI_ARCH_PATH/man
-    ;;
-
-SYSTEMOPENMPI)
-    # Use the system installed openmpi, get library directory via mpicc
-    export FOAM_MPI=openmpi-system
-
-    # Set compilation flags here instead of in wmake/rules/../mplibSYSTEMOPENMPI
-    export PINC="`mpicc --showme:compile`"
-    export PLIBS="`mpicc --showme:link`"
-    libDir=`echo "$PLIBS" | sed -e 's/.*-L\([^ ]*\).*/\1/'`
-
-    # Bit of a hack: strip off 'lib' and hope this is the path to openmpi
-    # include files and libraries.
-    export MPI_ARCH_PATH="${libDir%/*}"
-
-    if [ "$FOAM_VERBOSE" -a "$PS1" ]
-    then
-        echo "Using system installed MPI:"
-        echo "    compile flags : $PINC"
-        echo "    link flags    : $PLIBS"
-        echo "    libmpi dir    : $libDir"
-    fi
-
-    _foamAddLib     $libDir
-    unset libDir
     ;;
 
 MPICH)
@@ -516,7 +509,11 @@ MPICH)
     export MPI_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
 
     _foamAddPath    $MPI_ARCH_PATH/bin
+
+    # 64-bit on OpenSuSE 12.1 uses lib64 others use lib
+    _foamAddLib     $MPI_ARCH_PATH/lib$WM_COMPILER_LIB_ARCH
     _foamAddLib     $MPI_ARCH_PATH/lib
+
     _foamAddMan     $MPI_ARCH_PATH/share/man
     ;;
 
@@ -527,7 +524,11 @@ MPICH-GM)
     export GM_LIB_PATH=/opt/gm/lib64
 
     _foamAddPath    $MPI_ARCH_PATH/bin
+
+    # 64-bit on OpenSuSE 12.1 uses lib64 others use lib
+    _foamAddLib     $MPI_ARCH_PATH/lib$WM_COMPILER_LIB_ARCH
     _foamAddLib     $MPI_ARCH_PATH/lib
+
     _foamAddLib     $GM_LIB_PATH
     ;;
 

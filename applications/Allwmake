@@ -17,16 +17,34 @@ wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
 
 set -x
 
+if onWin; then
+
+./smartAllwmake utilities
+./smartAllwmake solvers
+
+else
+
 wmake all utilities
 wmake all solvers
+
+fi
 
 if isMinGW; then
   #since we advise to build these in the wiki, lets just put them here to get built too
   ( set +e; wmake all utilities/mesh/conversion/Optional ; exit 0 ) #ccm26ToFoam - use a containment shell since it depends on license.
   wmake all test/parallel #Test-parallel
 
-  wmakeVerifyExeDependencies utilities || wmake all utilities
-  wmakeVerifyExeDependencies solvers || wmake all solvers
+  if onWin; then
+
+    wmakeVerifyExeDependencies utilities || ./smartAllwmake utilities
+    wmakeVerifyExeDependencies solvers || ./smartAllwmake solvers
+
+  else
+
+    wmakeVerifyExeDependencies utilities || wmake all utilities
+    wmakeVerifyExeDependencies solvers || wmake all solvers
+
+  fi
   
   ( set +e; wmake all utilities/mesh/conversion/Optional ; exit 0 ) #ccm26ToFoam - use a containment shell since it depends on license.
   wmakeVerifyExeDependencies test/parallel || wmake all test/parallel #Test-parallel
